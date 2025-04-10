@@ -2,16 +2,13 @@
 import Grid from '@mui/material/Grid'
 
 // Component Imports
-
-import AddClassForm from '@/views/class/create/AddClassForm'
-import AddClass from '@/views/class/create/AddClass'
+import UserTableAdmin from '@/views/user/UserTableAdmin'
+import TopSection from '@/components/top-section/topsection'
 
 const FormLayouts = () => {
   return (
     <>
-      <AddClassForm />
-
-      <AddClass />
+      <UserTableAdmin />
     </>
   )
 }

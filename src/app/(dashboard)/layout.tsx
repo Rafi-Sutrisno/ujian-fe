@@ -12,6 +12,7 @@ import Navbar from '@components/layout/vertical/Navbar'
 import VerticalFooter from '@components/layout/vertical/Footer'
 import { Breadcrumbs } from '@mui/material'
 import CustomBreadcrumbs from '@/components/breadcrump/breadcrump'
+import AdminBreadcrumbs from '@/components/breadcrump/breadcrumpAdmin'
 
 const Layout = async ({ children }: ChildrenType) => {
   // Vars
@@ -22,7 +23,7 @@ const Layout = async ({ children }: ChildrenType) => {
       <LayoutWrapper
         verticalLayout={
           <VerticalLayout navigation={<Navigation />} navbar={<Navbar />} footer={<VerticalFooter />}>
-            <CustomBreadcrumbs />
+            <AdminBreadcrumbs />
             {children}
           </VerticalLayout>
         }

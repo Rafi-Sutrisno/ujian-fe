@@ -2,13 +2,16 @@
 import Grid from '@mui/material/Grid'
 
 // Component Imports
-import FormLayoutsBasic from '@views/form-layouts/FormLayoutsBasic'
-import FormLayoutsIcon from '@views/form-layouts/FormLayoutsIcons'
-import FormLayoutsAlignment from '@views/form-layouts/FormLayoutsAlignment'
 import UserTableAdmin from '@/views/user/UserTableAdmin'
+import TopSection from '@/components/top-section/topsection'
 
 const FormLayouts = () => {
-  return <UserTableAdmin />
+  return (
+    <>
+      <TopSection title='User Management' buttonText='Add New User' buttonLink='/user/create' />
+      <UserTableAdmin />
+    </>
+  )
 }
 
 export default FormLayouts
