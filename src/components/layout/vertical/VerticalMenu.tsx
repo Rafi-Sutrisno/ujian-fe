@@ -1,23 +1,10 @@
-// MUI Imports
 import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
-
-// Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// Type Imports
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
-
-// Component Imports
 import { Menu, SubMenu, MenuItem, MenuSection } from '@menu/vertical-menu'
-
-// Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
-
-// Styled Component Imports
 import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
-
-// Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
@@ -33,15 +20,12 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
 )
 
 const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectScrollbar: boolean) => void }) => {
-  // Hooks
   const theme = useTheme()
   const { isBreakpointReached, transitionDuration } = useVerticalNav()
 
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
   return (
-    // eslint-disable-next-line lines-around-comment
-    /* Custom scrollbar instead of browser scroll, remove if you want browser scroll only */
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
@@ -53,49 +37,26 @@ const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectSc
             onScrollY: container => scrollMenu(container, true)
           })}
     >
-      {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
-      {/* Vertical Menu */}
       <Menu
         menuItemStyles={menuItemStyles(theme)}
         renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(theme)}
       >
-        <SubMenu
-          label='Dashboards'
-          icon={<i className='ri-home-smile-line' />}
-          // suffix={<Chip label='5' size='small' color='error' />}
-        >
+        <SubMenu label='Dashboards' icon={<i className='ri-home-smile-line' />}>
           <MenuItem href='/'>Analytics</MenuItem>
+          <MenuItem href='/admin/user'>User</MenuItem>
+          <MenuItem href='/admin/class'>Class</MenuItem>
         </SubMenu>
 
-        <MenuSection label='Menu'>
-          <MenuItem
-            href={`/home`}
-            icon={<i className='ri-home-5-line' />}
-            // suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
-          >
+        <MenuSection label='Judge'>
+          <MenuItem href={`/home`} icon={<i className='ri-home-5-line' />}>
             Home
           </MenuItem>
-          <MenuItem
-            href={`/user`}
-            icon={<i className='ri-group-line' />}
-            // suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
-          >
-            User
-          </MenuItem>
-          <MenuItem
-            href={`/class`}
-            icon={<i className='ri-graduation-cap-line' />}
-            // suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
-          >
+          <MenuItem href={`/class`} icon={<i className='ri-graduation-cap-line' />}>
             Class
           </MenuItem>
-          <MenuItem
-            href={`/exam`}
-            icon={<i className='ri-file-text-line' />}
-            // suffix={<Chip label='Pro' size='small' color='primary' variant='tonal' />}
-          >
+          <MenuItem href={`/exam`} icon={<i className='ri-file-text-line' />}>
             Exam
           </MenuItem>
 
