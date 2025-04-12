@@ -14,7 +14,7 @@ import UserTable from '@/components/Table/Judge/UserTable'
 import ViewExamJudge from '@/views/judge/view/ExamPageJudge'
 import ProblemTable from '@/components/Table/Judge/ProblemTable'
 import ViewExamParticipant from '@/views/participant/ExamPageParticipant'
-import ExamPlayground from '@/views/participant/playground/testing'
+import ExamPlayground from '@/views/participant/playground/playground'
 
 const FormLayouts = () => {
   return (
