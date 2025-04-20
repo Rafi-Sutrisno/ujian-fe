@@ -1,7 +1,9 @@
 'use client'
 
+import ExamTable from '@/components/Table/Judge/ExamTable'
 import EditUserClass from '@/views/class/edit/EditUserClass'
 import ViewClass from '@/views/class/view/ViewClass'
+import ClassTableJudge from '@/views/judge/ClassTableJudge'
 import { useParams } from 'next/navigation'
 
 const FormLayouts = () => {
@@ -12,6 +14,7 @@ const FormLayouts = () => {
     <>
       {id && <ViewClass id={id as string} />}
       {id && <EditUserClass id={id as string} />}
+      {id && <ExamTable class_id={id as string} />}
     </>
   )
 }
