@@ -13,15 +13,19 @@ const AdminBreadcrumbs = () => {
   const userDisplayName = 'Rafi Sutrisno'
 
   const createBreadcrumbs = () => {
-    // Skip "admin" in breadcrumbs
-    const filteredSegments = pathSegments.filter(segment => segment !== 'admin')
+    const excludedSegments = ['admin', 'judge']
+    const filteredSegments = pathSegments.filter(segment => !excludedSegments.includes(segment))
 
     return filteredSegments.map((segment, index) => {
-      const path = '/' + pathSegments.slice(0, index + 1 + (pathSegments.includes('admin') ? 1 : 0)).join('/')
+      const originalIndex = pathSegments.findIndex(
+        (seg, i) =>
+          !excludedSegments.includes(seg) && pathSegments.slice(i).join('/') === filteredSegments.slice(index).join('/')
+      )
+
+      const path = '/' + pathSegments.slice(0, originalIndex + 1).join('/')
       const isLast = index === filteredSegments.length - 1
 
       const isUserDetail = filteredSegments.length >= 2 && filteredSegments[0] === 'user' && index === 1
-
       const label = isUserDetail ? userDisplayName : segment.charAt(0).toUpperCase() + segment.slice(1)
 
       return isLast ? (
