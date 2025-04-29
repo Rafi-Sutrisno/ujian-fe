@@ -21,7 +21,7 @@ const Layout = async ({ children }: ChildrenType) => {
       <LayoutWrapper
         verticalLayout={
           <VerticalLayout navigation={<Navigation />} navbar={<Navbar />} footer={<VerticalFooter />}>
-            <AdminBreadcrumbs />
+            {/* <AdminBreadcrumbs /> */}
             {children}
           </VerticalLayout>
         }
