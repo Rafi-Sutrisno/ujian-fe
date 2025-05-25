@@ -1,4 +1,4 @@
-import ClassTableStudent from '@/views/participant/ClassTableStudent'
+import ClassTableStudent from '@/views/student/ClassTableStudent'
 
 const FormLayouts = () => {
   return (
