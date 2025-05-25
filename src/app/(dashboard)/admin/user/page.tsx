@@ -1,4 +1,4 @@
-import UserTableAdmin from '@/views/user/UserTableAdmin'
+import UserTableAdmin from '@/views/admin/UserTableAdmin'
 
 const FormLayouts = () => {
   return (

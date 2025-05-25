@@ -1,22 +1,29 @@
 'use client'
+import type { ReactElement } from 'react'
+import dynamic from 'next/dynamic'
 
-import ExamTable from '@/components/Table/Judge/ExamTable'
-import EditUserClass from '@/views/class/edit/EditUserClass'
-import ViewClass from '@/views/class/view/ViewClass'
-import ClassTableJudge from '@/views/judge/ClassTableJudge'
+// import ViewClassAdmin from '@/views/admin/ViewClassAdmin'
+// import UserClassTableAdmin from '@/views/admin/UserClassTableAdmin'
+// import ExamTableAdmin from '@/components/Table/Admin/ExamTableAdmin'
+
 import { useParams } from 'next/navigation'
+import SplitViewClassAdmin from '@/views/admin/split_views/ViewClassAdmin'
+
+const ViewClassAdmin = dynamic(() => import('@/views/admin/ViewClassAdmin'))
+const UserClassTableAdmin = dynamic(() => import('@/views/admin/UserClassTableAdmin'))
+const ExamTableAdmin = dynamic(() => import('@/views/admin/ExamTableAdmin'))
+
+const tabContentList = (id: string): { [key: string]: ReactElement } => ({
+  class: <ViewClassAdmin id={id as string} />,
+  participant: <UserClassTableAdmin id={id as string} />,
+  exam: <ExamTableAdmin class_id={id as string} />
+})
 
 const FormLayouts = () => {
   const params = useParams()
   const id = params?.id as string
 
-  return (
-    <>
-      {id && <ViewClass id={id as string} />}
-      {id && <EditUserClass id={id as string} />}
-      {id && <ExamTable class_id={id as string} />}
-    </>
-  )
+  return <SplitViewClassAdmin tabContentList={tabContentList(id)} />
 }
 
 export default FormLayouts

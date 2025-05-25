@@ -1,4 +1,4 @@
-import ClassTableAdmin from '@/views/class/ClassTableAdmin'
+import ClassTableAdmin from '@/views/admin/ClassTableAdmin'
 
 const FormLayouts = () => {
   return (
