@@ -31,6 +31,7 @@ import { visuallyHidden } from '@mui/utils'
 import { Delete } from '@mui/icons-material'
 import AddUserModal from '@/components/form/AddUserForm'
 import { fetchWithAuth } from '@/utils/api'
+import AddUserUploadModal from '@/components/form/AddUserUpload'
 
 interface Column {
   id: keyof Data | 'actions'
@@ -193,6 +194,11 @@ export default function UserTableAdmin() {
     setOpen(false)
   }
 
+  const [openUploadModal, setOpenUploadModal] = React.useState(false)
+
+  const handleOpenUpload = () => setOpenUploadModal(true)
+  const handleCloseUpload = () => setOpenUploadModal(false)
+
   const handleDeleteConfirm = () => {
     // logic for actual deletion goes here
     console.log(`Deleting ${selected.length} users...`)
@@ -205,14 +211,19 @@ export default function UserTableAdmin() {
   return (
     <>
       <AddUserModal open={openModal} onClose={handleCloseAdd} onUserAdded={fetchData} />
-
+      <AddUserUploadModal open={openUploadModal} onClose={handleCloseUpload} onUploadSuccess={fetchData} />
       <Box display='flex' justifyContent='space-between' alignItems='center' mb={4}>
         <Typography variant='h5' fontWeight='bold'>
           User Management
         </Typography>
-        <Button variant='contained' color='primary' onClick={handleOpen}>
-          Add New User
-        </Button>
+        <Box display='flex' justifyContent='start' gap={2} alignItems='center' mb={4}>
+          <Button variant='outlined' color='secondary' onClick={handleOpenUpload}>
+            Upload Users File
+          </Button>
+          <Button variant='contained' color='primary' onClick={handleOpen}>
+            Add New User
+          </Button>
+        </Box>
       </Box>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <EnhancedTableToolbar selected={selected} onDelete={handleClickOpen} />

@@ -16,7 +16,23 @@ import DialogActions from '@mui/material/DialogActions'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, Grid, MenuItem, Stack, Snackbar, Alert } from '@mui/material'
+import {
+  Card,
+  CardContent,
+  Grid,
+  MenuItem,
+  Stack,
+  Snackbar,
+  Alert,
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Switch,
+  FormControl,
+  InputLabel,
+  Select,
+  ListItemText
+} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import Link from 'next/link'
 import TopSectionModal from '@/components/top-section/topsectionModal'
@@ -43,6 +59,25 @@ interface Data {
   duration: string
   end_time: string
   created_at: string
+}
+
+interface LangData {
+  id: string
+  name: string
+  code: string
+}
+
+type FormData = {
+  name: string
+  short_name: string
+  is_published: boolean
+  start_time: string
+  duration: string
+  end_time: string
+  is_seb_restricted: boolean
+  seb_browser_key: string
+  seb_config_key: string
+  allowed_languages: string[]
 }
 
 const columns: readonly Column[] = [
@@ -93,6 +128,10 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
+  const [lang, setLang] = React.useState<LangData[]>([])
+
+  const [sebKeyEnabled, setSebKeyEnabled] = React.useState(false)
+  const [sebConfigKeyEnabled, setSebConfigKeyEnabled] = React.useState(false)
 
   const fetchData = async () => {
     try {
@@ -111,14 +150,26 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
             created_at: result.created_at
           })
         )
-        console.log('update: ', transformed)
+
         setRows(transformed)
-        // console.log('transformed:', transformed)
+
+        const langData = await fetchWithAuth(`/api/language/all`, undefined, 'GET')
+        if (langData.status) {
+          const transformed = langData.data.map(
+            (result: any): LangData => ({
+              id: result.id,
+              name: result.name,
+              code: result.code
+            })
+          )
+          console.log('lang: ', transformed)
+          setLang(transformed)
+        }
       } else {
-        console.error('Failed to fetch classes:', data.message)
+        console.error('Failed to fetch exam:', data.message)
       }
     } catch (error) {
-      console.error('Error fetching classes:', error)
+      console.error('Error fetching exam:', error)
     }
   }
 
@@ -148,13 +199,17 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
     setSelectedId(null)
   }
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<FormData>({
     name: '',
     short_name: '',
     is_published: true,
     start_time: '',
     duration: '',
-    end_time: ''
+    end_time: '',
+    is_seb_restricted: false,
+    seb_browser_key: '',
+    seb_config_key: '',
+    allowed_languages: []
   })
 
   const [hours, setHours] = React.useState(0)
@@ -204,10 +259,29 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
   const handleSubmit = async () => {
     const formattedData = formatExamData(formData)
     console.log('data:', formattedData)
-    const { name, short_name, is_published, start_time, duration } = formattedData
-    console.log('data: ', name, short_name, is_published, start_time, duration)
+    const {
+      name,
+      short_name,
+      is_published,
+      start_time,
+      duration,
+      is_seb_restricted,
+      seb_browser_key,
+      seb_config_key,
+      allowed_languages
+    } = formattedData
+    // console.log('data: ', name, short_name, is_published, start_time, duration)
+    console.log('allowd lang:', allowed_languages)
 
-    if (!name || !short_name || is_published === null || is_published === undefined || !start_time || !duration) {
+    if (
+      !name ||
+      !short_name ||
+      is_published === null ||
+      is_published === undefined ||
+      !start_time ||
+      !duration ||
+      allowed_languages.length < 0
+    ) {
       console.log('all field required')
       return setSnackbar({
         open: true,
@@ -217,7 +291,18 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
     }
 
     try {
-      const payload = { class_id, name, short_name, is_published, start_time, duration }
+      const payload = {
+        class_id,
+        name,
+        short_name,
+        is_published,
+        start_time,
+        duration,
+        is_seb_restricted,
+        seb_browser_key: sebKeyEnabled ? seb_browser_key : '',
+        seb_config_key: sebConfigKeyEnabled ? seb_config_key : ''
+      }
+      console.log('ini payload: ', payload)
 
       const data = await fetchWithAuth(`/api/exam/create`, payload, 'POST')
 
@@ -231,6 +316,23 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       }
 
       console.log('Exam created:', data)
+
+      const payload2 = allowed_languages.map(id => ({
+        lang_id: parseInt(id),
+        exam_id: data.data.id
+      }))
+
+      console.log('ini payload2:', payload2)
+      const data2 = await fetchWithAuth(`/api/exam_lang/create_many`, payload2, 'POST')
+      if (data2.status === false) {
+        console.log(data2)
+        return setSnackbar({
+          open: true,
+          message: data2?.message || 'Failed to create exam.',
+          severity: 'error'
+        })
+      }
+
       fetchData()
       setSnackbar({
         open: true,
@@ -355,6 +457,110 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                       onChange={e => setSeconds(parseInt(e.target.value) || 0)}
                       InputProps={{ inputProps: { min: 0, max: 59 } }}
                     />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.is_seb_restricted}
+                          onChange={e => setFormData(prev => ({ ...prev, is_seb_restricted: e.target.checked }))}
+                          name='is_seb_restricted'
+                          color='primary'
+                        />
+                      }
+                      label='Require Safe Exam Browser (SEB) Only'
+                    />
+                  </Grid>
+
+                  {formData.is_seb_restricted && (
+                    <>
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />
+                          }
+                          label={
+                            <Typography color={sebKeyEnabled ? 'textPrimary' : 'textSecondary'}>
+                              Enable SEB Browser Key
+                            </Typography>
+                          }
+                        />
+                        <TextField
+                          fullWidth
+                          label='SEB Browser Key'
+                          name='seb_browser_key'
+                          value={formData.seb_browser_key}
+                          onChange={e => setFormData(prev => ({ ...prev, seb_browser_key: e.target.value }))}
+                          disabled={!sebKeyEnabled}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={sebConfigKeyEnabled}
+                              onChange={e => setSebConfigKeyEnabled(e.target.checked)}
+                            />
+                          }
+                          label={
+                            <Typography color={sebConfigKeyEnabled ? 'textPrimary' : 'textSecondary'}>
+                              Enable SEB Config Key
+                            </Typography>
+                          }
+                        />
+
+                        <TextField
+                          fullWidth
+                          label='SEB Config Key'
+                          name='seb_config_key'
+                          value={formData.seb_config_key}
+                          onChange={e => setFormData(prev => ({ ...prev, seb_config_key: e.target.value }))}
+                          disabled={!sebConfigKeyEnabled}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Typography variant='body2' color='textSecondary'>
+                          If both left empty, access will only be checked by User-Agent
+                        </Typography>
+                      </Grid>
+                    </>
+                  )}
+
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id='language-select-label'>Allowed Programming Languages</InputLabel>
+                      <Select
+                        labelId='language-select-label'
+                        id='language-select'
+                        multiple
+                        value={formData.allowed_languages} // <-- array of IDs
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            allowed_languages:
+                              typeof e.target.value === 'string'
+                                ? e.target.value.split(',') // defensive for string input
+                                : e.target.value
+                          }))
+                        }
+                        label='Allowed Programming Languages'
+                        renderValue={selected =>
+                          (selected as string[])
+                            .map(id => lang.find(l => String(l.id) === String(id))?.name || id)
+                            .join(', ')
+                        }
+                      >
+                        {lang.map(l => (
+                          <MenuItem key={l.id} value={String(l.id)}>
+                            <Checkbox checked={formData.allowed_languages.includes(String(l.id))} />
+                            <ListItemText primary={l.name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
               </form>
