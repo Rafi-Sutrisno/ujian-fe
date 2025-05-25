@@ -1,65 +1,52 @@
 'use client'
 
-// Next Imports
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
-// MUI Imports
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-
-// Type Imports
-import type { Mode } from '@core/types'
-
-// Component Imports
 import Form from '@components/Form'
 import DirectionalIcon from '@components/DirectionalIcon'
 import Illustrations from '@components/Illustrations'
 import Logo from '@components/layout/shared/Logo'
-
-// Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
-// React Imports
-import { useState } from 'react'
-
-const ForgotPassword = ({ mode }: { mode: Mode }) => {
-  // Vars
+const ResetPassword = ({ token }: { token: string }) => {
+  const mode = 'light' // fallback until you properly detect theme
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
-
-  // Hooks
   const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const router = useRouter()
 
-  // States
-  const [email, setEmail] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Handlers
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:8080/api/user/forgot_password', {
+      const res = await fetch('http://localhost:8080/api/user/reset_password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, new_password: newPassword }),
         credentials: 'include'
       })
 
-      const data = await response.json()
-      console.log('Forgot Password Response:', data)
+      const data = await res.json()
 
-      // You can show a success message or redirect here
-      alert('Reset link sent! Please check your email.')
-    } catch (error) {
-      console.error('Forgot Password Error:', error)
-      alert('Something went wrong. Please try again.')
+      if (res.ok) {
+        alert('Password has been reset successfully!')
+        router.push('/login')
+      } else {
+        alert(data.error || 'Failed to reset password')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Something went wrong!')
     } finally {
       setLoading(false)
     }
@@ -72,22 +59,21 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
           <Link href='/' className='flex justify-center items-center mbe-6'>
             <Logo />
           </Link>
-          <Typography variant='h4'>Forgot Password 🔒</Typography>
+          <Typography variant='h4'>Reset Password 🔒</Typography>
           <div className='flex flex-col gap-5'>
-            <Typography className='mbs-1'>
-              Enter your email and we&#39;ll send you instructions to reset your password
-            </Typography>
+            <Typography className='mbs-1'>Please enter your new password below</Typography>
             <Form noValidate autoComplete='off' className='flex flex-col gap-5' onSubmit={handleSubmit}>
               <TextField
                 autoFocus
                 fullWidth
-                label='Email'
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                label='New Password'
+                type='password'
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
                 required
               />
               <Button fullWidth variant='contained' type='submit' disabled={loading}>
-                {loading ? 'Sending...' : 'Send reset link'}
+                {loading ? 'Resetting...' : 'Reset Password'}
               </Button>
               <Typography className='flex justify-center items-center' color='primary'>
                 <Link href='/login' className='flex items-center'>
@@ -104,4 +90,4 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
   )
 }
 
-export default ForgotPassword
+export default ResetPassword

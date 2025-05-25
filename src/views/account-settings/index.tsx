@@ -31,7 +31,6 @@ const AccountSettings = ({ tabContentList }: { tabContentList: { [key: string]: 
               iconPosition='start'
               value='notifications'
             />
-            <Tab label='Connections' icon={<i className='ri-link' />} iconPosition='start' value='connections' />
           </TabList>
         </Grid>
         <Grid item xs={12}>
