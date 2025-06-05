@@ -64,7 +64,7 @@ const AccountDetails = () => {
 
     try {
       const data = await fetchWithAuth(
-        `/api/user/update/me`,
+        `/api/user/me`,
         { email: formData.email }, // <-- correct format here
         'PATCH'
       )
