@@ -25,7 +25,7 @@ interface ExamTableProps {
 }
 
 interface Column {
-  id: keyof Data | 'action'
+  id: keyof Data | 'action' | 'score'
   label: string
   minWidth?: number
   align?: 'right' | 'left' | 'center'
@@ -36,13 +36,15 @@ interface Data {
   id: string
   name: string
   noid: string
-  total_correct: boolean
+  total_correct: number
+  total_problem: number
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'Name', minWidth: 120, sortable: true },
-  { id: 'noid', label: 'Noid', minWidth: 100, sortable: true },
-  { id: 'total_correct', label: 'Total Correct', minWidth: 170, sortable: true }
+  { id: 'name', label: 'Name', minWidth: 170, sortable: true },
+  { id: 'noid', label: 'No Id', minWidth: 170, sortable: true },
+  { id: 'total_correct', label: 'Total Correct', minWidth: 100, sortable: true },
+  { id: 'score', label: 'Score', minWidth: 170, sortable: true }
 ]
 
 type Order = 'asc' | 'desc'
@@ -94,7 +96,8 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             id: result.user_id,
             name: result.user_name,
             noid: result.user_no_id,
-            total_correct: result.total_correct
+            total_correct: result.total_correct,
+            total_problem: result.total_problem
           })
         )
         console.log('update: ', transformed)
@@ -181,6 +184,26 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                   .map(row => (
                     <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
                       {columns.map(column => {
+                        if (column.id === 'total_correct') {
+                          const correct = row.total_correct
+                          const total = row.total_problem
+                          return (
+                            <TableCell key={column.id} align={column.align ?? 'left'}>
+                              {correct} / {total}
+                            </TableCell>
+                          )
+                        }
+
+                        if (column.id === 'score') {
+                          const correct = row.total_correct
+                          const total = row.total_problem
+                          const percentage = total > 0 ? ((correct / total) * 100).toFixed(2) : '0.00'
+                          return (
+                            <TableCell key={column.id} align={column.align ?? 'left'}>
+                              {percentage}%
+                            </TableCell>
+                          )
+                        }
                         if (column.id === 'action') {
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>

@@ -259,7 +259,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
     fetchData()
     setSnackbar({
       open: true,
-      message: 'Users Added to class successfully!',
+      message: 'Problems Added to class successfully!',
       severity: 'success'
     })
   }

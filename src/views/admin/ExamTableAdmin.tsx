@@ -37,6 +37,9 @@ import TextField from '@mui/material/TextField'
 import Link from 'next/link'
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import { fetchWithAuth } from '@/utils/api'
+import { v4 as uuidv4 } from 'uuid'
+
+const frontnedURL = process.env.NEXT_PUBLIC_APP_URL
 
 interface ExamTableProps {
   class_id: string
@@ -77,6 +80,7 @@ type FormData = {
   is_seb_restricted: boolean
   seb_browser_key: string
   seb_config_key: string
+  seb_quit_url: string
   allowed_languages: string[]
 }
 
@@ -132,6 +136,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const [sebKeyEnabled, setSebKeyEnabled] = React.useState(false)
   const [sebConfigKeyEnabled, setSebConfigKeyEnabled] = React.useState(false)
+  const [sebQuitUrlEnabled, setSebQuitUrlEnabled] = React.useState(false)
 
   const fetchData = async () => {
     try {
@@ -209,6 +214,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
     is_seb_restricted: false,
     seb_browser_key: '',
     seb_config_key: '',
+    seb_quit_url: '',
     allowed_languages: []
   })
 
@@ -268,10 +274,11 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       is_seb_restricted,
       seb_browser_key,
       seb_config_key,
+      seb_quit_url,
       allowed_languages
     } = formattedData
     // console.log('data: ', name, short_name, is_published, start_time, duration)
-    console.log('allowd lang:', allowed_languages)
+    console.log('allowd lang:', allowed_languages.length)
 
     if (
       !name ||
@@ -280,7 +287,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       is_published === undefined ||
       !start_time ||
       !duration ||
-      allowed_languages.length < 0
+      allowed_languages.length <= 0
     ) {
       console.log('all field required')
       return setSnackbar({
@@ -300,11 +307,12 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
         duration,
         is_seb_restricted,
         seb_browser_key: sebKeyEnabled ? seb_browser_key : '',
-        seb_config_key: sebConfigKeyEnabled ? seb_config_key : ''
+        seb_config_key: sebConfigKeyEnabled ? seb_config_key : '',
+        seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
       }
       console.log('ini payload: ', payload)
 
-      const data = await fetchWithAuth(`/api/exam/create`, payload, 'POST')
+      const data = await fetchWithAuth(`/api/exam/`, payload, 'POST')
 
       if (data.status === false) {
         console.log(data)
@@ -525,6 +533,46 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                         <Typography variant='body2' color='textSecondary'>
                           If both left empty, access will only be checked by User-Agent
                         </Typography>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={sebQuitUrlEnabled}
+                              onChange={e => {
+                                const checked = e.target.checked
+                                setSebQuitUrlEnabled(checked)
+                                if (checked) {
+                                  const randomId = uuidv4().slice(0, 8)
+                                  const quitUrl = `${frontnedURL}/${randomId}`
+                                  setFormData(prev => ({ ...prev, seb_quit_url: quitUrl }))
+                                } else {
+                                  setFormData(prev => ({ ...prev, seb_quit_url: '' }))
+                                }
+                              }}
+                            />
+                          }
+                          label={
+                            <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
+                              Enable SEB Quit Url
+                            </Typography>
+                          }
+                        />
+
+                        <TextField
+                          fullWidth
+                          label='SEB Quit Url'
+                          name='seb_quit_url'
+                          value={formData.seb_quit_url}
+                          InputProps={{
+                            readOnly: sebQuitUrlEnabled
+                          }}
+                          disabled={!sebQuitUrlEnabled && formData.seb_quit_url === ''}
+                          helperText={
+                            sebQuitUrlEnabled ? 'URL ini akan digunakan untuk mengakhiri SEB setelah ujian.' : ''
+                          }
+                        />
                       </Grid>
                     </>
                   )}

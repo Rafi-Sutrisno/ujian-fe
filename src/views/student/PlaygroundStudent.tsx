@@ -112,10 +112,14 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   useEffect(() => {
     if (!userId || !currentProblem) return
     const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.code
+    if (!selectedLangCode) {
+      // handle error or fallback, e.g.:
+      throw new Error('Selected language code not found')
+    }
     setCode(loadEncrypted('code', userId, `${currentProblem.id}-${language}`, selectedLangCode)) // pass language
-    setInput(loadEncrypted('input', userId, currentProblem.id))
-    setOutput(loadEncrypted('output', userId, currentProblem.id))
-  }, [userId, currentProblem, language]) // include `language` in dependency array
+    setInput(loadEncrypted('input', userId, currentProblem.id, ''))
+    setOutput(loadEncrypted('output', userId, currentProblem.id, ''))
+  }, [userId, currentProblem, language])
 
   const handleCodeChange = (newCode: string) => {
     setCode(newCode)
@@ -171,6 +175,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           end_time: result.end_time,
           allowed_languages: result.allowed_languages
         })
+        setLanguage(result.allowed_languages[0].code)
       } else {
         console.error('Failed to fetch exam:', data.message)
       }
@@ -181,8 +186,17 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   useEffect(() => {
     if (exam_id) {
-      fetchData()
-      fetchDataProblem()
+      const fetchSequentially = async () => {
+        try {
+          await fetchData()
+          await fetchDataProblem()
+          // After both done
+          console.log('Both fetches done sequentially')
+        } catch (err) {
+          console.error('Error fetching data:', err)
+        }
+      }
+      fetchSequentially()
     }
   }, [exam_id])
 
@@ -198,7 +212,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         stdin: encodedInput
       }
 
-      const result = await fetchWithAuth('/api/submission/run', payload, 'POST')
+      const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
 
       if (result?.status?.id === 3) {
         const decodedOutput = atob(result.stdout || '') // Decode Base64 output
@@ -233,7 +247,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
       // console.log('ini payload:', payload)
 
-      const result = await fetchWithAuth('/api/submission/submit', payload, 'POST')
+      const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
 
       console.log('ini result: ', result)
     } catch (err) {
@@ -245,22 +259,19 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   }
 
   const handleFinishExam = () => {
-    setConfirmOpen(true) // open modal
+    setConfirmOpen(true)
   }
 
   const confirmFinishExam = async () => {
     setConfirmOpen(false)
-    // your logic here to finish the exam (e.g., API call, route change)
     const result = await fetchWithAuth(`/api/exam_session/finish_exam/${exam_id}`, {}, 'POST')
     console.log('ini result finish exam:', result)
-    router.push(`/student/exam/${exam_id}`)
+    router.push(`/exam_feedback/${exam_id}`)
   }
 
   const cancelFinishExam = () => {
     setConfirmOpen(false)
   }
-
-  // Problem data
 
   return (
     <Card>

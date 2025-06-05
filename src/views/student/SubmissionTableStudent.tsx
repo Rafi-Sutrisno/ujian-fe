@@ -12,12 +12,10 @@ import TableRow from '@mui/material/TableRow'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
-import DialogActions from '@mui/material/DialogActions'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, CardHeader, Stack } from '@mui/material'
-import Link from 'next/link'
+import { Card, CardContent, CardHeader, DialogContent } from '@mui/material'
 import { fetchWithAuth } from '@/utils/api'
 
 interface ExamTableProps {
@@ -35,20 +33,23 @@ interface Column {
 interface Data {
   id: string
   problem_id: string
+  problem_title: string
   lang_id: string
   submission_time: boolean
   status: string
   time: string
   memory: string
+  code: string
 }
 
 const columns: readonly Column[] = [
-  { id: 'problem_id', label: 'Problem', minWidth: 120, sortable: true },
+  { id: 'problem_title', label: 'Problem', minWidth: 120, sortable: true },
   { id: 'lang_id', label: 'Language', minWidth: 100, sortable: true },
   { id: 'time', label: 'Time', minWidth: 170, sortable: true },
-  { id: 'memory', label: 'Memory', minWidth: 170, sortable: true },
-  { id: 'status', label: 'Status', minWidth: 120 },
-  { id: 'submission_time', label: 'Submitted At', minWidth: 170, sortable: true }
+  { id: 'memory', label: 'Memory', minWidth: 100, sortable: true },
+  { id: 'status', label: 'Status', minWidth: 100 },
+  { id: 'submission_time', label: 'Submitted At', minWidth: 170, sortable: true },
+  { id: 'action', label: 'Actions', minWidth: 150 }
 ]
 
 type Order = 'asc' | 'desc'
@@ -86,6 +87,7 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
   const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
   const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
+  const [userCode, setUserCode] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
 
@@ -99,11 +101,13 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
           (result: any): Data => ({
             id: result.id,
             problem_id: result.problem_id,
-            lang_id: result.lang_id,
+            lang_id: result.lang.name,
             submission_time: result.submission_time,
             status: result.status,
             time: result.time,
-            memory: result.memory
+            memory: result.memory,
+            problem_title: result.problem.title,
+            code: result.code
           })
         )
         console.log('update: ', transformed)
@@ -146,6 +150,12 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
     console.log('Delete ID:', selectedId)
     setOpenDialog(false)
     setSelectedId(null)
+  }
+
+  const handleSeeCode = (code: string) => {
+    const decodedCode = atob(code)
+    setUserCode(decodedCode)
+    setOpenDialog(true)
   }
 
   return (
@@ -192,14 +202,15 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
                       {columns.map(column => {
                         if (column.id === 'action') {
                           return (
-                            <TableCell key={column.id} align={column.align ?? 'left'}>
-                              <Stack direction='row' spacing={2}>
-                                <Link href={`/student/exam/${row.id}`} passHref>
-                                  <Button variant='outlined' size='small' color='primary'>
-                                    View
-                                  </Button>
-                                </Link>
-                              </Stack>
+                            <TableCell key={column.id}>
+                              <Button
+                                variant='outlined'
+                                size='small'
+                                color='primary'
+                                onClick={() => handleSeeCode(row.code)}
+                              >
+                                See Code
+                              </Button>
                             </TableCell>
                           )
                         }
@@ -224,14 +235,14 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+
           <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-            <DialogTitle>Are you sure you want to delete this exam?</DialogTitle>
-            <DialogActions>
-              <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-              <Button color='error' onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-            </DialogActions>
+            <DialogTitle>Users Code</DialogTitle>
+            <DialogContent>
+              <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                <code>{userCode}</code>
+              </pre>
+            </DialogContent>
           </Dialog>
         </Paper>
       </CardContent>{' '}

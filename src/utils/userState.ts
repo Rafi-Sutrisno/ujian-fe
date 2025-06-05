@@ -1,20 +1,34 @@
 import CryptoJS from 'crypto-js'
 
-export const getStorageKey = (type: 'code' | 'input' | 'output', userId: string, problemId: string) =>
-  `${userId}-${type}-${problemId}`
+export const getStorageKey = (
+  type: 'code' | 'input' | 'output',
+  userId: string,
+  problemId: string,
+  language?: string
+) => {
+  return type === 'code'
+    ? `${userId}-${type}-${problemId}-${language}` // include language for code
+    : `${userId}-${type}-${problemId}` // input/output remain as is
+}
 
-export const saveEncrypted = (type: 'code' | 'input' | 'output', userId: string, problemId: string, value: string) => {
+export const saveEncrypted = (
+  type: 'code' | 'input' | 'output',
+  userId: string,
+  problemId: string,
+  value: string,
+  language?: string // optional, only needed for 'code'
+) => {
   const encrypted = CryptoJS.AES.encrypt(value, userId).toString()
-  localStorage.setItem(getStorageKey(type, userId, problemId), encrypted)
+  localStorage.setItem(getStorageKey(type, userId, problemId, language), encrypted)
 }
 
 export const loadEncrypted = (
   type: 'code' | 'input' | 'output',
   userId: string,
   problemId: string,
-  language?: string // added language
+  language?: string // optional, only needed for 'code'
 ): string => {
-  const encrypted = localStorage.getItem(getStorageKey(type, userId, problemId))
+  const encrypted = localStorage.getItem(getStorageKey(type, userId, problemId, language))
   if (!encrypted && type === 'code') {
     console.log('No saved code found, returning default for language:', language)
     return getDefaultCode(language)

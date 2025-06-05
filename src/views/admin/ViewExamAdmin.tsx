@@ -46,6 +46,7 @@ type FormData = {
   is_seb_restricted: boolean
   seb_browser_key: string
   seb_config_key: string
+  seb_quit_url: string
   allowed_languages: Language[]
 }
 
@@ -62,6 +63,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
     is_seb_restricted: false,
     seb_browser_key: '',
     seb_config_key: '',
+    seb_quit_url: '',
     allowed_languages: []
   })
 
@@ -70,6 +72,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
   const [seconds, setSeconds] = useState(0)
   const [sebKeyEnabled, setSebKeyEnabled] = useState(false)
   const [sebConfigKeyEnabled, setSebConfigKeyEnabled] = useState(false)
+  const [sebQuitUrlEnabled, setSebQuitUrlEnabled] = useState(false)
 
   useEffect(() => {
     setFormData(prev => ({
@@ -113,6 +116,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
           is_seb_restricted: result.is_seb_restricted,
           seb_browser_key: result.seb_browser_key,
           seb_config_key: result.seb_config_key,
+          seb_quit_url: result.seb_quit_url,
           allowed_languages: result.allowed_languages
         })
         if (result.seb_browser_key !== '') {
@@ -120,6 +124,9 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
         }
         if (result.seb_config_key !== '') {
           setSebConfigKeyEnabled(true)
+        }
+        if (result.seb_quit_url !== '') {
+          setSebQuitUrlEnabled(true)
         }
 
         const langData = await fetchWithAuth(`/api/language/all`, undefined, 'GET')
@@ -196,6 +203,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       is_seb_restricted,
       seb_browser_key,
       seb_config_key,
+      seb_quit_url,
       allowed_languages
     } = formattedData
     console.log('data: ', name, short_name, is_published, start_time, duration)
@@ -207,7 +215,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       is_published === undefined ||
       !start_time ||
       !duration ||
-      allowed_languages.length < 0
+      allowed_languages.length <= 0
     ) {
       console.log('all field required')
       return setSnackbar({
@@ -218,11 +226,19 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
     }
 
     try {
-      const data = await fetchWithAuth(
-        `/api/exam/${id}`,
-        { name, short_name, is_published, start_time, duration, is_seb_restricted, seb_browser_key, seb_config_key },
-        'PATCH'
-      )
+      const payload = {
+        name,
+        short_name,
+        is_published,
+        start_time,
+        duration,
+        is_seb_restricted,
+        seb_browser_key: sebKeyEnabled ? seb_browser_key : '',
+        seb_config_key: sebConfigKeyEnabled ? seb_config_key : '',
+        seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
+      }
+
+      const data = await fetchWithAuth(`/api/exam/${id}`, payload, 'PATCH')
 
       if (data.status === false) {
         console.log(data)
@@ -480,6 +496,31 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                             If both left empty, access will only be checked by User-Agent
                           </Typography>
                         </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={sebQuitUrlEnabled}
+                                onChange={e => setSebQuitUrlEnabled(e.target.checked)}
+                              />
+                            }
+                            label={
+                              <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
+                                Enable SEB Quit Url
+                              </Typography>
+                            }
+                          />
+
+                          <TextField
+                            fullWidth
+                            label='SEB Quit Url'
+                            name='seb_quit_url'
+                            value={formData.seb_quit_url}
+                            onChange={e => setFormData(prev => ({ ...prev, seb_quit_url: e.target.value }))}
+                            disabled={!sebQuitUrlEnabled}
+                          />
+                        </Grid>
                       </>
                     )}
                     <Grid item xs={12}>
@@ -598,7 +639,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={!!formData.is_seb_restricted} // Ensures it's always a boolean
+                      checked={!!formData.is_seb_restricted}
                       onChange={e =>
                         setFormData(prev => ({
                           ...prev,
@@ -663,6 +704,28 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                     <Typography variant='body2' color='textSecondary'>
                       If both left empty, access will only be checked by User-Agent
                     </Typography>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={sebQuitUrlEnabled} onChange={e => setSebQuitUrlEnabled(e.target.checked)} />
+                      }
+                      label={
+                        <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
+                          Enable SEB Quit Url
+                        </Typography>
+                      }
+                    />
+
+                    <TextField
+                      fullWidth
+                      label='SEB Quit Url'
+                      name='seb_quit_url'
+                      value={formData.seb_quit_url}
+                      onChange={e => setFormData(prev => ({ ...prev, seb_quit_url: e.target.value }))}
+                      disabled={!sebQuitUrlEnabled}
+                    />
                   </Grid>
                 </>
               )}

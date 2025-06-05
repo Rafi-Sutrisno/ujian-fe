@@ -171,7 +171,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
   const handleDeleteClick = async (id: string) => {
     console.log(id)
     try {
-      const data = await fetchWithAuth(`/api/user_class/delete/${id}`, undefined, 'DELETE')
+      const data = await fetchWithAuth(`/api/user_class/${id}`, undefined, 'DELETE')
       console.log('User removed:', data)
       if (data.status === false) {
         console.log(data)

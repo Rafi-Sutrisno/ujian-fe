@@ -57,7 +57,7 @@ module.exports = {
       }
     ],
     'import/order': [
-      'error',
+      'warn',
       {
         groups: ['builtin', 'external', ['internal', 'parent', 'sibling', 'index'], ['object', 'unknown']],
         pathGroups: [

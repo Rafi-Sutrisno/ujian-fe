@@ -91,11 +91,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
     }
 
     try {
-      const result = await fetchWithAuth(
-        `/api/class/update/${id}`,
-        { name, year, class: class_name, short_name },
-        'PATCH'
-      )
+      const result = await fetchWithAuth(`/api/class/${id}`, { name, year, class: class_name, short_name }, 'PATCH')
 
       if (result.status === false) {
         console.log(result)
@@ -125,7 +121,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
   const handleDelete = async () => {
     try {
-      const data = await fetchWithAuth(`/api/class/delete/${id}`, undefined, 'DELETE')
+      const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'DELETE')
 
       if (data.status === false) {
         console.log(data)

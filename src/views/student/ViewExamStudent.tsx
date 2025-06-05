@@ -14,6 +14,12 @@ import { Button, Box, Typography, Snackbar, Alert, FormControl, InputLabel } fro
 
 import { fetchWithAuth, fetchWithAuthCookie, fetchWithCookie } from '@/utils/api'
 
+declare global {
+  interface Window {
+    SafeExamBrowser?: any
+  }
+}
+
 interface ViewExamProps {
   id: string
 }
@@ -93,9 +99,25 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
   const startExamSession = async () => {
     try {
-      const startExam = await fetchWithAuth('/api/exam_session/start_exam', { exam_id: id }, 'POST')
+      let configKey = ''
+      let browserExamKey = ''
 
-      console.log(startExam)
+      if (typeof window.SafeExamBrowser !== 'undefined' && window.SafeExamBrowser.security) {
+        await window.SafeExamBrowser.security.updateKeys(() => {
+          configKey = window.SafeExamBrowser.security.configKey
+          browserExamKey = window.SafeExamBrowser.security.browserExamKey
+        })
+      }
+
+      const payload = {
+        exam_id: id,
+        config_key: configKey,
+        browser_exam_key: browserExamKey
+      }
+
+      const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
+
+      console.log('ini start exam: ', startExam)
 
       if (startExam.status) {
         setSnackbar({
@@ -103,7 +125,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
           message: 'Success Start Exam, redirecting to playground page.',
           severity: 'success'
         })
-        router.push(`/student/playground/${formData.id}`)
+        router.push(`/student/playground/${startExam.data.exam_id}`)
       } else {
         setSnackbar({
           open: true,

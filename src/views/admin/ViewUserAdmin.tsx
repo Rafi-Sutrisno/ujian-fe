@@ -94,7 +94,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
     }
 
     try {
-      const data = await fetchWithAuth(`/api/user/update/${id}`, { username, name, email, noid }, 'PATCH')
+      const data = await fetchWithAuth(`/api/user/${id}`, { username, name, email, noid }, 'PATCH')
 
       if (data.status === false) {
         console.log(data)
@@ -124,7 +124,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
   const handleDelete = async () => {
     try {
-      const data = await fetchWithAuth(`/api/user/delete/${id}`, undefined, 'DELETE')
+      const data = await fetchWithAuth(`/api/user/${id}`, undefined, 'DELETE')
 
       if (data.status === false) {
         console.log(data)
