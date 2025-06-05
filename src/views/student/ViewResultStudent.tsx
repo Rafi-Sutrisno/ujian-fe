@@ -118,11 +118,11 @@ const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
                   Total Correct Answers
                 </Typography>
                 <Typography variant='body1' fontWeight='bold'>
-                  {rows?.total_correct ?? 0}
+                  {`${rows?.total_correct ?? 0} / ${rows?.total_problem ?? 0}`}
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <Typography variant='subtitle2' color='textSecondary'>
                   Total Problems
                 </Typography>
@@ -131,7 +131,6 @@ const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
                 </Typography>
               </Grid>
 
-              {/* Correct / Total */}
               <Grid item xs={12} sm={6}>
                 <Typography variant='subtitle2' color='textSecondary'>
                   Correct / Total
@@ -139,7 +138,7 @@ const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
                 <Typography variant='body1' fontWeight='bold'>
                   {`${rows?.total_correct ?? 0} / ${rows?.total_problem ?? 0}`}
                 </Typography>
-              </Grid>
+              </Grid> */}
 
               {/* Percentage */}
               <Grid item xs={12} sm={6}>

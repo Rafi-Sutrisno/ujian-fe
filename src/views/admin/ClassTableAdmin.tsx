@@ -111,7 +111,7 @@ export default function ClassTableAdmin() {
 
   const fetchData = async () => {
     try {
-      const data = await fetchWithAuth(`/api/class/all`, undefined, 'GET')
+      const data = await fetchWithAuth(`/api/class/user`, undefined, 'GET')
 
       if (data.status) {
         const transformed = data.data.map(
