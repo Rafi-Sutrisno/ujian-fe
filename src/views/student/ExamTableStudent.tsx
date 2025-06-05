@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { fetchWithAuth } from '@/utils/api'
 
 interface ExamTableProps {
-  class_id: string
+  class_id: string | null
 }
 
 interface Column {
@@ -92,7 +92,9 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const fetchData = async () => {
     try {
-      const data = await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
+      const data = class_id
+        ? await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
+        : await fetchWithAuth(`/api/exam/byuser`, undefined, 'GET')
       console.log(data)
 
       if (data.status) {

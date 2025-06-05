@@ -31,7 +31,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  ListItemText
+  ListItemText,
+  CardHeader
 } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import Link from 'next/link'
@@ -42,7 +43,7 @@ import { v4 as uuidv4 } from 'uuid'
 const frontnedURL = process.env.NEXT_PUBLIC_APP_URL
 
 interface ExamTableProps {
-  class_id: string
+  class_id: string | null
 }
 
 interface Column {
@@ -140,7 +141,9 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const fetchData = async () => {
     try {
-      const data = await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
+      const data = class_id
+        ? await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
+        : await fetchWithAuth(`/api/exam/byuser`, undefined, 'GET')
 
       if (data.status) {
         const transformed = data.data.map(
@@ -360,28 +363,29 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
   return (
     <Card sx={{ mt: 4 }}>
       <CardContent>
-        <TopSectionModal
-          title='Exam List'
-          buttonText='Add New Exam'
-          modalContent={
-            <CardContent>
-              <form>
-                <Grid container spacing={5}>
-                  <Grid item xs={12}>
-                    <TextField fullWidth label='Name' name='name' value={formData.name} onChange={handleChange} />
-                  </Grid>
+        {class_id ? (
+          <TopSectionModal
+            title='Exam List'
+            buttonText='Add New Exam'
+            modalContent={
+              <CardContent>
+                <form>
+                  <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                      <TextField fullWidth label='Name' name='name' value={formData.name} onChange={handleChange} />
+                    </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label='Short Name'
-                      name='short_name'
-                      value={formData.short_name}
-                      onChange={handleChange}
-                    />
-                  </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label='Short Name'
+                        name='short_name'
+                        value={formData.short_name}
+                        onChange={handleChange}
+                      />
+                    </Grid>
 
-                  {/* <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -399,223 +403,227 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                       />
                     </Grid> */}
 
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label='Published'
-                      name='is_published'
-                      select
-                      value={formData.is_published ? 'true' : 'false'}
-                      onChange={e => setFormData(prev => ({ ...prev, is_published: e.target.value === 'true' }))}
-                    >
-                      <MenuItem value='true'>Yes</MenuItem>
-                      <MenuItem value='false'>No</MenuItem>
-                    </TextField>
-                  </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label='Published'
+                        name='is_published'
+                        select
+                        value={formData.is_published ? 'true' : 'false'}
+                        onChange={e => setFormData(prev => ({ ...prev, is_published: e.target.value === 'true' }))}
+                      >
+                        <MenuItem value='true'>Yes</MenuItem>
+                        <MenuItem value='false'>No</MenuItem>
+                      </TextField>
+                    </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      type='datetime-local'
-                      label='Start Time'
-                      name='start_time'
-                      value={formData.start_time}
-                      onChange={e =>
-                        setFormData(prev => ({
-                          ...prev,
-                          start_time: e.target.value
-                        }))
-                      }
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <p>Duration:</p>
-                  </Grid>
-
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type='number'
-                      label='Hours'
-                      value={hours}
-                      onChange={e => setHours(parseInt(e.target.value) || 0)}
-                      InputProps={{ inputProps: { min: 0 } }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type='number'
-                      label='Minutes'
-                      value={minutes}
-                      onChange={e => setMinutes(parseInt(e.target.value) || 0)}
-                      InputProps={{ inputProps: { min: 0, max: 59 } }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type='number'
-                      label='Seconds'
-                      value={seconds}
-                      onChange={e => setSeconds(parseInt(e.target.value) || 0)}
-                      InputProps={{ inputProps: { min: 0, max: 59 } }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={formData.is_seb_restricted}
-                          onChange={e => setFormData(prev => ({ ...prev, is_seb_restricted: e.target.checked }))}
-                          name='is_seb_restricted'
-                          color='primary'
-                        />
-                      }
-                      label='Require Safe Exam Browser (SEB) Only'
-                    />
-                  </Grid>
-
-                  {formData.is_seb_restricted && (
-                    <>
-                      <Grid item xs={12}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />
-                          }
-                          label={
-                            <Typography color={sebKeyEnabled ? 'textPrimary' : 'textSecondary'}>
-                              Enable SEB Browser Key
-                            </Typography>
-                          }
-                        />
-                        <TextField
-                          fullWidth
-                          label='SEB Browser Key'
-                          name='seb_browser_key'
-                          value={formData.seb_browser_key}
-                          onChange={e => setFormData(prev => ({ ...prev, seb_browser_key: e.target.value }))}
-                          disabled={!sebKeyEnabled}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={sebConfigKeyEnabled}
-                              onChange={e => setSebConfigKeyEnabled(e.target.checked)}
-                            />
-                          }
-                          label={
-                            <Typography color={sebConfigKeyEnabled ? 'textPrimary' : 'textSecondary'}>
-                              Enable SEB Config Key
-                            </Typography>
-                          }
-                        />
-
-                        <TextField
-                          fullWidth
-                          label='SEB Config Key'
-                          name='seb_config_key'
-                          value={formData.seb_config_key}
-                          onChange={e => setFormData(prev => ({ ...prev, seb_config_key: e.target.value }))}
-                          disabled={!sebConfigKeyEnabled}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Typography variant='body2' color='textSecondary'>
-                          If both left empty, access will only be checked by User-Agent
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={sebQuitUrlEnabled}
-                              onChange={e => {
-                                const checked = e.target.checked
-                                setSebQuitUrlEnabled(checked)
-                                if (checked) {
-                                  const randomId = uuidv4().slice(0, 8)
-                                  const quitUrl = `${frontnedURL}/${randomId}`
-                                  setFormData(prev => ({ ...prev, seb_quit_url: quitUrl }))
-                                } else {
-                                  setFormData(prev => ({ ...prev, seb_quit_url: '' }))
-                                }
-                              }}
-                            />
-                          }
-                          label={
-                            <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
-                              Enable SEB Quit Url
-                            </Typography>
-                          }
-                        />
-
-                        <TextField
-                          fullWidth
-                          label='SEB Quit Url'
-                          name='seb_quit_url'
-                          value={formData.seb_quit_url}
-                          InputProps={{
-                            readOnly: sebQuitUrlEnabled
-                          }}
-                          disabled={!sebQuitUrlEnabled && formData.seb_quit_url === ''}
-                          helperText={
-                            sebQuitUrlEnabled ? 'URL ini akan digunakan untuk mengakhiri SEB setelah ujian.' : ''
-                          }
-                        />
-                      </Grid>
-                    </>
-                  )}
-
-                  <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id='language-select-label'>Allowed Programming Languages</InputLabel>
-                      <Select
-                        labelId='language-select-label'
-                        id='language-select'
-                        multiple
-                        value={formData.allowed_languages} // <-- array of IDs
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        type='datetime-local'
+                        label='Start Time'
+                        name='start_time'
+                        value={formData.start_time}
                         onChange={e =>
                           setFormData(prev => ({
                             ...prev,
-                            allowed_languages:
-                              typeof e.target.value === 'string'
-                                ? e.target.value.split(',') // defensive for string input
-                                : e.target.value
+                            start_time: e.target.value
                           }))
                         }
-                        label='Allowed Programming Languages'
-                        renderValue={selected =>
-                          (selected as string[])
-                            .map(id => lang.find(l => String(l.id) === String(id))?.name || id)
-                            .join(', ')
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <p>Duration:</p>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        type='number'
+                        label='Hours'
+                        value={hours}
+                        onChange={e => setHours(parseInt(e.target.value) || 0)}
+                        InputProps={{ inputProps: { min: 0 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        type='number'
+                        label='Minutes'
+                        value={minutes}
+                        onChange={e => setMinutes(parseInt(e.target.value) || 0)}
+                        InputProps={{ inputProps: { min: 0, max: 59 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        type='number'
+                        label='Seconds'
+                        value={seconds}
+                        onChange={e => setSeconds(parseInt(e.target.value) || 0)}
+                        InputProps={{ inputProps: { min: 0, max: 59 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={formData.is_seb_restricted}
+                            onChange={e => setFormData(prev => ({ ...prev, is_seb_restricted: e.target.checked }))}
+                            name='is_seb_restricted'
+                            color='primary'
+                          />
                         }
-                      >
-                        {lang.map(l => (
-                          <MenuItem key={l.id} value={String(l.id)}>
-                            <Checkbox checked={formData.allowed_languages.includes(String(l.id))} />
-                            <ListItemText primary={l.name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                        label='Require Safe Exam Browser (SEB) Only'
+                      />
+                    </Grid>
+
+                    {formData.is_seb_restricted && (
+                      <>
+                        <Grid item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />
+                            }
+                            label={
+                              <Typography color={sebKeyEnabled ? 'textPrimary' : 'textSecondary'}>
+                                Enable SEB Browser Key
+                              </Typography>
+                            }
+                          />
+                          <TextField
+                            fullWidth
+                            label='SEB Browser Key'
+                            name='seb_browser_key'
+                            value={formData.seb_browser_key}
+                            onChange={e => setFormData(prev => ({ ...prev, seb_browser_key: e.target.value }))}
+                            disabled={!sebKeyEnabled}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={sebConfigKeyEnabled}
+                                onChange={e => setSebConfigKeyEnabled(e.target.checked)}
+                              />
+                            }
+                            label={
+                              <Typography color={sebConfigKeyEnabled ? 'textPrimary' : 'textSecondary'}>
+                                Enable SEB Config Key
+                              </Typography>
+                            }
+                          />
+
+                          <TextField
+                            fullWidth
+                            label='SEB Config Key'
+                            name='seb_config_key'
+                            value={formData.seb_config_key}
+                            onChange={e => setFormData(prev => ({ ...prev, seb_config_key: e.target.value }))}
+                            disabled={!sebConfigKeyEnabled}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <Typography variant='body2' color='textSecondary'>
+                            If both left empty, access will only be checked by User-Agent
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={sebQuitUrlEnabled}
+                                onChange={e => {
+                                  const checked = e.target.checked
+                                  setSebQuitUrlEnabled(checked)
+                                  if (checked) {
+                                    const randomId = uuidv4().slice(0, 8)
+                                    const quitUrl = `${frontnedURL}/${randomId}`
+                                    setFormData(prev => ({ ...prev, seb_quit_url: quitUrl }))
+                                  } else {
+                                    setFormData(prev => ({ ...prev, seb_quit_url: '' }))
+                                  }
+                                }}
+                              />
+                            }
+                            label={
+                              <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
+                                Enable SEB Quit Url
+                              </Typography>
+                            }
+                          />
+
+                          <TextField
+                            fullWidth
+                            label='SEB Quit Url'
+                            name='seb_quit_url'
+                            value={formData.seb_quit_url}
+                            InputProps={{
+                              readOnly: sebQuitUrlEnabled
+                            }}
+                            disabled={!sebQuitUrlEnabled && formData.seb_quit_url === ''}
+                            helperText={
+                              sebQuitUrlEnabled ? 'URL ini akan digunakan untuk mengakhiri SEB setelah ujian.' : ''
+                            }
+                          />
+                        </Grid>
+                      </>
+                    )}
+
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id='language-select-label'>Allowed Programming Languages</InputLabel>
+                        <Select
+                          labelId='language-select-label'
+                          id='language-select'
+                          multiple
+                          value={formData.allowed_languages} // <-- array of IDs
+                          onChange={e =>
+                            setFormData(prev => ({
+                              ...prev,
+                              allowed_languages:
+                                typeof e.target.value === 'string'
+                                  ? e.target.value.split(',') // defensive for string input
+                                  : e.target.value
+                            }))
+                          }
+                          label='Allowed Programming Languages'
+                          renderValue={selected =>
+                            (selected as string[])
+                              .map(id => lang.find(l => String(l.id) === String(id))?.name || id)
+                              .join(', ')
+                          }
+                        >
+                          {lang.map(l => (
+                            <MenuItem key={l.id} value={String(l.id)}>
+                              <Checkbox checked={formData.allowed_languages.includes(String(l.id))} />
+                              <ListItemText primary={l.name} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </form>
-            </CardContent>
-          }
-          onSave={handleSubmit}
-        />
+                </form>
+              </CardContent>
+            }
+            onSave={handleSubmit}
+          />
+        ) : (
+          <CardHeader title='Exam List' />
+        )}
+
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label='exam table'>
