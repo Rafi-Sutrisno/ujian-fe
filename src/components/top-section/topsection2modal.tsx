@@ -9,12 +9,12 @@ interface ClassTopSectionProps {
   primaryButtonText?: string
   primaryModalContent?: ReactNode
   onPrimaryClose?: () => void
-  onPrimarySave?: () => void
+  onPrimarySave?: () => void // Updated this to remove the event parameter
 
   secondaryButtonText?: string
   secondaryModalContent?: ReactNode
   onSecondaryClose?: () => void
-  onSecondarySave?: () => void
+  onSecondarySave?: () => void // Updated this to remove the event parameter
 }
 
 const TopSection2Modal = ({
@@ -39,7 +39,7 @@ const TopSection2Modal = ({
     setOpenPrimary(false)
   }
   const handleSavePrimary = () => {
-    onPrimarySave?.()
+    onPrimarySave?.() // Calls the provided save function without any parameters
     setOpenPrimary(false)
   }
 
@@ -49,7 +49,7 @@ const TopSection2Modal = ({
     setOpenSecondary(false)
   }
   const handleSaveSecondary = () => {
-    onSecondarySave?.()
+    onSecondarySave?.() // Calls the provided save function without any parameters
     setOpenSecondary(false)
   }
 

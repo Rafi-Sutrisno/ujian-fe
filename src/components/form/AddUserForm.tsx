@@ -96,7 +96,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
     }
 
     try {
-      const data = await fetchWithAuth('/api/user/add', payload, 'POST')
+      const data = await fetchWithAuth('/api/user/', payload, 'POST')
 
       if (data.status) {
         setSnackbar({

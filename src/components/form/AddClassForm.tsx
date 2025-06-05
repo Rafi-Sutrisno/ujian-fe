@@ -74,18 +74,18 @@ const AddClassModal = ({ open = false, onClose, onAdded }: AddUserModalProps) =>
 
     const payload = {
       name,
-      year,
+      year: year.toString(),
       class: className,
       short_name
     }
 
     try {
-      const data = await fetchWithAuth('/api/class/create', payload, 'POST')
+      const data = await fetchWithAuth('/api/class/', payload, 'POST')
 
       if (data.status) {
         setSnackbar({
           open: true,
-          message: 'User added successfully!',
+          message: 'Class added successfully!',
           severity: 'success'
         })
         setFormData({ name: '', year: '', className: '', short_name: '' })
@@ -94,7 +94,7 @@ const AddClassModal = ({ open = false, onClose, onAdded }: AddUserModalProps) =>
       } else {
         setSnackbar({
           open: true,
-          message: data?.message || 'Failed to add user.',
+          message: data?.message || 'Failed to add class.',
           severity: 'error'
         })
       }
@@ -102,7 +102,7 @@ const AddClassModal = ({ open = false, onClose, onAdded }: AddUserModalProps) =>
       console.error('Network error:', error)
       setSnackbar({
         open: true,
-        message: 'Network error while adding user.',
+        message: 'Network error while adding class.',
         severity: 'error'
       })
     }

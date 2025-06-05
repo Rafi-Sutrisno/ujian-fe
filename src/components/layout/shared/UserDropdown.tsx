@@ -46,12 +46,31 @@ const UserDropdown = () => {
   }
 
   const handleDropdownClose = (event?: MouseEvent<HTMLLIElement> | (MouseEvent | TouchEvent), url?: string) => {
+    if (anchorRef.current && anchorRef.current.contains(event?.target as HTMLElement)) {
+      return
+    }
+
     if (url) {
+      console.log('ini url: ', url)
       router.push(url)
     }
 
+    setOpen(false)
+  }
+
+  const handleLogout = (event?: MouseEvent<HTMLLIElement> | (MouseEvent | TouchEvent), url?: string) => {
     if (anchorRef.current && anchorRef.current.contains(event?.target as HTMLElement)) {
       return
+    }
+
+    // Remove the token cookie
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+
+    // Optional: if using cookies-next:
+    // deleteCookie('token')
+
+    if (url) {
+      router.push(url)
     }
 
     setOpen(false)
@@ -102,7 +121,7 @@ const UserDropdown = () => {
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/account_settings')}>
                     <i className='ri-user-3-line' />
                     <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
@@ -117,7 +136,7 @@ const UserDropdown = () => {
                       color='error'
                       size='small'
                       endIcon={<i className='ri-logout-box-r-line' />}
-                      onClick={e => handleDropdownClose(e, '/login')}
+                      onClick={e => handleLogout(e, '/login')}
                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
                       Logout
