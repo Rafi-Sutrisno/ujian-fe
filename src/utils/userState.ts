@@ -4,11 +4,12 @@ export const getStorageKey = (
   type: 'code' | 'input' | 'output',
   userId: string,
   problemId: string,
+  examId: string,
   language?: string
 ) => {
   return type === 'code'
-    ? `${userId}-${type}-${problemId}-${language}` // include language for code
-    : `${userId}-${type}-${problemId}` // input/output remain as is
+    ? `${userId}-${type}-${problemId}-${language}-${examId}`
+    : `${userId}-${type}-${problemId}-${examId}`
 }
 
 export const saveEncrypted = (
@@ -16,19 +17,25 @@ export const saveEncrypted = (
   userId: string,
   problemId: string,
   value: string,
+  examId: string,
   language?: string // optional, only needed for 'code'
 ) => {
   const encrypted = CryptoJS.AES.encrypt(value, userId).toString()
-  localStorage.setItem(getStorageKey(type, userId, problemId, language), encrypted)
+  if (type === 'code') {
+    localStorage.setItem(getStorageKey(type, userId, problemId, examId, language), encrypted)
+  } else {
+    localStorage.setItem(getStorageKey(type, userId, problemId, examId), encrypted)
+  }
 }
 
 export const loadEncrypted = (
   type: 'code' | 'input' | 'output',
   userId: string,
   problemId: string,
+  examId: string,
   language?: string // optional, only needed for 'code'
 ): string => {
-  const encrypted = localStorage.getItem(getStorageKey(type, userId, problemId, language))
+  const encrypted = localStorage.getItem(getStorageKey(type, userId, problemId, examId, language))
   if (!encrypted && type === 'code') {
     console.log('No saved code found, returning default for language:', language)
     return getDefaultCode(language)
@@ -46,15 +53,16 @@ export const loadEncrypted = (
 
 // Default code generator
 const getDefaultCode = (language?: string): string => {
+  console.log('ini lang:', language)
   switch (language) {
-    case 'c':
+    case 'C':
       return `#include <stdio.h>
 
 int main() {
     printf("Hello from C!\\n");
     return 0;
 }`
-    case 'cpp':
+    case 'C++':
     default:
       return `#include <iostream>
 using namespace std;

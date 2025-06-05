@@ -111,30 +111,31 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   useEffect(() => {
     if (!userId || !currentProblem) return
-    const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.code
+    const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.name
     if (!selectedLangCode) {
       // handle error or fallback, e.g.:
       throw new Error('Selected language code not found')
     }
-    setCode(loadEncrypted('code', userId, `${currentProblem.id}-${language}`, selectedLangCode)) // pass language
-    setInput(loadEncrypted('input', userId, currentProblem.id, ''))
-    setOutput(loadEncrypted('output', userId, currentProblem.id, ''))
+    setCode(loadEncrypted('code', userId, currentProblem.id, exam_id, selectedLangCode)) // pass language
+    setInput(loadEncrypted('input', userId, currentProblem.id, exam_id))
+    setOutput(loadEncrypted('output', userId, currentProblem.id, exam_id))
   }, [userId, currentProblem, language])
 
   const handleCodeChange = (newCode: string) => {
+    const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.name
     setCode(newCode)
-    saveEncrypted('code', userId, `${currentProblem.id}-${language}`, newCode)
+    saveEncrypted('code', userId, currentProblem.id, newCode, exam_id, selectedLangCode)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
-    saveEncrypted('input', userId, currentProblem.id, e.target.value)
+    saveEncrypted('input', userId, currentProblem.id, e.target.value, exam_id)
   }
 
   const handleOutputChange = (newOutput: string) => {
     setOutput(newOutput)
     if (currentProblem) {
-      saveEncrypted('output', userId, currentProblem.id, newOutput)
+      saveEncrypted('output', userId, currentProblem.id, newOutput, exam_id)
     }
   }
 
@@ -350,7 +351,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
             {/* <Typography variant='h3' fontWeight='bold'>
               01:23:45
             </Typography> */}
-            <Timer endTime={formData.end_time} />
+            <Timer endTime={formData.end_time} onTimeUp={confirmFinishExam} />
           </Grid>
         </Grid>
 

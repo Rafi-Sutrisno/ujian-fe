@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Grid, Typography } from '@mui/material'
 
-export default function Timer({ endTime }: { endTime: string }) {
+export default function Timer({ endTime, onTimeUp }: { endTime: string; onTimeUp?: () => void }) {
   const [timeLeft, setTimeLeft] = useState(0)
 
   useEffect(() => {
@@ -10,17 +10,18 @@ export default function Timer({ endTime }: { endTime: string }) {
 
     const interval = setInterval(() => {
       const now = Date.now()
-      const diff = Math.max(0, Math.floor((end - now) / 1000)) // in seconds
+      const diff = Math.max(0, Math.floor((end - now) / 1000))
 
       setTimeLeft(diff)
 
       if (diff <= 0) {
         clearInterval(interval)
+        if (onTimeUp) onTimeUp()
       }
     }, 1000)
 
-    return () => clearInterval(interval) // Cleanup on unmount
-  }, [endTime])
+    return () => clearInterval(interval)
+  }, [endTime, onTimeUp])
 
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600)
