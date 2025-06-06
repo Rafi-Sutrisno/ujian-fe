@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Card from '@mui/material/Card'
 
 import CardContent from '@mui/material/CardContent'
@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
 import CodeMirror from '@uiw/react-codemirror'
-import { cpp } from '@codemirror/lang-cpp'
 
 import {
   Button,
@@ -33,6 +32,8 @@ import { saveEncrypted, loadEncrypted } from '@/utils/userState'
 import { getTokenFromCookies, getUserIdFromToken } from '@/utils/token'
 import { type } from 'node:os'
 import { useRouter } from 'next/navigation'
+import { getExtensionsForCodeEditor } from '@/components/Editor/CodeEditor'
+import { useTheme } from '@mui/material/styles'
 
 interface PlaygroundProps {
   exam_id: string
@@ -80,11 +81,6 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [language, setLanguage] = useState('103')
 
-  const languages = [
-    { id: '103', name: 'C', code: 'c' },
-    { id: '105', name: 'C++', code: 'cpp' }
-  ]
-
   const [formData, setFormData] = useState<ExamData>({
     id: '',
     name: '',
@@ -98,6 +94,10 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   const [problems, setProblems] = useState<Data[]>([])
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0)
   const currentProblem = problems[currentProblemIndex]
+
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
+
   // const token = getTokenFromCookies()
   const [userId, setUserId] = useState('anonymous')
   useEffect(() => {
@@ -138,6 +138,12 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       saveEncrypted('output', userId, currentProblem.id, newOutput, exam_id)
     }
   }
+
+  const extensions = useMemo(
+    () =>
+      getExtensionsForCodeEditor(formData.allowed_languages.find(l => l.code === language)?.name || 'C', isDarkMode),
+    [language, isDarkMode]
+  )
 
   const fetchDataProblem = async () => {
     try {
@@ -214,16 +220,26 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       }
 
       const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
+      console.log('ini result:', result)
 
-      if (result?.status?.id === 3) {
-        const decodedOutput = atob(result.stdout || '') // Decode Base64 output
-        // setOutput(decodedOutput)
-        handleOutputChange(decodedOutput)
+      if (result.status) {
+        const res = result.data
+        if (res.status?.id === 3) {
+          const decodedOutput = atob(res.stdout || '') // Decode Base64 output
+          // setOutput(decodedOutput)
+          handleOutputChange(decodedOutput)
+        } else {
+          const errorOutput = res.compile_output || res.stderr || 'Unknown error occurred'
+          const decodedError = atob(errorOutput)
+          // setOutput(`Error: ${decodedError}`)
+          handleOutputChange(`Error: ${decodedError}`)
+        }
       } else {
-        const errorOutput = result.compile_output || result.stderr || 'Unknown error occurred'
-        const decodedError = atob(errorOutput)
-        // setOutput(`Error: ${decodedError}`)
-        handleOutputChange(`Error: ${decodedError}`)
+        setSnackbar({
+          open: true,
+          message: result?.error || 'Failed to run code.',
+          severity: 'error'
+        })
       }
     } catch (err) {
       console.error('Error during code execution:', err)
@@ -246,14 +262,23 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         problem_id: currentProblem.id
       }
 
-      // console.log('ini payload:', payload)
-
       const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
-
-      console.log('ini result: ', result)
+      if (result.status) {
+      } else {
+        setSnackbar({
+          open: true,
+          message: result?.error || 'Failed to submit code.',
+          severity: 'error'
+        })
+      }
     } catch (err) {
-      console.error('Error during code execution:', err)
-      setOutput('Failed to run code. Please try again.')
+      console.error('Error during code submission:', err)
+      setSnackbar({
+        open: true,
+        message: 'Failed to submit code.',
+        severity: 'error'
+      })
+      // setOutput('Failed to run code. Please try again.')
     } finally {
       setLoadingSubmit(false)
     }
@@ -412,8 +437,16 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
             </Grid>
 
             {/* Code Editor */}
-            <Grid item style={{ marginBottom: '20px', borderBottom: '2px solid gray', padding: '5px' }}>
-              <CodeMirror value={code} height='400px' extensions={[cpp()]} onChange={handleCodeChange} />
+            <Grid
+              item
+              style={{ marginBottom: '20px', borderBottom: '2px solid gray', padding: '5px' }}
+              sx={{
+                '& .cm-editor': {
+                  backgroundColor: isDarkMode ? 'black !important' : undefined
+                }
+              }}
+            >
+              <CodeMirror value={code} height='400px' extensions={extensions} onChange={handleCodeChange} />
             </Grid>
 
             <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
@@ -440,7 +473,10 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                     whiteSpace: 'pre', // Ensures text doesn't wrap
                     fontFamily: 'monospace',
                     padding: '8px',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    backgroundColor: 'transparent', // <-- transparent here
+                    color: 'inherit', // optional: inherit text color from parent
+                    border: '1px solid #ccc' // optional: keep border visible
                   }}
                 />
               </div>
@@ -468,8 +504,10 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                     whiteSpace: 'pre',
                     fontFamily: 'monospace',
                     padding: '8px',
-                    backgroundColor: '#f5f5f5',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    backgroundColor: 'transparent', // <-- transparent here
+                    color: 'inherit', // optional: inherit text color from parent
+                    border: '1px solid #ccc' // optional: keep border visible
                   }}
                 />
               </div>

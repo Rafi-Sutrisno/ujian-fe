@@ -52,6 +52,7 @@ export const loadEncrypted = (
 }
 
 // Default code generator
+// Default code generator
 const getDefaultCode = (language?: string): string => {
   console.log('ini lang:', language)
   switch (language) {
@@ -63,6 +64,21 @@ int main() {
     return 0;
 }`
     case 'C++':
+      return `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello from C++!" << endl;
+    return 0;
+}`
+    case 'C#':
+      return `using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello from C#!");
+    }
+}`
     default:
       return `#include <iostream>
 using namespace std;
