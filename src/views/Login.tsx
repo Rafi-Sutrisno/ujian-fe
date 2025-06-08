@@ -147,7 +147,6 @@ const Login = ({ mode }: { mode: Mode }) => {
           </div>
         </CardContent>
       </Card>
-      <Illustrations maskImg={{ src: authBackground }} />
     </div>
   )
 }
