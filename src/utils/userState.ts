@@ -60,32 +60,32 @@ const getDefaultCode = (language?: string): string => {
       return `#include <stdio.h>
 
 int main() {
-    printf("Hello from C!\\n");
-    return 0;
+  printf("Hello from C!\\n");
+  return 0;
 }`
     case 'C++':
       return `#include <iostream>
 using namespace std;
 
 int main() {
-    cout << "Hello from C++!" << endl;
-    return 0;
+  cout << "Hello from C++!" << endl;
+  return 0;
 }`
     case 'C#':
       return `using System;
 
 class Program {
-    static void Main() {
-        Console.WriteLine("Hello from C#!");
-    }
+  static void Main() {
+      Console.WriteLine("Hello from C#!");
+  }
 }`
     default:
       return `#include <iostream>
 using namespace std;
 
 int main() {
-    cout << "Hello from C++!" << endl;
-    return 0;
+  cout << "Hello from C++!" << endl;
+  return 0;
 }`
   }
 }
