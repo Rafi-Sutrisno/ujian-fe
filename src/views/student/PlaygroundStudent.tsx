@@ -79,7 +79,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     severity: 'success' as 'success' | 'error'
   })
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [language, setLanguage] = useState('103')
+  const [language, setLanguage] = useState(1)
 
   const [formData, setFormData] = useState<ExamData>({
     id: '',
@@ -111,7 +111,8 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   useEffect(() => {
     if (!userId || !currentProblem) return
-    const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.name
+    const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
+    console.log('ini language, formdata: ', language, formData.allowed_languages)
     if (!selectedLangCode) {
       // handle error or fallback, e.g.:
       throw new Error('Selected language code not found')
@@ -122,7 +123,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   }, [userId, currentProblem, language])
 
   const handleCodeChange = (newCode: string) => {
-    const selectedLangCode = formData.allowed_languages.find(l => l.code === language)?.name
+    const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
     setCode(newCode)
     saveEncrypted('code', userId, currentProblem.id, newCode, exam_id, selectedLangCode)
   }
@@ -140,8 +141,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   }
 
   const extensions = useMemo(
-    () =>
-      getExtensionsForCodeEditor(formData.allowed_languages.find(l => l.code === language)?.name || 'C', isDarkMode),
+    () => getExtensionsForCodeEditor(formData.allowed_languages.find(l => l.id === language)?.name || 'C', isDarkMode),
     [language, isDarkMode]
   )
 
@@ -182,7 +182,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           end_time: result.end_time,
           allowed_languages: result.allowed_languages
         })
-        setLanguage(result.allowed_languages[0].code)
+        setLanguage(result.allowed_languages[0].id)
       } else {
         console.error('Failed to fetch exam:', data.message)
       }
@@ -212,9 +212,9 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     try {
       const encodedCode = btoa(code) // Encode the code to Base64
       const encodedInput = btoa(input) // Encode the input to Base64
-      console.log('ini lang run:', language, typeof parseInt(language))
+
       const payload = {
-        language_id: parseInt(language),
+        language_id: language,
         source_code: encodedCode,
         stdin: encodedInput
       }
@@ -256,7 +256,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       const encodedCode = code
 
       const payload = {
-        language_id: 52, // C (gcc)
+        language_id: language,
         source_code: encodedCode,
         exam_id: exam_id,
         problem_id: currentProblem.id
@@ -425,10 +425,10 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                   labelId='language-select-label'
                   value={language}
                   label='Language'
-                  onChange={e => setLanguage(e.target.value)}
+                  onChange={e => setLanguage(Number(e.target.value))}
                 >
                   {formData.allowed_languages.map(lang => (
-                    <MenuItem key={lang.id} value={lang.code}>
+                    <MenuItem key={lang.id} value={lang.id}>
                       {lang.name}
                     </MenuItem>
                   ))}
