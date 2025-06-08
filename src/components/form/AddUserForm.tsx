@@ -29,6 +29,7 @@ interface AddUserModalProps {
 
 const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps) => {
   const [formData, setFormData] = useState({
+    username: '',
     name: '',
     email: '',
     role: '',
@@ -63,9 +64,9 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { name, email, role, noid, password } = formData
+    const { username, name, email, role, noid, password } = formData
 
-    if (!name || !email || !role || !noid || !password) {
+    if (!username || !name || !email || !role || !noid || !password) {
       return setSnackbar({
         open: true,
         message: 'All fields are required.',
@@ -88,6 +89,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
     }
 
     const payload = {
+      username,
       name,
       email,
       noid,
@@ -104,7 +106,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
           message: 'User added successfully!',
           severity: 'success'
         })
-        setFormData({ name: '', email: '', role: '', noid: '', password: '' })
+        setFormData({ username: '', name: '', email: '', role: '', noid: '', password: '' })
         onClose?.()
         onUserAdded?.()
       } else {
@@ -131,6 +133,17 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Username'
+                  placeholder='Example: Alice1'
+                  name='username'
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
