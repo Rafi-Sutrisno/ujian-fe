@@ -206,13 +206,13 @@ export default function ClassTableAdmin() {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell padding='checkbox'>
+                {/* <TableCell padding='checkbox'>
                   <Checkbox
                     indeterminate={selected.length > 0 && selected.length < rows.length}
                     checked={rows.length > 0 && selected.length === rows.length}
                     onChange={handleSelectAllClick}
                   />
-                </TableCell>
+                </TableCell> */}
                 {columns.map(column => (
                   <TableCell
                     key={column.id}
@@ -247,9 +247,9 @@ export default function ClassTableAdmin() {
                     onClick={() => handleClick(row.id)}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
+                    {/* <TableCell padding='checkbox'>
                       <Checkbox color='primary' checked={isItemSelected} />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.year}</TableCell>
                     <TableCell>{row.class}</TableCell>

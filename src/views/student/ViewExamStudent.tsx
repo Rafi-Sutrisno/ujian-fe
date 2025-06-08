@@ -38,7 +38,7 @@ type FormData = {
   start_time: string
   duration: string
   end_time: string
-  // is_seb_restricted: boolean
+  is_seb_restricted: boolean
   // seb_browser_key: string
   // seb_config_key: string
   allowed_languages: LangData[] // 👈 Correct type
@@ -61,6 +61,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
     start_time: '',
     duration: '',
     end_time: '',
+    is_seb_restricted: false,
     allowed_languages: []
   })
 
@@ -83,6 +84,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
           start_time: result.start_time,
           duration: result.duration,
           end_time: result.end_time,
+          is_seb_restricted: result.is_seb_restricted,
           allowed_languages: result.allowed_languages
         })
       } else {
@@ -112,7 +114,8 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
       const payload = {
         exam_id: id,
         config_key: configKey,
-        browser_exam_key: browserExamKey
+        browser_exam_key: browserExamKey,
+        seb_url: window.location.href
       }
 
       const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
@@ -182,7 +185,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 fullWidth
                 label='Published'
@@ -192,7 +195,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
                   readOnly: true
                 }}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <TextField
@@ -224,6 +227,18 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
                 label='End Time'
                 name='end_time'
                 value={formData.end_time}
+                InputProps={{
+                  readOnly: true
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='Is Seb Restricted'
+                name='is_seb_restricted'
+                value={formData.is_seb_restricted ? 'Yes' : 'No'}
                 InputProps={{
                   readOnly: true
                 }}

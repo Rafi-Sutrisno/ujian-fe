@@ -70,6 +70,8 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
             })
           )
           setRows(transformed)
+        } else {
+          setRows([])
         }
 
         // console.log('transformed:', transformed)
@@ -241,7 +243,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
       }
 
       console.log('Test Case deleted:', data)
-      fetchData()
+      await fetchData()
       setSnackbar({
         open: true,
         message: 'Test Case deleted successfully!',

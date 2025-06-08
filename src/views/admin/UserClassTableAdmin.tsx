@@ -289,8 +289,11 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                         sx={{ cursor: 'pointer' }}
                       >
                         {columns.map(column => {
+                          console.log('ini column:', column)
                           const value = row[column.id as keyof Data]
+                          console.log('ini value:', value)
                           if (column.id === 'actions') {
+                            if (row.role === 'admin') return null
                             return (
                               <TableCell key={column.id} align={column.align ?? 'left'}>
                                 <Button

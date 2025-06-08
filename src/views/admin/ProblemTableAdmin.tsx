@@ -298,15 +298,6 @@ const ProblemTableAdmin = () => {
                                     View
                                   </Button>
                                 </Link>
-
-                                <Button
-                                  variant='outlined'
-                                  size='small'
-                                  color='error'
-                                  onClick={() => handleDeleteClick(row.id)}
-                                >
-                                  Delete
-                                </Button>
                               </Stack>
                             </TableCell>
                           )

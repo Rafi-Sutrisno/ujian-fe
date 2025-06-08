@@ -103,7 +103,7 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
             problem_id: result.problem_id,
             lang_id: result.lang.name,
             submission_time: result.submission_time,
-            status: result.status,
+            status: result.status_name,
             time: result.time,
             memory: result.memory,
             problem_title: result.problem.title,

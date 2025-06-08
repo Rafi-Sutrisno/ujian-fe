@@ -231,13 +231,13 @@ export default function UserTableAdmin() {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell padding='checkbox'>
+                {/* <TableCell padding='checkbox'>
                   <Checkbox
                     indeterminate={selected.length > 0 && selected.length < rows.length}
                     checked={rows.length > 0 && selected.length === rows.length}
                     onChange={handleSelectAllClick}
                   />
-                </TableCell>
+                </TableCell> */}
                 {columns.map(column => (
                   <TableCell
                     key={column.id}
@@ -278,9 +278,9 @@ export default function UserTableAdmin() {
                     onClick={() => handleClick(row.id)}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
+                    {/* <TableCell padding='checkbox'>
                       <Checkbox color='primary' checked={isItemSelected} />
-                    </TableCell>
+                    </TableCell> */}
                     {columns.map(column => {
                       const value = row[column.id as keyof Data]
                       if (column.id === 'actions') {
