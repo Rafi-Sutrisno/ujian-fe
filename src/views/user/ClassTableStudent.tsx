@@ -160,7 +160,7 @@ export default function ClassTableStudent() {
 
                     <TableCell align='center'>
                       <Stack direction='row' spacing={1} justifyContent='center'>
-                        <Link href={`/student/class/${row.id}`} passHref>
+                        <Link href={`/user/class/${row.id}`} passHref>
                           <Button variant='outlined' size='small' color='primary' onClick={e => e.stopPropagation()}>
                             View
                           </Button>

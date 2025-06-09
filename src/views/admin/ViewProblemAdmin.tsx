@@ -29,7 +29,9 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
     description: ``,
     constraints: ``,
     sample_input: ``,
-    sample_output: ``
+    sample_output: ``,
+    cpu_time_limit: '',
+    memory_limit: ''
   })
 
   const [snackbar, setSnackbar] = useState({
@@ -51,7 +53,9 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
           description: result.description,
           constraints: result.constraints,
           sample_input: result.sample_input,
-          sample_output: result.sample_output
+          sample_output: result.sample_output,
+          cpu_time_limit: result.cpu_time_limit,
+          memory_limit: result.memory_limit
         })
       } else {
         console.error('Failed to fetch problem:', data.message)
@@ -74,7 +78,7 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
   }
 
   const handleSubmit = async () => {
-    const { title, description, constraints, sample_input, sample_output } = formData
+    const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
     console.log('data: ', title, description, constraints, sample_input, sample_output)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
@@ -86,12 +90,23 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
       })
     }
 
+    const payload: any = { title, description, constraints, sample_input, sample_output }
+    if (cpu_time_limit !== '') {
+      payload.cpu_time_limit = parseFloat(cpu_time_limit)
+    }
+    if (memory_limit !== '') {
+      payload.memory_limit = parseInt(memory_limit)
+      if (payload.memory_limit <= 2048 && payload.memory_limit !== 0) {
+        return setSnackbar({
+          open: true,
+          message: 'Memory limit must be greater than or equal to 2048',
+          severity: 'error'
+        })
+      }
+    }
+
     try {
-      const result = await fetchWithAuth(
-        `/api/problem/${id}`,
-        { title, description, constraints, sample_input, sample_output },
-        'PATCH'
-      )
+      const result = await fetchWithAuth(`/api/problem/${id}`, payload, 'PATCH')
 
       if (result.status === false) {
         console.log(result)
@@ -199,6 +214,29 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
                         content={formData.sample_output}
                         onChange={handleEditorChange}
                       />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label='CPU Time Limit (seconds - Optional)'
+                        name='cpu_time_limit'
+                        type='number'
+                        value={formData.cpu_time_limit}
+                        onChange={e => handleEditorChange('cpu_time_limit', e.target.value)}
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label='Memory Limit (kylobyte - Optional)'
+                        name='memory_limit'
+                        type='number'
+                        value={formData.memory_limit}
+                        onChange={e => handleEditorChange('memory_limit', e.target.value)}
+                        fullWidth
+                      />
+                      <p>must be greater than or equal to 2048</p>
                     </Grid>
                   </Grid>
                 </form>
@@ -311,31 +349,39 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Sample Input'
-                name='sample_input'
-                value={formData.sample_input}
-                multiline
-                InputProps={{
-                  readOnly: true
-                }}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Cpu Time Limit'
+                  placeholder=''
+                  name='cpu_time_limit'
+                  value={
+                    formData.cpu_time_limit && formData.cpu_time_limit !== '0'
+                      ? formData.cpu_time_limit
+                      : 'default limit (2 sec)'
+                  }
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Sample Output'
-                name='sample_output'
-                multiline
-                value={formData.sample_output}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
-            </Grid> */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Memory Limit'
+                  placeholder=''
+                  name='memory_limit'
+                  value={
+                    formData.memory_limit && formData.memory_limit !== '0'
+                      ? formData.memory_limit
+                      : 'default limit (128000 kylobyte)'
+                  }
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+              </Grid>
             </Grid>
           </form>
         </CardContent>

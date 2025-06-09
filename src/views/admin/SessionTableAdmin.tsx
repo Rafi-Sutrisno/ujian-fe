@@ -42,6 +42,7 @@ interface Data {
   user_agent: string
   device: string
   status: string
+  finished_at: string
   created_at: string
 }
 
@@ -52,6 +53,7 @@ const columns: readonly Column[] = [
   { id: 'user_agent', label: 'Agent Info', minWidth: 150, sortable: true },
   { id: 'device', label: 'Device', minWidth: 100, sortable: true },
   { id: 'status', label: 'Status', minWidth: 120, sortable: true },
+  { id: 'finished_at', label: 'Finished At', minWidth: 120, sortable: true },
   { id: 'created_at', label: 'Created At', minWidth: 150, sortable: true },
   { id: 'action', label: 'Action', minWidth: 120 }
 ]
@@ -111,6 +113,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
               user_agent: result.user_agent,
               device: result.device,
               status: result.status === 0 ? 'not finished' : 'finished',
+              finished_at: result.status === 1 ? result.finished_at : '-',
               created_at: result.created_at
             })
           )

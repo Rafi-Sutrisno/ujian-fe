@@ -78,7 +78,7 @@ const Login = ({ mode }: { mode: Mode }) => {
         if (data.data.role_id === 1) {
           router.push('/admin/user')
         } else {
-          router.push('/student/class')
+          router.push('/user/class')
         }
       } else {
         setError('Login Failed: ' + data.error || 'Login failed')

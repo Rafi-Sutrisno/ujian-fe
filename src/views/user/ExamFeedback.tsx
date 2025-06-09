@@ -96,7 +96,7 @@ const ExamFeedback: React.FC<ExamFeedbackProps> = ({ id }) => {
         </Box>
         {formData.seb_quit_url === '' ? (
           <>
-            <Link href={`/student/exam/${id}`}>
+            <Link href={`/user/exam/${id}`}>
               <Button variant='outlined' size='small' color='primary'>
                 Finish Exam
               </Button>

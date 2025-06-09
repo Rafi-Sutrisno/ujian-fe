@@ -208,7 +208,7 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
                               <Stack direction='row' spacing={2}>
-                                <Link href={`/student/exam/${row.id}`} passHref>
+                                <Link href={`/user/exam/${row.id}`} passHref>
                                   <Button variant='outlined' size='small' color='primary'>
                                     View
                                   </Button>

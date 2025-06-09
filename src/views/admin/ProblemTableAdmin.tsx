@@ -10,9 +10,6 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogActions from '@mui/material/DialogActions'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
@@ -126,11 +123,6 @@ const ProblemTableAdmin = () => {
     setPage(0)
   }
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedId(id)
-    setOpenDialog(true)
-  }
-
   const handleConfirmDelete = () => {
     // perform delete logic here
     console.log('Delete ID:', selectedId)
@@ -143,7 +135,9 @@ const ProblemTableAdmin = () => {
     description: ``,
     constraints: ``,
     sample_input: ``,
-    sample_output: ``
+    sample_output: ``,
+    cpu_time_limit: '',
+    memory_limit: ''
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +155,7 @@ const ProblemTableAdmin = () => {
   })
 
   const handleSubmit = async () => {
-    const { title, description, constraints, sample_input, sample_output } = formData
+    const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
     console.log('data: ', formData)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
@@ -174,7 +168,13 @@ const ProblemTableAdmin = () => {
     }
 
     try {
-      const payload = { title, description, constraints, sample_input, sample_output }
+      const payload: any = { title, description, constraints, sample_input, sample_output }
+      if (cpu_time_limit !== '') {
+        payload.cpu_time_limit = parseFloat(cpu_time_limit)
+      }
+      if (memory_limit !== '') {
+        payload.memory_limit = parseInt(memory_limit)
+      }
 
       const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
 
@@ -243,6 +243,28 @@ const ProblemTableAdmin = () => {
                   <Grid item xs={12}>
                     <p>Sample Output</p>
                     <EditorBasic name='sample_output' content={formData.sample_output} onChange={handleEditorChange} />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label='CPU Time Limit (seconds - Optional)'
+                      name='cpu_time_limit'
+                      type='number'
+                      value={formData.cpu_time_limit}
+                      onChange={e => handleEditorChange('cpu_time_limit', e.target.value)}
+                      fullWidth
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label='Memory Limit (kylobyte - Optional)'
+                      name='memory_limit'
+                      type='number'
+                      value={formData.memory_limit}
+                      onChange={e => handleEditorChange('memory_limit', e.target.value)}
+                      fullWidth
+                    />
                   </Grid>
                 </Grid>
               </form>
@@ -323,15 +345,6 @@ const ProblemTableAdmin = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-            <DialogTitle>Are you sure you want to delete this problem?</DialogTitle>
-            <DialogActions>
-              <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-              <Button color='error' onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Paper>
       </CardContent>
       <Snackbar

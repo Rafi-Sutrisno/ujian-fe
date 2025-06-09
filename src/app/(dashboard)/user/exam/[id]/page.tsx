@@ -3,12 +3,12 @@
 import dynamic from 'next/dynamic'
 import type { ReactElement } from 'react'
 
-// import ViewExamStudent from '@/views/student/ViewExamStudent'
+// import ViewExamStudent from '@/views/user/ViewExamStudent'
 import { useParams } from 'next/navigation'
-import SplitViewExamStudent from '@/views/student/split_views/ViewExamStudent'
+import SplitViewExamStudent from '@/views/user/split_views/ViewExamStudent'
 
-const ViewExamStudent = dynamic(() => import('@/views/student/ViewExamStudent'))
-const ResultTableStudent = dynamic(() => import('@/views/student/ViewResultStudent'))
+const ViewExamStudent = dynamic(() => import('@/views/user/ViewExamStudent'))
+const ResultTableStudent = dynamic(() => import('@/views/user/ViewResultStudent'))
 
 const tabContentList = (id: string): { [key: string]: ReactElement } => ({
   exam: <ViewExamStudent id={id as string} />,

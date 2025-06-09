@@ -4,10 +4,10 @@ import type { ReactElement } from 'react'
 import dynamic from 'next/dynamic'
 
 import { useParams } from 'next/navigation'
-import SplitViewPlaygroundStudent from '@/views/student/split_views/PlagroundStudent'
+import SplitViewPlaygroundStudent from '@/views/user/split_views/PlagroundStudent'
 
-const PlaygroundStudent = dynamic(() => import('@/views/student/PlaygroundStudent'))
-const SubmissionTableStudent = dynamic(() => import('@/views/student/SubmissionTableStudent'))
+const PlaygroundStudent = dynamic(() => import('@/views/user/PlaygroundStudent'))
+const SubmissionTableStudent = dynamic(() => import('@/views/user/SubmissionTableStudent'))
 
 const tabContentList = (id: string): { [key: string]: ReactElement } => ({
   playground: <PlaygroundStudent exam_id={id as string} />,

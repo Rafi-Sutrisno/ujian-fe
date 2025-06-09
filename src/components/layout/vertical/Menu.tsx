@@ -37,10 +37,10 @@ const MenuAuthRole = () => {
 
       {role === 'user' && (
         <MenuSection label='User'>
-          <MenuItem href='/student/class' icon={<i className='ri-graduation-cap-line' />}>
+          <MenuItem href='/user/class' icon={<i className='ri-graduation-cap-line' />}>
             Class
           </MenuItem>
-          <MenuItem href='/student/exam' icon={<i className='ri-file-list-3-line' />}>
+          <MenuItem href='/user/exam' icon={<i className='ri-file-list-3-line' />}>
             Exam
           </MenuItem>
         </MenuSection>

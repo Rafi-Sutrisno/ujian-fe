@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import ExamFeedback from '@/views/student/ExamFeedback'
+import ExamFeedback from '@/views/user/ExamFeedback'
 
 const ForgotPasswordPage = () => {
   const params = useParams()
