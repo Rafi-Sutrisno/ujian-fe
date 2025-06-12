@@ -28,7 +28,7 @@ import { fetchWithAuth } from '@/utils/api'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import Timer from '@/components/time/timer'
-import { saveEncrypted, loadEncrypted } from '@/utils/userState'
+import { saveEncrypted, loadEncrypted, getStorageKey } from '@/utils/userState'
 import { getTokenFromCookies, getUserIdFromToken } from '@/utils/token'
 import { type } from 'node:os'
 import { useRouter } from 'next/navigation'
@@ -111,16 +111,56 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   useEffect(() => {
     if (!userId || !currentProblem) return
+
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
-    console.log('ini language, formdata: ', language, formData.allowed_languages)
-    if (!selectedLangCode) {
-      // handle error or fallback, e.g.:
-      throw new Error('Selected language code not found')
-    }
-    setCode(loadEncrypted('code', userId, currentProblem.id, exam_id, selectedLangCode)) // pass language
-    setInput(loadEncrypted('input', userId, currentProblem.id, exam_id))
-    setOutput(loadEncrypted('output', userId, currentProblem.id, exam_id))
+    if (!selectedLangCode) throw new Error('Selected language code not found')
+    ;(async () => {
+      const loadedCode = await loadEncrypted('code', userId, currentProblem.id, exam_id, selectedLangCode)
+      const loadedInput = await loadEncrypted('input', userId, currentProblem.id, exam_id)
+      const loadedOutput = await loadEncrypted('output', userId, currentProblem.id, exam_id)
+
+      setCode(loadedCode)
+      setInput(loadedInput)
+      setOutput(loadedOutput)
+    })()
   }, [userId, currentProblem, language])
+
+  useEffect(() => {
+    if (!userId || problems.length === 0) return
+
+    const interval = setInterval(() => {
+      problems.forEach(problem => {
+        const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
+        if (!selectedLangCode) return
+        console.log('masuk loop save draft')
+        const problemId = problem.id
+
+        // Read latest from localStorage
+        const code = localStorage.getItem(getStorageKey('code', userId, problemId, exam_id, selectedLangCode))
+
+        // Send to backend if code exists
+        if (code) {
+          fetchWithAuth(
+            '/api/user/draft/save',
+            {
+              exam_id: exam_id,
+              problem_id: problem.id,
+              language: selectedLangCode,
+              code: code
+            },
+            'POST'
+          )
+            .then(data => {
+              console.log(`Auto-saved for problem ${problem.id}`)
+              console.log('ini resp save draft:', data)
+            })
+            .catch(err => console.warn(`Failed to auto-save for problem ${problem.id}`, err))
+        }
+      })
+    }, 10000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [userId, problems, formData.allowed_languages, language, exam_id])
 
   const handleCodeChange = (newCode: string) => {
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
@@ -264,6 +304,11 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
       const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
       if (result.status) {
+        setSnackbar({
+          open: true,
+          message: result?.message || 'Success submit code.',
+          severity: 'success'
+        })
       } else {
         setSnackbar({
           open: true,
@@ -467,7 +512,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                   wrap='off' // This disables word wrapping
                   style={{
                     width: '100%',
-                    height: '90%',
+                    height: '80%',
                     resize: 'none',
                     overflow: 'auto',
                     whiteSpace: 'pre', // Ensures text doesn't wrap
@@ -498,7 +543,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                   wrap='off'
                   style={{
                     width: '100%',
-                    height: '100%',
+                    height: '80%',
                     resize: 'none',
                     overflow: 'auto',
                     whiteSpace: 'pre',

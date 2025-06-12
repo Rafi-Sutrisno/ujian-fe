@@ -38,13 +38,17 @@ interface Data {
   noid: string
   total_correct: number
   total_problem: number
+  status: string
+  finished_at: string
 }
 
 const columns: readonly Column[] = [
   { id: 'name', label: 'Name', minWidth: 170, sortable: true },
   { id: 'noid', label: 'No Id', minWidth: 170, sortable: true },
   { id: 'total_correct', label: 'Total Correct', minWidth: 100, sortable: true },
-  { id: 'score', label: 'Score', minWidth: 170, sortable: true }
+  { id: 'score', label: 'Score', minWidth: 170, sortable: true },
+  { id: 'status', label: 'Status', minWidth: 170, sortable: true },
+  { id: 'finished_at', label: 'Finished At', minWidth: 170, sortable: true }
 ]
 
 type Order = 'asc' | 'desc'
@@ -97,7 +101,9 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             name: result.user_name,
             noid: result.user_no_id,
             total_correct: result.total_correct,
-            total_problem: result.total_problem
+            total_problem: result.total_problem,
+            status: result.status === 0 ? 'not finished' : 'finished',
+            finished_at: result.status === 1 ? result.finished_at : '-'
           })
         )
         console.log('update: ', transformed)

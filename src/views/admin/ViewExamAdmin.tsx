@@ -238,6 +238,8 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
         seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
       }
 
+      console.log('ini payload:', payload)
+
       const data = await fetchWithAuth(`/api/exam/${id}`, payload, 'PATCH')
 
       if (data.status === false) {
@@ -637,6 +639,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
               <Grid item xs={12}>
                 <FormControlLabel
+                  disabled
                   control={
                     <Switch
                       checked={!!formData.is_seb_restricted}
@@ -658,7 +661,9 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                 <>
                   <Grid item xs={12}>
                     <FormControlLabel
-                      control={<Checkbox checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />}
+                      control={
+                        <Checkbox disabled checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />
+                      }
                       label={
                         <Typography color={sebKeyEnabled ? 'textPrimary' : 'textSecondary'}>
                           Enable SEB Browser Key
@@ -671,7 +676,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                       name='seb_browser_key'
                       value={formData.seb_browser_key}
                       onChange={e => setFormData(prev => ({ ...prev, seb_browser_key: e.target.value }))}
-                      disabled={!sebKeyEnabled}
+                      disabled
                     />
                   </Grid>
 
@@ -679,6 +684,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          disabled
                           checked={sebConfigKeyEnabled}
                           onChange={e => setSebConfigKeyEnabled(e.target.checked)}
                         />
@@ -696,7 +702,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                       name='seb_config_key'
                       value={formData.seb_config_key}
                       onChange={e => setFormData(prev => ({ ...prev, seb_config_key: e.target.value }))}
-                      disabled={!sebConfigKeyEnabled}
+                      disabled
                     />
                   </Grid>
 
@@ -709,7 +715,11 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                   <Grid item xs={12}>
                     <FormControlLabel
                       control={
-                        <Checkbox checked={sebQuitUrlEnabled} onChange={e => setSebQuitUrlEnabled(e.target.checked)} />
+                        <Checkbox
+                          disabled
+                          checked={sebQuitUrlEnabled}
+                          onChange={e => setSebQuitUrlEnabled(e.target.checked)}
+                        />
                       }
                       label={
                         <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
@@ -724,7 +734,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
                       name='seb_quit_url'
                       value={formData.seb_quit_url}
                       onChange={e => setFormData(prev => ({ ...prev, seb_quit_url: e.target.value }))}
-                      disabled={!sebQuitUrlEnabled}
+                      disabled
                     />
                   </Grid>
                 </>

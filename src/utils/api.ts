@@ -57,7 +57,6 @@ export async function fetchWithAuthFile(
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${token}`
-    // ❌ Do NOT set Content-Type here
   }
 
   const fetchOptions: RequestInit = {
