@@ -12,7 +12,7 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import { fetchWithAuth } from '@/utils/api'
 import { useRouter } from 'next/navigation'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box } from '@mui/material'
 
 const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key: string]: ReactElement } }) => {
   // States
@@ -51,46 +51,48 @@ const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key
 
   return (
     <>
-      <TabContext value={activeTab}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <TabList onChange={handleChange} variant='scrollable'>
-              <Tab
-                label='Playground'
-                icon={<i className='ri-graduation-cap-line' />}
-                iconPosition='start'
-                value='playground'
-              />
+      <Box p={4}>
+        <TabContext value={activeTab}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <TabList onChange={handleChange} variant='scrollable'>
+                <Tab
+                  label='Playground'
+                  icon={<i className='ri-graduation-cap-line' />}
+                  iconPosition='start'
+                  value='playground'
+                />
 
-              <Tab
-                label='Submission'
-                icon={<i className='ri-file-list-3-line' />}
-                iconPosition='start'
-                value='submission'
-              />
-            </TabList>
+                <Tab
+                  label='Submission'
+                  icon={<i className='ri-file-list-3-line' />}
+                  iconPosition='start'
+                  value='submission'
+                />
+              </TabList>
+            </Grid>
+            <Grid item xs={12}>
+              <TabPanel value={activeTab} className='p-0'>
+                {tabContentList[activeTab]}
+              </TabPanel>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TabPanel value={activeTab} className='p-0'>
-              {tabContentList[activeTab]}
-            </TabPanel>
-          </Grid>
-        </Grid>
-      </TabContext>
-      <Dialog
-        open={sessionInvalid}
-        onClose={() => {}} // Required, but does nothing
-        disableEscapeKeyDown
-        BackdropProps={{ onClick: () => {} }}
-      >
-        <DialogTitle>Session Invalid</DialogTitle>
-        <DialogContent>Your session has expired or is being used on another device.</DialogContent>
-        <DialogActions>
-          <Button onClick={handleRedirect} variant='contained'>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </TabContext>
+        <Dialog
+          open={sessionInvalid}
+          onClose={() => {}} // Required, but does nothing
+          disableEscapeKeyDown
+          BackdropProps={{ onClick: () => {} }}
+        >
+          <DialogTitle>Session Invalid</DialogTitle>
+          <DialogContent>Your session has expired or is being used on another device.</DialogContent>
+          <DialogActions>
+            <Button onClick={handleRedirect} variant='contained'>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </>
   )
 }
