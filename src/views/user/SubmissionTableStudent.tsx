@@ -94,7 +94,7 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(`/api/submission/exam/student/${exam_id}`, undefined, 'GET')
-      console.log('ini submission student', data)
+      // console.log('ini submission student', data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -110,9 +110,9 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
             code: result.code
           })
         )
-        console.log('update: ', transformed)
+        // console.log('update: ', transformed)
         setRows(transformed)
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }
@@ -147,7 +147,7 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
 
   const handleConfirmDelete = () => {
     // perform delete logic here
-    console.log('Delete ID:', selectedId)
+    // console.log('Delete ID:', selectedId)
     setOpenDialog(false)
     setSelectedId(null)
   }

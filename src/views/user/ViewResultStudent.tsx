@@ -40,11 +40,11 @@ const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/submission/stats/user/exam/${id}`, undefined, 'GET')
 
-      console.log('ini data: ', data)
+      // console.log('ini data: ', data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -57,7 +57,7 @@ const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
           total_problem: result.total_problem
         }
 
-        console.log('update:', transformed)
+        // console.log('update:', transformed)
         setRows(transformed)
       } else {
         setErr(data.error)

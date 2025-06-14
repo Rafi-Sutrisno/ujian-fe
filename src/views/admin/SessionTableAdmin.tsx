@@ -100,7 +100,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
     try {
       const data = await fetchWithAuth(`/api/exam_session/byexamid/${exam_id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         if (data.data) {
@@ -120,7 +120,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
           setRows(transformed)
         }
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch sessions:', data.message)
       }
@@ -154,12 +154,12 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
   }
 
   const handleDelete = async () => {
-    // console.log('Problem Deleted:', formData.input_data)
+    // // console.log('Problem Deleted:', formData.input_data)
     try {
       const data = await fetchWithAuth(`/api/exam_session/${selectedId}`, undefined, 'DELETE')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete sessions.',
@@ -167,7 +167,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
         })
       }
 
-      console.log('Sessions deleted:', data)
+      // console.log('Sessions deleted:', data)
       fetchData()
       setSnackbar({
         open: true,

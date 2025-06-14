@@ -11,7 +11,7 @@ export async function fetchWithAuth(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
-  console.log('server: ', serverPath)
+  // console.log('server: ', serverPath)
 
   if (!token) {
     throw new Error('Token is missing')
@@ -48,7 +48,7 @@ export async function fetchWithAuthFile(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
-  console.log('server:', serverPath)
+  // console.log('server:', serverPath)
 
   if (!token) {
     throw new Error('Token is missing')
@@ -85,7 +85,7 @@ export async function fetchWithAuthCookie(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
-  console.log('server: ', serverPath)
+  // console.log('server: ', serverPath)
 
   if (!token) {
     throw new Error('Token is missing')

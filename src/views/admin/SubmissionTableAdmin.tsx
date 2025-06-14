@@ -98,7 +98,7 @@ const SubmissionTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(`/api/submission/exam/${exam_id}`, undefined, 'GET')
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -116,9 +116,9 @@ const SubmissionTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             user_no_id: result.user.noid
           })
         )
-        console.log('update: ', transformed)
+        // console.log('update: ', transformed)
         setRows(transformed)
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }

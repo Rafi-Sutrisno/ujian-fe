@@ -67,11 +67,11 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/exam/${id}`, undefined, 'GET')
 
-      console.log('ini data: ', data)
+      // console.log('ini data: ', data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -120,7 +120,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
       const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
 
-      console.log('ini start exam: ', startExam)
+      // console.log('ini start exam: ', startExam)
 
       if (startExam.status) {
         setSnackbar({

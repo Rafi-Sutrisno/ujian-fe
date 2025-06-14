@@ -35,11 +35,11 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'GET')
 
-      console.log('data class ke fetch', data)
+      // console.log('data class ke fetch', data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -94,7 +94,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
       const result = await fetchWithAuth(`/api/class/${id}`, { name, year, class: class_name, short_name }, 'PATCH')
 
       if (result.status === false) {
-        console.log(result)
+        // console.log(result)
         return setSnackbar({
           open: true,
           message: result?.message || 'Failed to update class.',
@@ -102,7 +102,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
         })
       }
 
-      console.log('Class updated:', result)
+      // console.log('Class updated:', result)
 
       setSnackbar({
         open: true,
@@ -124,7 +124,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
       const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'DELETE')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete class.',
@@ -132,7 +132,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
         })
       }
 
-      console.log('Class deleted:', data)
+      // console.log('Class deleted:', data)
 
       setSnackbar({
         open: true,

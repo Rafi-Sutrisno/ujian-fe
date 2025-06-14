@@ -7,10 +7,10 @@ const loginPath = '/login'
 const protectedRoutes = ['/', '/account_settings', '/admin', '/user']
 
 export function middleware(request: NextRequest) {
-  console.log('middleware active')
+  // console.log('middleware active')
   const token = request.cookies.get('token')?.value
   const { pathname } = request.nextUrl
-  console.log('ini pathname dan token:', pathname, token)
+  // console.log('ini pathname dan token:', pathname, token)
 
   // If already logged in and trying to access login page, redirect to home
   if (token && pathname === loginPath) {

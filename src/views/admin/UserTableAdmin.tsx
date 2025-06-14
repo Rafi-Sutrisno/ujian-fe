@@ -201,7 +201,7 @@ export default function UserTableAdmin() {
 
   const handleDeleteConfirm = () => {
     // logic for actual deletion goes here
-    console.log(`Deleting ${selected.length} users...`)
+    // console.log(`Deleting ${selected.length} users...`)
     setSelected([])
     setOpen(false)
   }

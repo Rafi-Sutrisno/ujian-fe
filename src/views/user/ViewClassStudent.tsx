@@ -31,11 +31,11 @@ const ViewClassStudent: React.FC<ViewClassProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status && data.data) {
         const result = data.data

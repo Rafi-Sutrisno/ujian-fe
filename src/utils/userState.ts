@@ -51,7 +51,7 @@ export const loadEncrypted = async (
 
   // Step 2: Try backend DB (only for 'code')
   if (type === 'code' && language) {
-    console.log('masuk ambil kode dari be')
+    // console.log('masuk ambil kode dari be')
     try {
       const response = await fetchWithAuth(
         `/api/user/draft/load`,
@@ -74,7 +74,7 @@ export const loadEncrypted = async (
 
   // Step 3: Fallback to default
   if (type === 'code') {
-    console.log('Returning default code for language:', language)
+    // console.log('Returning default code for language:', language)
     return getDefaultCode(language)
   }
 
@@ -83,7 +83,7 @@ export const loadEncrypted = async (
 
 // Default code generator
 const getDefaultCode = (language?: string): string => {
-  console.log('ini lang:', language)
+  // console.log('ini lang:', language)
   switch (language) {
     case 'C':
       return `#include <stdio.h>

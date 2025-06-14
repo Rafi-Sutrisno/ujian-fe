@@ -70,7 +70,7 @@ const Login = ({ mode }: { mode: Mode }) => {
       })
 
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
 
       if (response.ok) {
         document.cookie = `token=${data.data.token}; path=/; samesite=lax`
