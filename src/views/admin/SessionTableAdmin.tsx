@@ -48,13 +48,13 @@ interface Data {
 
 const columns: readonly Column[] = [
   { id: 'name', label: 'Name', minWidth: 150, sortable: true },
-  { id: 'no_id', label: 'Nrp', minWidth: 120, sortable: true },
-  { id: 'ip_address', label: 'Ip Address', minWidth: 140, sortable: true },
+  { id: 'no_id', label: 'Nrp', minWidth: 100, sortable: true },
+  { id: 'ip_address', label: 'Ip Address', minWidth: 100, sortable: true },
   { id: 'user_agent', label: 'Agent Info', minWidth: 150, sortable: true },
   { id: 'device', label: 'Device', minWidth: 100, sortable: true },
-  { id: 'status', label: 'Status', minWidth: 120, sortable: true },
+  { id: 'status', label: 'Status', minWidth: 100, sortable: true },
   { id: 'finished_at', label: 'Finished At', minWidth: 120, sortable: true },
-  { id: 'created_at', label: 'Created At', minWidth: 150, sortable: true },
+  { id: 'created_at', label: 'Created At', minWidth: 120, sortable: true },
   { id: 'action', label: 'Action', minWidth: 120 }
 ]
 
