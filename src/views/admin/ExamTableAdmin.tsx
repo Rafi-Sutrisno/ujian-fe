@@ -170,7 +170,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
               code: result.code
             })
           )
-          // console.log('lang: ', transformed)
+          console.log('lang: ', transformed)
           setLang(transformed)
         }
       } else {
@@ -202,7 +202,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleConfirmDelete = () => {
     // perform delete logic here
-    // console.log('Delete ID:', selectedId)
+    console.log('Delete ID:', selectedId)
     setOpenDialog(false)
     setSelectedId(null)
   }
@@ -267,7 +267,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleSubmit = async () => {
     const formattedData = formatExamData(formData)
-    // console.log('data:', formattedData)
+    console.log('data:', formattedData)
     const {
       name,
       short_name,
@@ -280,8 +280,8 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       seb_quit_url,
       allowed_languages
     } = formattedData
-    // // console.log('data: ', name, short_name, is_published, start_time, duration)
-    // console.log('allowd lang:', allowed_languages.length)
+    // console.log('data: ', name, short_name, is_published, start_time, duration)
+    console.log('allowd lang:', allowed_languages.length)
 
     if (
       !name ||
@@ -292,7 +292,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       !duration ||
       allowed_languages.length <= 0
     ) {
-      // console.log('all field required')
+      console.log('all field required')
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -313,12 +313,12 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
         seb_config_key: sebConfigKeyEnabled ? seb_config_key : '',
         seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
       }
-      // console.log('ini payload: ', payload)
+      console.log('ini payload: ', payload)
 
       const data = await fetchWithAuth(`/api/exam/`, payload, 'POST')
 
       if (data.status === false) {
-        // console.log(data)
+        console.log(data)
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to create exam.',
@@ -326,17 +326,17 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
         })
       }
 
-      // console.log('Exam created:', data)
+      console.log('Exam created:', data)
 
       const payload2 = allowed_languages.map(id => ({
         lang_id: parseInt(id),
         exam_id: data.data.id
       }))
 
-      // console.log('ini payload2:', payload2)
+      console.log('ini payload2:', payload2)
       const data2 = await fetchWithAuth(`/api/exam_lang/create_many`, payload2, 'POST')
       if (data2.status === false) {
-        // console.log(data2)
+        console.log(data2)
         return setSnackbar({
           open: true,
           message: data2?.message || 'Failed to create exam.',

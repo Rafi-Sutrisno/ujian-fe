@@ -74,7 +74,7 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
         console.error('Failed to assign users:', data)
         onError?.(data?.message || 'Failed to assign users.')
       } else {
-        // console.log('Users assigned successfully:', data)
+        console.log('Users assigned successfully:', data)
         onSuccess?.()
         // fetchData()
       }
@@ -88,7 +88,7 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
     try {
       const data = await fetchWithAuth(`/api/user_class/class/unassigned/${id}`, undefined, 'GET')
 
-      // console.log('unasigned:', data)
+      console.log('unasigned:', data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -101,7 +101,7 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
           })
         )
         setRows(transformed)
-        // // console.log('transformed:', transformed)
+        // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }

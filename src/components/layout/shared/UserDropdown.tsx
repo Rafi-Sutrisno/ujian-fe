@@ -51,7 +51,7 @@ const UserDropdown = () => {
     }
 
     if (url) {
-      // console.log('ini url: ', url)
+      console.log('ini url: ', url)
       router.push(url)
     }
 

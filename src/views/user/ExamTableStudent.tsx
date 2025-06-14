@@ -95,7 +95,7 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
       const data = class_id
         ? await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
         : await fetchWithAuth(`/api/exam/byuser`, undefined, 'GET')
-      // console.log(data)
+      console.log(data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -109,9 +109,9 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
             end_time: result.end_time
           })
         )
-        // console.log('update: ', transformed)
+        console.log('update: ', transformed)
         setRows(transformed)
-        // // console.log('transformed:', transformed)
+        // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }
@@ -146,7 +146,7 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleConfirmDelete = () => {
     // perform delete logic here
-    // console.log('Delete ID:', selectedId)
+    console.log('Delete ID:', selectedId)
     setOpenDialog(false)
     setSelectedId(null)
   }

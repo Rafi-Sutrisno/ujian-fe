@@ -81,7 +81,7 @@ const ProblemTableAdmin = () => {
     try {
       const data = await fetchWithAuth(`/api/problem/`, undefined, 'GET')
 
-      // console.log(data)
+      console.log(data)
 
       if (data.status) {
         if (data.data) {
@@ -95,7 +95,7 @@ const ProblemTableAdmin = () => {
           setRows(transformed)
         }
 
-        // // console.log('transformed:', transformed)
+        // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch problems:', data.message)
       }
@@ -125,7 +125,7 @@ const ProblemTableAdmin = () => {
 
   const handleConfirmDelete = () => {
     // perform delete logic here
-    // console.log('Delete ID:', selectedId)
+    console.log('Delete ID:', selectedId)
     setOpenDialog(false)
     setSelectedId(null)
   }
@@ -156,10 +156,10 @@ const ProblemTableAdmin = () => {
 
   const handleSubmit = async () => {
     const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
-    // console.log('data: ', formData)
+    console.log('data: ', formData)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
-      // console.log('all field required')
+      console.log('all field required')
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -179,7 +179,7 @@ const ProblemTableAdmin = () => {
       const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
 
       if (result.status === false) {
-        // console.log(result)
+        console.log(result)
         return setSnackbar({
           open: true,
           message: result?.message || 'Failed to create problem.',
@@ -187,7 +187,7 @@ const ProblemTableAdmin = () => {
         })
       }
 
-      // console.log('Problem created:', result)
+      console.log('Problem created:', result)
       fetchData()
       setSnackbar({
         open: true,

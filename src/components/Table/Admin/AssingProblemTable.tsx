@@ -67,7 +67,7 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
           console.error('Failed to assign problems:', data)
           onError?.(data?.message || 'Failed to assign problems.')
         } else {
-          // console.log('Problems assigned successfully:', data)
+          console.log('Problems assigned successfully:', data)
           onSuccess?.()
           // fetchData()
         }
@@ -81,7 +81,7 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
       try {
         const data = await fetchWithAuth(`/api/exam_problem/unassigned/exam/${id}`, undefined, 'GET')
 
-        // console.log('unasigned:', data)
+        console.log('unasigned:', data)
 
         if (data.status) {
           const transformed = data.data.map(
@@ -91,7 +91,7 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
             })
           )
           setRows(transformed)
-          // // console.log('transformed:', transformed)
+          // console.log('transformed:', transformed)
         } else {
           console.error('Failed to fetch classes:', data.message)
         }
