@@ -1,25 +1,27 @@
-version: '3.8'
-
 services:
-  app:
-    container_name: nextjs-app
+  frontend:
+    container_name: ${APP_NAME}-app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '5437:3000'
-    environment:
-      - NODE_ENV=production
-    restart: unless-stopped
-    volumes:
-      - .:/app
+      - '3000:3000'
+    networks:
+      - frontend-net
+    restart: always
 
-  # Optional NGINX reverse proxy (useful for production)
-  # nginx:
-  #   image: nginx:alpine
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf
-  #   depends_on:
-  #     - app
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME}-nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+    networks:
+      - frontend-net
+
+networks:
+  frontend-net:
+    driver: bridge
