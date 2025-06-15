@@ -6,7 +6,10 @@ WORKDIR /app
 
 # Copy package files and install
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --ignore-scripts
+
+RUN npm run build:icons
+RUN npm run build
 
 # Copy source code
 COPY . .
