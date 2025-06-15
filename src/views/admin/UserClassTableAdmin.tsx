@@ -26,9 +26,7 @@ import {
 } from '@mui/material'
 
 import { visuallyHidden } from '@mui/utils'
-import { Delete } from '@mui/icons-material'
 
-import TopSectionModal from '@/components/top-section/topsectionModal'
 import AssignUserClassTable, { AssignUserTableRef } from '@components/Table/Admin/AssignUserTable'
 import { fetchWithAuth } from '@/utils/api'
 import TopSectionAssignUser from '@/components/top-section/topSectionAssignUser'
