@@ -39,6 +39,7 @@ import Link from 'next/link'
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import { fetchWithAuth } from '@/utils/api'
 import { v4 as uuidv4 } from 'uuid'
+import TopSectionCreateExam from '@/components/top-section/topSectionCreateExam'
 
 const frontnedURL = process.env.NEXT_PUBLIC_APP_URL
 
@@ -360,11 +361,28 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
     }
   }
 
+  const onError = (message?: string) => {
+    setSnackbar({
+      open: true,
+      message: message || 'Failed to remove user from class.',
+      severity: 'error'
+    })
+  }
+
+  const onSucess = (message?: string) => {
+    setSnackbar({
+      open: true,
+      message: message || 'Success to create exam using yaml.',
+      severity: 'success'
+    })
+    fetchData()
+  }
+
   return (
     <Card sx={{ mt: 4 }}>
       <CardContent>
         {class_id ? (
-          <TopSectionModal
+          <TopSectionCreateExam
             title='Exam List'
             buttonText='Add New Exam'
             modalContent={
@@ -618,7 +636,10 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                 </form>
               </CardContent>
             }
+            class_id={class_id}
             onSave={handleSubmit}
+            onSave2={onSucess}
+            onError={onError}
           />
         ) : (
           <CardHeader title='Exam List' />
