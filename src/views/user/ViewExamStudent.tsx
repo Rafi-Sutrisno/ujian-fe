@@ -122,7 +122,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
         seb_url: window.location.href
       }
 
-      const startExam = await fetchWithAuth('/api/proxy/start_exam', payload, 'POST')
+      const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
 
       console.log('ini start exam: ', startExam)
 
