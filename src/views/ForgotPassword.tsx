@@ -26,6 +26,8 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useState } from 'react'
 
 const ForgotPassword = ({ mode }: { mode: Mode }) => {
+  const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
+
   // Vars
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
@@ -43,7 +45,7 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:8080/api/user/forgot_password', {
+      const response = await fetch(`${serverPath}/api/user/forgot_password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

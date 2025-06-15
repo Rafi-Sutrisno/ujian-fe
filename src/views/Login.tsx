@@ -32,6 +32,8 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
 const Login = ({ mode }: { mode: Mode }) => {
+  const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
+
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [username, setUsername] = useState('')
@@ -57,7 +59,7 @@ const Login = ({ mode }: { mode: Mode }) => {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8080/api/user/login', {
+      const response = await fetch(`${serverPath}/api/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

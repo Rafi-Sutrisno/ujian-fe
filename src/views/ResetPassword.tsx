@@ -15,6 +15,8 @@ import Logo from '@components/layout/shared/Logo'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
 const ResetPassword = ({ token }: { token: string }) => {
+  const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
+
   const mode = 'light' // fallback until you properly detect theme
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
@@ -29,7 +31,7 @@ const ResetPassword = ({ token }: { token: string }) => {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:8080/api/user/reset_password', {
+      const res = await fetch(`${serverPath}/api/user/reset_password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, new_password: newPassword }),
