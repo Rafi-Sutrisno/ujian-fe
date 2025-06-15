@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import { useImperativeHandle, forwardRef } from 'react'
+
 import {
   Paper,
   Table,
@@ -12,7 +15,7 @@ import {
   TableRow,
   Checkbox
 } from '@mui/material'
-import { useImperativeHandle, forwardRef } from 'react'
+
 import { fetchWithAuth } from '@/utils/api'
 
 export interface AssignUserTableRef {
@@ -59,6 +62,7 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
 
     if (selectedRows.length === 0) {
       console.warn('No users selected.')
+
       return
     }
 
@@ -76,6 +80,7 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
       } else {
         console.log('Users assigned successfully:', data)
         onSuccess?.()
+
         // fetchData()
       }
     } catch (error) {
@@ -100,7 +105,9 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
             noid: result.noid
           })
         )
+
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -126,11 +133,13 @@ const AssignUserClassTable = forwardRef<AssignUserTableRef, AssignUserTableProps
   const handleToggleRow = (id: string) => {
     setSelectedIds(prev => {
       const updated = new Set(prev)
+
       if (updated.has(id)) {
         updated.delete(id)
       } else {
         updated.add(id)
       }
+
       return updated
     })
   }

@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import Link from 'next/link'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -13,8 +16,8 @@ import Button from '@mui/material/Button'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, CardHeader, Stack, Grid, TextField, Snackbar, Alert } from '@mui/material'
-import Link from 'next/link'
+import { Card, CardContent, Stack, Grid, TextField, Snackbar, Alert } from '@mui/material'
+
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import EditorBasic from '@/components/Editor/EditorBasic'
 import { fetchWithAuth } from '@/utils/api'
@@ -44,6 +47,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -61,7 +65,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -72,7 +78,8 @@ const ProblemTableAdmin = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
-  const [openDialog, setOpenDialog] = React.useState(false)
+
+  // const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
@@ -92,6 +99,7 @@ const ProblemTableAdmin = () => {
               created_at: result.created_at
             })
           )
+
           setRows(transformed)
         }
 
@@ -110,6 +118,7 @@ const ProblemTableAdmin = () => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -123,12 +132,12 @@ const ProblemTableAdmin = () => {
     setPage(0)
   }
 
-  const handleConfirmDelete = () => {
-    // perform delete logic here
-    console.log('Delete ID:', selectedId)
-    setOpenDialog(false)
-    setSelectedId(null)
-  }
+  // const handleConfirmDelete = () => {
+  //   // perform delete logic here
+  //   console.log('Delete ID:', selectedId)
+  //   setOpenDialog(false)
+  //   setSelectedId(null)
+  // }
 
   const [formData, setFormData] = React.useState({
     title: '',
@@ -142,6 +151,7 @@ const ProblemTableAdmin = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -156,10 +166,12 @@ const ProblemTableAdmin = () => {
 
   const handleSubmit = async () => {
     const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
+
     console.log('data: ', formData)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
       console.log('all field required')
+
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -169,9 +181,11 @@ const ProblemTableAdmin = () => {
 
     try {
       const payload: any = { title, description, constraints, sample_input, sample_output }
+
       if (cpu_time_limit !== '') {
         payload.cpu_time_limit = parseFloat(cpu_time_limit)
       }
+
       if (memory_limit !== '') {
         payload.memory_limit = parseInt(memory_limit)
       }
@@ -180,6 +194,7 @@ const ProblemTableAdmin = () => {
 
       if (result.status === false) {
         console.log(result)
+
         return setSnackbar({
           open: true,
           message: result?.message || 'Failed to create problem.',
@@ -324,7 +339,9 @@ const ProblemTableAdmin = () => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}

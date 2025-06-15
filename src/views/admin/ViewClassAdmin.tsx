@@ -4,14 +4,19 @@
 import { useEffect, useState } from 'react'
 
 // MUI Imports
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
-import TopSection2Modal from '@/components/top-section/topsection2modal'
+
 import Typography from '@mui/material/Typography'
-import { useRouter } from 'next/navigation'
-import { Snackbar, Alert, Select, MenuItem, InputLabel, FormControl, SelectChangeEvent } from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material';
+import { Snackbar, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
+
+import TopSection2Modal from '@/components/top-section/topsection2modal'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewClassProps {
@@ -20,6 +25,7 @@ interface ViewClassProps {
 
 const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     name: '',
     year: '',
@@ -43,6 +49,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
       if (data.status && data.data) {
         const result = data.data
+
         setFormData({
           name: result.name,
           year: result.year,
@@ -63,6 +70,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -95,7 +103,8 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
       if (result.status === false) {
         console.log(result)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: result?.message || 'Failed to update class.',
           severity: 'error'
@@ -125,7 +134,8 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
       if (data.status === false) {
         console.log(data)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete class.',
           severity: 'error'
@@ -142,6 +152,7 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
       setTimeout(() => {
         router.push('/admin/class')
       }, 1000)
+
       // Redirect or show confirmation
     } catch (error) {
       console.error('Network error:', error)

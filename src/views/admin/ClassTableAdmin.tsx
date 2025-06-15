@@ -1,7 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
 import Link from 'next/link'
+
 import {
   Paper,
   Table,
@@ -13,7 +15,6 @@ import {
   TableRow,
   Button,
   Stack,
-  Checkbox,
   Toolbar,
   Typography,
   IconButton,
@@ -28,6 +29,7 @@ import {
 } from '@mui/material'
 
 import { Delete } from '@mui/icons-material'
+
 import AddClassModal from '@/components/form/AddClassForm'
 import { fetchWithAuth } from '@/utils/api'
 
@@ -61,6 +63,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -124,7 +127,9 @@ export default function ClassTableAdmin() {
             created_at: result.created_at
           })
         )
+
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -140,22 +145,14 @@ export default function ClassTableAdmin() {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = rows.map(n => n.id)
-      setSelected(newSelected)
-    } else {
-      setSelected([])
-    }
-  }
-
   const handleClick = (id: string) => {
     const selectedIndex = selected.indexOf(id)
-    let newSelected = [...selected]
+    const newSelected = [...selected]
 
     if (selectedIndex === -1) {
       newSelected.push(id)
@@ -237,6 +234,7 @@ export default function ClassTableAdmin() {
             <TableBody>
               {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                 const isItemSelected = isSelected(row.id)
+
                 return (
                   <TableRow
                     hover

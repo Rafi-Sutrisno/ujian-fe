@@ -1,9 +1,11 @@
 'use client'
 
 import type { ReactElement } from 'react'
+
 import dynamic from 'next/dynamic'
 
 import { useParams } from 'next/navigation'
+
 import SplitViewPlaygroundStudent from '@/views/user/split_views/PlagroundStudent'
 
 const PlaygroundStudent = dynamic(() => import('@/views/user/PlaygroundStudent'))
@@ -17,7 +19,9 @@ const tabContentList = (id: string): { [key: string]: ReactElement } => ({
 const FormLayouts = () => {
   const params = useParams()
   const id = params?.id as string
-  return <SplitViewPlaygroundStudent tabContentList={tabContentList(id)} />
+
+  
+return <SplitViewPlaygroundStudent tabContentList={tabContentList(id)} />
 }
 
 export default FormLayouts

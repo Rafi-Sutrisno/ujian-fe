@@ -27,7 +27,8 @@ import {
 
 import { visuallyHidden } from '@mui/utils'
 
-import AssignUserClassTable, { AssignUserTableRef } from '@components/Table/Admin/AssignUserTable'
+import type { AssignUserTableRef } from '@components/Table/Admin/AssignUserTable'
+import AssignUserClassTable from '@components/Table/Admin/AssignUserTable'
 import { fetchWithAuth } from '@/utils/api'
 import TopSectionAssignUser from '@/components/top-section/topSectionAssignUser'
 
@@ -63,6 +64,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -87,14 +89,15 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
   const [open, setOpen] = React.useState(false)
   const [selectedData, setSelectedData] = React.useState<Data | null>(null)
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
+  // const handleClickOpen = () => {
+  //   setOpen(true)
+  // }
 
   const handleClose = () => {
     setSelectedData(null)
     setOpen(false)
   }
+
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: '',
@@ -117,8 +120,10 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
             noid: result.user.noid
           })
         )
+
         console.log('update: ', transformed)
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -134,6 +139,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -168,11 +174,15 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
 
   const handleDeleteClick = async (id: string) => {
     console.log(id)
+
     try {
       const data = await fetchWithAuth(`/api/user_class/${id}`, undefined, 'DELETE')
+
       console.log('User removed:', data)
+
       if (data.status === false) {
         console.log(data)
+
         return setSnackbar({
           open: true,
           message: data?.message + ', error : ' + data?.error || 'Failed to remove user from class.',
@@ -199,6 +209,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
         severity: 'error'
       })
     }
+
     handleClose()
   }
 
@@ -277,6 +288,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                 <TableBody>
                   {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                     const isItemSelected = isSelected(row.id)
+
                     return (
                       <TableRow
                         hover
@@ -290,9 +302,11 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                         {columns.map(column => {
                           // console.log('ini column:', column)
                           const value = row[column.id as keyof Data]
+
                           // console.log('ini value:', value)
                           if (column.id === 'actions') {
                             if (row.role === 'admin') return null
+
                             return (
                               <TableCell key={column.id} align={column.align ?? 'left'}>
                                 <Button
@@ -309,6 +323,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                               </TableCell>
                             )
                           }
+
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
                               {value}

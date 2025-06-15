@@ -1,8 +1,10 @@
 'use client'
 import type { ReactElement } from 'react'
+
 import dynamic from 'next/dynamic'
 
 import { useParams } from 'next/navigation'
+
 import SplitViewProblemAdmin from '@/views/admin/split_views/ViewProblemAdmin'
 
 const ViewProblemAdmin = dynamic(() => import('@/views/admin/ViewProblemAdmin'))

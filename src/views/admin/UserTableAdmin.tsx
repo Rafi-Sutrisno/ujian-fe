@@ -1,7 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
 import Link from 'next/link'
+
 import {
   Box,
   Paper,
@@ -30,6 +32,7 @@ import {
 
 import { visuallyHidden } from '@mui/utils'
 import { Delete } from '@mui/icons-material'
+
 import AddUserModal from '@/components/form/AddUserForm'
 import { fetchWithAuth } from '@/utils/api'
 import AddUserUploadModal from '@/components/form/AddUserUpload'
@@ -66,6 +69,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -112,6 +116,7 @@ export default function UserTableAdmin() {
   const handleCloseAdd = () => setOpenModal(false)
 
   const [rows, setRows] = React.useState<Data[]>([])
+
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: '',
@@ -134,6 +139,7 @@ export default function UserTableAdmin() {
             created_at: user.created_at
           })
         )
+
         setRows(transformed)
       } else {
         console.error('Failed to fetch users:', data.message)
@@ -149,18 +155,22 @@ export default function UserTableAdmin() {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = rows.map(n => n.id)
-      setSelected(newSelected)
-      return
-    }
-    setSelected([])
-  }
+  // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.checked) {
+  //     const newSelected = rows.map(n => n.id)
+
+  //     setSelected(newSelected)
+
+  //     return
+  //   }
+
+  //   setSelected([])
+  // }
 
   const handleClick = (id: string) => {
     const selectedIndex = selected.indexOf(id)
@@ -287,6 +297,7 @@ export default function UserTableAdmin() {
             <TableBody>
               {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                 const isItemSelected = isSelected(row.id)
+
                 return (
                   <TableRow
                     hover
@@ -302,6 +313,7 @@ export default function UserTableAdmin() {
                     </TableCell> */}
                     {columns.map(column => {
                       const value = row[column.id as keyof Data]
+
                       if (column.id === 'actions') {
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
@@ -320,6 +332,7 @@ export default function UserTableAdmin() {
                           </TableCell>
                         )
                       }
+
                       return (
                         <TableCell key={column.id} align={column.align ?? 'left'}>
                           {value}

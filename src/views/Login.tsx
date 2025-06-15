@@ -23,7 +23,6 @@ import type { Mode } from '@core/types'
 
 // Component Imports
 import Logo from '@components/layout/shared/Logo'
-import Illustrations from '@components/Illustrations'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
@@ -47,7 +46,8 @@ const Login = ({ mode }: { mode: Mode }) => {
 
   // Hooks
   const router = useRouter()
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
+
+  // const authBackground = useImageVariant(mode, lightImg, darkImg)
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
@@ -72,11 +72,13 @@ const Login = ({ mode }: { mode: Mode }) => {
       })
 
       const data = await response.json()
+
       console.log(data)
 
       if (response.ok) {
         document.cookie = `token=${data.data.token}; path=/; samesite=lax`
         setSuccess('Login Succesfull, redirecting to your page ')
+
         if (data.data.role_id === 1) {
           router.push('/admin/user')
         } else {
@@ -92,6 +94,7 @@ const Login = ({ mode }: { mode: Mode }) => {
       setLoading(false)
     }
   }
+
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>
       <Card className='flex flex-col sm:is-[450px]'>

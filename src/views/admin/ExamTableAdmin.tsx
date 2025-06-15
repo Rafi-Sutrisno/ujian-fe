@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import Link from 'next/link'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -35,10 +38,11 @@ import {
   CardHeader
 } from '@mui/material'
 import TextField from '@mui/material/TextField'
-import Link from 'next/link'
-import TopSectionModal from '@/components/top-section/topsectionModal'
-import { fetchWithAuth } from '@/utils/api'
+
 import { v4 as uuidv4 } from 'uuid'
+
+import { fetchWithAuth } from '@/utils/api'
+
 import TopSectionCreateExam from '@/components/top-section/topSectionCreateExam'
 
 const frontnedURL = process.env.NEXT_PUBLIC_APP_URL
@@ -102,6 +106,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -119,7 +124,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -163,6 +170,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
         setRows(transformed)
 
         const langData = await fetchWithAuth(`/api/language/all`, undefined, 'GET')
+
         if (langData.status) {
           const transformed = langData.data.map(
             (result: any): LangData => ({
@@ -171,6 +179,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
               code: result.code
             })
           )
+
           console.log('lang: ', transformed)
           setLang(transformed)
         }
@@ -188,6 +197,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -235,6 +245,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -246,6 +257,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
     // Append timezone manually if it's missing
     let start_time = data.start_time
+
     if (!start_time.includes('+')) {
       start_time += ':00+07:00' // or use dynamic TZ if needed
     }
@@ -268,7 +280,9 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleSubmit = async () => {
     const formattedData = formatExamData(formData)
+
     console.log('data:', formattedData)
+
     const {
       name,
       short_name,
@@ -281,6 +295,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       seb_quit_url,
       allowed_languages
     } = formattedData
+
     // console.log('data: ', name, short_name, is_published, start_time, duration)
     console.log('allowd lang:', allowed_languages.length)
 
@@ -294,6 +309,7 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
       allowed_languages.length <= 0
     ) {
       console.log('all field required')
+
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -314,12 +330,14 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
         seb_config_key: sebConfigKeyEnabled ? seb_config_key : '',
         seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
       }
+
       console.log('ini payload: ', payload)
 
       const data = await fetchWithAuth(`/api/exam/`, payload, 'POST')
 
       if (data.status === false) {
         console.log(data)
+
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to create exam.',
@@ -336,8 +354,10 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
 
       console.log('ini payload2:', payload2)
       const data2 = await fetchWithAuth(`/api/exam_lang/create_many`, payload2, 'POST')
+
       if (data2.status === false) {
         console.log(data2)
+
         return setSnackbar({
           open: true,
           message: data2?.message || 'Failed to create exam.',
@@ -564,10 +584,13 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                                 checked={sebQuitUrlEnabled}
                                 onChange={e => {
                                   const checked = e.target.checked
+
                                   setSebQuitUrlEnabled(checked)
+
                                   if (checked) {
                                     const randomId = uuidv4().slice(0, 8)
                                     const quitUrl = `${frontnedURL}/${randomId}`
+
                                     setFormData(prev => ({ ...prev, seb_quit_url: quitUrl }))
                                   } else {
                                     setFormData(prev => ({ ...prev, seb_quit_url: '' }))
@@ -696,7 +719,9 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}

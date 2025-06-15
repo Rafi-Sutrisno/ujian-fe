@@ -1,19 +1,23 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
+import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { SelectChangeEvent } from '@mui/material/Select'
-import TopSection2Modal from '@/components/top-section/topsection2modal'
+
 import { Snackbar, Alert } from '@mui/material'
-import { useRouter } from 'next/navigation'
+
+import TopSection2Modal from '@/components/top-section/topsection2modal'
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewUserProps {
@@ -22,6 +26,7 @@ interface ViewUserProps {
 
 const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -46,6 +51,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
       if (data.status && data.data) {
         const user = data.data
+
         setFormData({
           username: user.username,
           name: user.name,
@@ -68,6 +74,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
   // handleChange, handleSelectChange, handleSubmit, handleDelete stay the same...
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name as string]: value
@@ -76,6 +83,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
   const handleSelectChange = (e: SelectChangeEvent) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -98,7 +106,8 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
       if (data.status === false) {
         console.log(data)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: data?.message || 'Failed to update user.',
           severity: 'error'
@@ -128,7 +137,8 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
       if (data.status === false) {
         console.log(data)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete user.',
           severity: 'error'
@@ -143,6 +153,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
         severity: 'success'
       })
       router.push('/admin/user')
+
       // Redirect or show confirmation
     } catch (error) {
       console.error('Network error:', error)

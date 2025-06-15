@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewClassProps {
@@ -23,11 +24,11 @@ const ViewClassStudent: React.FC<ViewClassProps> = ({ id }) => {
     short_name: ''
   })
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error'
-  })
+  // const [snackbar, setSnackbar] = useState({
+  //   open: false,
+  //   message: '',
+  //   severity: 'success' as 'success' | 'error'
+  // })
 
   const fetchData = async () => {
     try {
@@ -39,6 +40,7 @@ const ViewClassStudent: React.FC<ViewClassProps> = ({ id }) => {
 
       if (data.status && data.data) {
         const result = data.data
+
         setFormData({
           name: result.name,
           year: result.year,

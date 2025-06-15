@@ -2,17 +2,17 @@
 
 // React Imports
 import { useEffect, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
 
 import CardContent from '@mui/material/CardContent'
-import { Button, Box, Typography, Snackbar, Alert, FormControl, InputLabel } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
-import { fetchWithAuth, fetchWithAuthCookie, fetchWithCookie } from '@/utils/api'
+import { fetchWithAuth } from '@/utils/api'
 
 declare global {
   interface Window {
@@ -33,7 +33,7 @@ type Data = {
 }
 
 const ViewResultStudent: React.FC<ViewExamProps> = ({ id }) => {
-  const router = useRouter()
+  // const router = useRouter()
 
   const [rows, setRows] = useState<Data>()
   const [err, setErr] = useState('')

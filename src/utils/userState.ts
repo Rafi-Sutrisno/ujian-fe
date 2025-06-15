@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js'
+
 import { fetchWithAuth } from './api'
 
 export const getStorageKey = (
@@ -22,6 +23,7 @@ export const saveEncrypted = (
   language?: string // optional, only needed for 'code'
 ) => {
   const encrypted = CryptoJS.AES.encrypt(value, userId).toString()
+
   if (type === 'code') {
     localStorage.setItem(getStorageKey(type, userId, problemId, examId, language), encrypted)
   } else {
@@ -43,7 +45,9 @@ export const loadEncrypted = async (
   if (encrypted) {
     try {
       const bytes = CryptoJS.AES.decrypt(encrypted, userId)
-      return bytes.toString(CryptoJS.enc.Utf8)
+
+      
+return bytes.toString(CryptoJS.enc.Utf8)
     } catch {
       // Fall through to DB
     }
@@ -52,6 +56,7 @@ export const loadEncrypted = async (
   // Step 2: Try backend DB (only for 'code')
   if (type === 'code' && language) {
     console.log('masuk ambil kode dari be')
+
     try {
       const response = await fetchWithAuth(
         `/api/user/draft/load`,
@@ -65,7 +70,9 @@ export const loadEncrypted = async (
 
       if (response?.data?.code) {
         const bytes = CryptoJS.AES.decrypt(response.data.code, userId)
-        return bytes.toString(CryptoJS.enc.Utf8)
+
+        
+return bytes.toString(CryptoJS.enc.Utf8)
       }
     } catch (err) {
       console.warn('Error fetching from DB draft', err)
@@ -75,7 +82,8 @@ export const loadEncrypted = async (
   // Step 3: Fallback to default
   if (type === 'code') {
     console.log('Returning default code for language:', language)
-    return getDefaultCode(language)
+    
+return getDefaultCode(language)
   }
 
   return ''
@@ -84,6 +92,7 @@ export const loadEncrypted = async (
 // Default code generator
 const getDefaultCode = (language?: string): string => {
   console.log('ini lang:', language)
+
   switch (language) {
     case 'C':
       return `#include <stdio.h>

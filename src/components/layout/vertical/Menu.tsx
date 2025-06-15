@@ -1,15 +1,19 @@
 'use client'
-import { getRoleFromToken, getTokenFromCookies } from '@/utils/token'
-import { SubMenu, MenuItem, MenuSection } from '@menu/vertical-menu'
 import { useEffect, useState } from 'react'
+
+import { getRoleFromToken, getTokenFromCookies } from '@/utils/token'
+import { MenuItem, MenuSection } from '@menu/vertical-menu'
+
 const MenuAuthRole = () => {
   const [role, setRole] = useState<'user' | 'admin' | null>(null)
 
   useEffect(() => {
     const token = getTokenFromCookies()
     const userRole = getRoleFromToken(token)
+
     setRole(userRole)
   }, [])
+
   return (
     <>
       {role === 'admin' && (
@@ -27,6 +31,7 @@ const MenuAuthRole = () => {
             Problem
           </MenuItem>
         </MenuSection>
+
         // <SubMenu label='Admin' icon={<i className='ri-home-smile-line' />}>
         //   <MenuItem href='/'>Home</MenuItem>
         //   <MenuItem href='/admin/user'>User</MenuItem>

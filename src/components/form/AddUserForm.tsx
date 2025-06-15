@@ -3,6 +3,9 @@
 import { useState } from 'react'
 
 // MUI Imports
+import type {
+  SelectChangeEvent
+} from '@mui/material';
 import {
   Button,
   Dialog,
@@ -16,9 +19,9 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl,
-  SelectChangeEvent
+  FormControl
 } from '@mui/material'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface AddUserModalProps {
@@ -45,6 +48,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name as string]: value
@@ -80,6 +84,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
     }
 
     const roleId = roleMapping[role.toLowerCase()]
+
     if (!roleId) {
       return setSnackbar({
         open: true,

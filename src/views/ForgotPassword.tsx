@@ -1,6 +1,8 @@
 'use client'
 
 // Next Imports
+import { useState } from 'react'
+
 import Link from 'next/link'
 
 // MUI Imports
@@ -23,7 +25,6 @@ import Logo from '@components/layout/shared/Logo'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
 // React Imports
-import { useState } from 'react'
 
 const ForgotPassword = ({ mode }: { mode: Mode }) => {
   const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
@@ -55,6 +56,7 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
       })
 
       const data = await response.json()
+
       console.log('Forgot Password Response:', data)
 
       // You can show a success message or redirect here

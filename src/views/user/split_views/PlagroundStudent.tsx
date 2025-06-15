@@ -5,14 +5,17 @@ import { useEffect, useState } from 'react'
 import type { SyntheticEvent, ReactElement } from 'react'
 
 // MUI Imports
+import { useRouter } from 'next/navigation'
+
 import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import { fetchWithAuth } from '@/utils/api'
-import { useRouter } from 'next/navigation'
+
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box } from '@mui/material'
+
+import { fetchWithAuth } from '@/utils/api'
 
 const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key: string]: ReactElement } }) => {
   // States
@@ -27,7 +30,9 @@ const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key
   const checkExamSession = async () => {
     try {
       const check = await fetchWithAuth('/api/exam_session/check_session', undefined, 'GET')
+
       console.log('ini check:', check, check.status)
+
       if (!check.status) {
         setSessionInvalid(true)
       }

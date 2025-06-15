@@ -3,6 +3,9 @@
 import { useState } from 'react'
 
 // MUI Imports
+import type {
+  SelectChangeEvent
+} from '@mui/material';
 import {
   Button,
   Dialog,
@@ -16,9 +19,9 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl,
-  SelectChangeEvent
+  FormControl
 } from '@mui/material'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface AddUserModalProps {
@@ -43,6 +46,7 @@ const AddClassModal = ({ open = false, onClose, onAdded }: AddUserModalProps) =>
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name as string]: value

@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import { useState } from 'react'
+
 import { Button, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 
 interface ClassTopSectionProps {
@@ -23,6 +25,7 @@ const TopSectionModal = ({
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
+
   const handleClose = () => {
     onClose?.()
     setOpen(false)

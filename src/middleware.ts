@@ -10,6 +10,7 @@ export function middleware(request: NextRequest) {
   console.log('middleware active')
   const token = request.cookies.get('token')?.value
   const { pathname } = request.nextUrl
+
   console.log('ini pathname dan token:', pathname, token)
 
   // If already logged in and trying to access login page, redirect to home

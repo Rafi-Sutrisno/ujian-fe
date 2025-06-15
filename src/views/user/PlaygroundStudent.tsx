@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 
 import CardContent from '@mui/material/CardContent'
@@ -24,16 +27,17 @@ import {
 } from '@mui/material'
 import { ArrowBackIos, ArrowForwardIos, PlayArrow, Publish } from '@mui/icons-material'
 
+import CircularProgress from '@mui/material/CircularProgress'
+
+import { useTheme } from '@mui/material/styles'
+
 import { fetchWithAuth } from '@/utils/api'
 
-import CircularProgress from '@mui/material/CircularProgress'
 import Timer from '@/components/time/timer'
 import { saveEncrypted, loadEncrypted, getStorageKey } from '@/utils/userState'
 import { getTokenFromCookies, getUserIdFromToken } from '@/utils/token'
-import { type } from 'node:os'
-import { useRouter } from 'next/navigation'
+
 import { getExtensionsForCodeEditor } from '@/components/Editor/CodeEditor'
-import { useTheme } from '@mui/material/styles'
 
 interface PlaygroundProps {
   exam_id: string
@@ -73,11 +77,13 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   const [output, setOutput] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success' as 'success' | 'error'
   })
+
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [language, setLanguage] = useState(1)
 
@@ -91,6 +97,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     end_time: '',
     allowed_languages: []
   })
+
   const [problems, setProblems] = useState<Data[]>([])
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0)
   const currentProblem = problems[currentProblemIndex]
@@ -100,10 +107,13 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   // const token = getTokenFromCookies()
   const [userId, setUserId] = useState('anonymous')
+
   useEffect(() => {
     const token = getTokenFromCookies()
+
     if (token) {
       const id = getUserIdFromToken(token)
+
       setUserId(id || 'anonymous')
       console.log('ini user id:', id)
     }
@@ -113,7 +123,9 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     if (!userId || !currentProblem) return
 
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
+
     if (!selectedLangCode) throw new Error('Selected language code not found')
+
     ;(async () => {
       const loadedCode = await loadEncrypted('code', userId, currentProblem.id, exam_id, selectedLangCode)
       const loadedInput = await loadEncrypted('input', userId, currentProblem.id, exam_id)
@@ -131,6 +143,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     const interval = setInterval(() => {
       problems.forEach(problem => {
         const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
+
         if (!selectedLangCode) return
         console.log('masuk loop save draft')
         const problemId = problem.id
@@ -164,6 +177,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const handleCodeChange = (newCode: string) => {
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
+
     setCode(newCode)
     saveEncrypted('code', userId, currentProblem.id, newCode, exam_id, selectedLangCode)
   }
@@ -175,6 +189,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const handleOutputChange = (newOutput: string) => {
     setOutput(newOutput)
+
     if (currentProblem) {
       saveEncrypted('output', userId, currentProblem.id, newOutput, exam_id)
     }
@@ -237,18 +252,21 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         try {
           await fetchData()
           await fetchDataProblem()
+
           // After both done
           console.log('Both fetches done sequentially')
         } catch (err) {
           console.error('Error fetching data:', err)
         }
       }
+
       fetchSequentially()
     }
   }, [exam_id])
 
   const handleRun = async () => {
     setLoading(true)
+
     try {
       const encodedCode = btoa(code) // Encode the code to Base64
       const encodedInput = btoa(input) // Encode the input to Base64
@@ -260,17 +278,21 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       }
 
       const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
+
       console.log('ini result:', result)
 
       if (result.status) {
         const res = result.data
+
         if (res.status?.id === 3) {
           const decodedOutput = atob(res.stdout || '') // Decode Base64 output
+
           // setOutput(decodedOutput)
           handleOutputChange(decodedOutput)
         } else {
           const errorOutput = res.compile_output || res.stderr || 'Unknown error occurred'
           const decodedError = atob(errorOutput)
+
           // setOutput(`Error: ${decodedError}`)
           handleOutputChange(`Error: ${decodedError}`)
         }
@@ -284,6 +306,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     } catch (err) {
       console.error('Error during code execution:', err)
       handleOutputChange('Failed to run code.')
+
       // setOutput('Failed to run code. Please try again.')
     } finally {
       setLoading(false)
@@ -292,6 +315,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const handleSubmit = async () => {
     setLoadingSubmit(true)
+
     try {
       const encodedCode = code
 
@@ -303,6 +327,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       }
 
       const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
+
       if (result.status) {
         setSnackbar({
           open: true,
@@ -323,6 +348,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         message: 'Failed to submit code.',
         severity: 'error'
       })
+
       // setOutput('Failed to run code. Please try again.')
     } finally {
       setLoadingSubmit(false)
@@ -336,6 +362,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   const confirmFinishExam = async () => {
     setConfirmOpen(false)
     const result = await fetchWithAuth(`/api/exam_session/finish_exam/${exam_id}`, {}, 'POST')
+
     console.log('ini result finish exam:', result)
     router.push(`/exam_feedback/${exam_id}`)
   }
@@ -579,7 +606,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       <Dialog open={confirmOpen} onClose={cancelFinishExam}>
         <DialogTitle>Confirm Finish</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to finish the exam? You won't be able to return.</Typography>
+          <Typography>Are you sure you want to finish the exam? You won&apos;t be able to return.</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelFinishExam}>Cancel</Button>

@@ -11,6 +11,7 @@ export async function fetchWithAuth(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
+
   console.log('server: ', serverPath)
 
   if (!token) {
@@ -48,6 +49,7 @@ export async function fetchWithAuthFile(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
+
   console.log('server:', serverPath)
 
   if (!token) {
@@ -72,6 +74,7 @@ export async function fetchWithAuthFile(
 
   if (!response.ok) {
     const errorText = await response.text()
+
     throw new Error(`Upload failed: ${response.status} ${errorText}`)
   }
 
@@ -85,6 +88,7 @@ export async function fetchWithAuthCookie(
   options: RequestInit = {}
 ) {
   const token = getTokenFromCookies()
+
   console.log('server: ', serverPath)
 
   if (!token) {
@@ -139,5 +143,7 @@ export async function fetchWithCookie(
 
   const fullUrl = new URL(url, serverPath).toString()
   const response = await fetch(fullUrl, fetchOptions)
-  return response.json()
+
+  
+return response.json()
 }

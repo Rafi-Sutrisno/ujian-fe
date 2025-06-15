@@ -1,10 +1,12 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import type { ReactElement } from 'react'
+
+import dynamic from 'next/dynamic'
 
 // import ViewExamStudent from '@/views/user/ViewExamStudent'
 import { useParams } from 'next/navigation'
+
 import SplitViewExamStudent from '@/views/user/split_views/ViewExamStudent'
 
 const ViewExamStudent = dynamic(() => import('@/views/user/ViewExamStudent'))

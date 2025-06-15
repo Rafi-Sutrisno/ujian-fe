@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import Link from 'next/link'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -17,7 +20,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
 import { Card, CardContent, CardHeader, Stack } from '@mui/material'
-import Link from 'next/link'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface ExamTableProps {
@@ -56,6 +59,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -73,7 +77,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -92,6 +98,7 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(`/api/submission/stats/exam/${exam_id}`, undefined, 'GET')
+
       console.log('ini dari be: ', data)
 
       if (data.status) {
@@ -106,8 +113,10 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             finished_at: result.status === 1 ? result.finished_at : '-'
           })
         )
+
         console.log('update: ', transformed)
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -123,6 +132,7 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -136,10 +146,10 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
     setPage(0)
   }
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedId(id)
-    setOpenDialog(true)
-  }
+  // const handleDeleteClick = (id: string) => {
+  //   setSelectedId(id)
+  //   setOpenDialog(true)
+  // }
 
   const handleConfirmDelete = () => {
     // perform delete logic here
@@ -193,6 +203,7 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                         if (column.id === 'total_correct') {
                           const correct = row.total_correct
                           const total = row.total_problem
+
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
                               {correct} / {total}
@@ -204,12 +215,14 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                           const correct = row.total_correct
                           const total = row.total_problem
                           const percentage = total > 0 ? ((correct / total) * 100).toFixed(2) : '0.00'
+
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
                               {percentage}%
                             </TableCell>
                           )
                         }
+
                         if (column.id === 'action') {
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
@@ -223,7 +236,9 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}

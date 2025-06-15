@@ -2,6 +2,7 @@
 
 // React Imports
 import { useEffect, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 // MUI Imports
@@ -10,9 +11,9 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 
 import CardContent from '@mui/material/CardContent'
-import { Button, Box, Typography, Snackbar, Alert, FormControl, InputLabel } from '@mui/material'
+import { Button, Box, Typography, Snackbar, Alert } from '@mui/material'
 
-import { fetchWithAuth, fetchWithAuthCookie, fetchWithCookie } from '@/utils/api'
+import { fetchWithAuth } from '@/utils/api'
 
 declare global {
   interface Window {
@@ -39,6 +40,7 @@ type FormData = {
   duration: string
   end_time: string
   is_seb_restricted: boolean
+
   // seb_browser_key: string
   // seb_config_key: string
   allowed_languages: LangData[] // 👈 Correct type
@@ -46,12 +48,14 @@ type FormData = {
 
 const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
   const router = useRouter()
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success' as 'success' | 'error'
   })
-  const [lang, setLang] = useState<LangData[]>([])
+
+  // const [lang, setLang] = useState<LangData[]>([])
 
   const [formData, setFormData] = useState<FormData>({
     id: '',

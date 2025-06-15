@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import Link from 'next/link'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -17,10 +20,11 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
 import { Card, CardContent, Stack, Snackbar, Alert } from '@mui/material'
-import Link from 'next/link'
+
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import { fetchWithAuth } from '@/utils/api'
-import AssignProblemTable, { AssignProblemTableRef } from '@components/Table/Admin/AssingProblemTable'
+import type { AssignProblemTableRef } from '@components/Table/Admin/AssingProblemTable'
+import AssignProblemTable from '@components/Table/Admin/AssingProblemTable'
 
 interface ProblemTableProps {
   exam_id: string
@@ -52,6 +56,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -69,7 +74,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -101,6 +108,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
               created_at: result.created_at
             })
           )
+
           setRows(transformed)
         }
 
@@ -119,6 +127,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -140,11 +149,15 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
   const handleConfirmDelete = async () => {
     // perform delete logic here
     console.log('Delete ID:', selectedId)
+
     try {
       const data = await fetchWithAuth(`/api/exam_problem/delete/${selectedId}`, undefined, 'DELETE')
+
       console.log('Problem removed:', data)
+
       if (data.status === false) {
         console.log(data)
+
         return setSnackbar({
           open: true,
           message: data?.message + ', error : ' + data?.error || 'Failed to remove problem from exam.',
@@ -184,13 +197,14 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
     sample_output: ``
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target
+
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }))
+  // }
 
   const [snackbar, setSnackbar] = React.useState({
     open: false,
@@ -198,56 +212,59 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
     severity: 'success' as 'success' | 'error'
   })
 
-  const handleSubmit = async () => {
-    const { title, description, constraints, sample_input, sample_output } = formData
-    console.log('data: ', formData)
+  // const handleSubmit = async () => {
+  //   const { title, description, constraints, sample_input, sample_output } = formData
 
-    if (!title || !description || !constraints || !sample_input || !sample_output) {
-      console.log('all field required')
-      return setSnackbar({
-        open: true,
-        message: 'All fields cant be null.',
-        severity: 'error'
-      })
-    }
+  //   console.log('data: ', formData)
 
-    try {
-      const payload = { exam_id, title, description, constraints, sample_input, sample_output }
+  //   if (!title || !description || !constraints || !sample_input || !sample_output) {
+  //     console.log('all field required')
 
-      const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
+  //     return setSnackbar({
+  //       open: true,
+  //       message: 'All fields cant be null.',
+  //       severity: 'error'
+  //     })
+  //   }
 
-      if (result.status === false) {
-        console.log(result)
-        return setSnackbar({
-          open: true,
-          message: result?.message || 'Failed to create problem.',
-          severity: 'error'
-        })
-      }
+  //   try {
+  //     const payload = { exam_id, title, description, constraints, sample_input, sample_output }
 
-      console.log('Problem created:', result)
-      fetchData()
-      setSnackbar({
-        open: true,
-        message: 'Problem created successfully!',
-        severity: 'success'
-      })
-    } catch (error) {
-      console.error('Network error:', error)
-      setSnackbar({
-        open: true,
-        message: 'Network error while creating problem.',
-        severity: 'error'
-      })
-    }
-  }
+  //     const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
 
-  const handleEditorChange = (name: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  //     if (result.status === false) {
+  //       console.log(result)
+
+  //       return setSnackbar({
+  //         open: true,
+  //         message: result?.message || 'Failed to create problem.',
+  //         severity: 'error'
+  //       })
+  //     }
+
+  //     console.log('Problem created:', result)
+  //     fetchData()
+  //     setSnackbar({
+  //       open: true,
+  //       message: 'Problem created successfully!',
+  //       severity: 'success'
+  //     })
+  //   } catch (error) {
+  //     console.error('Network error:', error)
+  //     setSnackbar({
+  //       open: true,
+  //       message: 'Network error while creating problem.',
+  //       severity: 'error'
+  //     })
+  //   }
+  // }
+
+  // const handleEditorChange = (name: string, value: string) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }))
+  // }
 
   const assignProblemTableRef = React.useRef<AssignProblemTableRef>(null)
 
@@ -381,7 +398,9 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}

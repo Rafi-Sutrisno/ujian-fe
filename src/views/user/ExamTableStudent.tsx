@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import Link from 'next/link'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -17,7 +20,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
 import { Card, CardContent, CardHeader, Stack } from '@mui/material'
-import Link from 'next/link'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface ExamTableProps {
@@ -57,6 +60,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -74,7 +78,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -95,6 +101,7 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
       const data = class_id
         ? await fetchWithAuth(`/api/exam/byclass/${class_id}`, undefined, 'GET')
         : await fetchWithAuth(`/api/exam/byuser`, undefined, 'GET')
+
       console.log(data)
 
       if (data.status) {
@@ -109,8 +116,10 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
             end_time: result.end_time
           })
         )
+
         console.log('update: ', transformed)
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -126,6 +135,7 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -139,10 +149,10 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
     setPage(0)
   }
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedId(id)
-    setOpenDialog(true)
-  }
+  // const handleDeleteClick = (id: string) => {
+  //   setSelectedId(id)
+  //   setOpenDialog(true)
+  // }
 
   const handleConfirmDelete = () => {
     // perform delete logic here
@@ -206,7 +216,9 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}

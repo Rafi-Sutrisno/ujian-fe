@@ -1,5 +1,6 @@
 'use client'
 import type { ReactElement } from 'react'
+
 import dynamic from 'next/dynamic'
 
 // import ViewClassAdmin from '@/views/admin/ViewClassAdmin'
@@ -7,6 +8,7 @@ import dynamic from 'next/dynamic'
 // import ExamTableAdmin from '@/components/Table/Admin/ExamTableAdmin'
 
 import { useParams } from 'next/navigation'
+
 import SplitViewClassAdmin from '@/views/admin/split_views/ViewClassAdmin'
 
 const ViewClassAdmin = dynamic(() => import('@/views/admin/ViewClassAdmin'))

@@ -1,6 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
+import { useImperativeHandle, forwardRef } from 'react'
+
 import {
   Paper,
   Table,
@@ -12,7 +15,7 @@ import {
   TableRow,
   Checkbox
 } from '@mui/material'
-import { useImperativeHandle, forwardRef } from 'react'
+
 import { fetchWithAuth } from '@/utils/api'
 
 export interface AssignProblemTableRef {
@@ -52,6 +55,7 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
 
       if (selectedRows.length === 0) {
         console.warn('No problems selected.')
+
         return
       }
 
@@ -69,6 +73,7 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
         } else {
           console.log('Problems assigned successfully:', data)
           onSuccess?.()
+
           // fetchData()
         }
       } catch (error) {
@@ -90,7 +95,9 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
               title: result.problem.title
             })
           )
+
           setRows(transformed)
+
           // console.log('transformed:', transformed)
         } else {
           console.error('Failed to fetch classes:', data.message)
@@ -116,11 +123,13 @@ const AssignProblemTable = forwardRef<AssignProblemTableRef, AssignProblemTableP
     const handleToggleRow = (id: string) => {
       setSelectedIds(prev => {
         const updated = new Set(prev)
+
         if (updated.has(id)) {
           updated.delete(id)
         } else {
           updated.add(id)
         }
+
         return updated
       })
     }

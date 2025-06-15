@@ -75,5 +75,6 @@ export const getExtensionsForCodeEditor = (langName: string, isDarkMode: boolean
   }
 
   if (isDarkMode) extensions.push(oneDark)
-  return extensions
+  
+return extensions
 }

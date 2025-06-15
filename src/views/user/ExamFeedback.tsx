@@ -2,17 +2,14 @@
 
 // React Imports
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
 
 import CardContent from '@mui/material/CardContent'
-import { Button, Box, Typography, Snackbar, Alert, FormControl, InputLabel, Link } from '@mui/material'
+import { Button, Box, Typography, Link } from '@mui/material'
 
-import { fetchWithAuth, fetchWithAuthCookie, fetchWithCookie } from '@/utils/api'
+import { fetchWithAuth } from '@/utils/api'
 
 interface ExamFeedbackProps {
   id: string
@@ -32,6 +29,7 @@ type FormData = {
   start_time: string
   duration: string
   end_time: string
+
   // is_seb_restricted: boolean
   // seb_browser_key: string
   // seb_config_key: string

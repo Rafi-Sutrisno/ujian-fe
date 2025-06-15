@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
   Dialog,
   DialogTitle,
@@ -15,7 +17,7 @@ import {
   Stack,
   Link
 } from '@mui/material'
-import { useState } from 'react'
+
 import { fetchWithAuthFile } from '@/utils/api'
 
 interface AddUserUploadModalProps {
@@ -55,6 +57,7 @@ export default function AssignUserUploadModal({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
+
     if (selectedFile) {
       setFile(selectedFile)
     }
@@ -63,9 +66,11 @@ export default function AssignUserUploadModal({
   const handleUpload = async () => {
     if (!file) return
     const formData = new FormData()
+
     formData.append('file', file)
 
     setUploading(true)
+
     try {
       const res = await fetchWithAuthFile(`/api/user_class/upload-file/${class_id}`, formData, 'POST')
 
@@ -88,6 +93,7 @@ export default function AssignUserUploadModal({
       try {
         const error = err as Error
         const parsed = JSON.parse(error.message.replace(/^.*?\{/, '{')) // sanitize in case there's prefix text
+
         message = parsed.error || parsed.message || message
       } catch (e) {
         console.error('Could not parse error message:', err)

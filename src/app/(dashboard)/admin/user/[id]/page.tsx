@@ -1,6 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
+
 import ViewUserAdmin from '@/views/admin/ViewUserAdmin'
 
 const FormLayouts = () => {

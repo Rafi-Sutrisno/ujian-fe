@@ -10,7 +10,6 @@ import Providers from '@components/Providers'
 import Navigation from '@components/layout/vertical/Navigation'
 import Navbar from '@components/layout/vertical/Navbar'
 import VerticalFooter from '@components/layout/vertical/Footer'
-import AdminBreadcrumbs from '@/components/breadcrump/breadcrumpAdmin'
 
 const Layout = async ({ children }: ChildrenType) => {
   // Vars

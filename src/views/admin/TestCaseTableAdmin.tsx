@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -17,6 +18,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { Card, CardContent, Grid, Snackbar, Alert } from '@mui/material'
+
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import { fetchWithAuth } from '@/utils/api'
 
@@ -69,6 +71,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
               created_at: result.created_at
             })
           )
+
           setRows(transformed)
         } else {
           setRows([])
@@ -100,6 +103,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -108,10 +112,12 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
   const handleSubmitPost = async () => {
     const { input_data, expected_output } = formData
+
     console.log('data: ', formData)
 
     if (!input_data || !expected_output) {
       console.log('all field required')
+
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -125,6 +131,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
       if (result.status === false) {
         console.log(result)
+
         return setSnackbar({
           open: true,
           message: result?.message || 'Failed to create test case.',
@@ -177,10 +184,12 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
   const handleSaveEdit = async () => {
     const { input_data, expected_output } = formData
+
     console.log('data: ', input_data, expected_output)
 
     if (!input_data || !expected_output) {
       console.log('all field required')
+
       return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
@@ -194,6 +203,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
       if (data.status === false) {
         console.log(data)
+
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to update test case.',
@@ -216,6 +226,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         severity: 'error'
       })
     }
+
     setOpenEditDialog(false)
   }
 
@@ -235,6 +246,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
 
       if (data.status === false) {
         console.log(data)
+
         return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete test case.',
@@ -257,6 +269,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         severity: 'error'
       })
     }
+
     setOpenDeleteDialog(false)
   }
 
@@ -344,6 +357,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
                           )
                         } else {
                           const value = row[column.id as keyof Data]
+
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
                               {value}

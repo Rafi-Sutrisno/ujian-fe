@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import { useState } from 'react'
+
 import { Button, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 
 interface ClassTopSectionProps {
@@ -34,20 +36,24 @@ const TopSection2Modal = ({
   const [openSecondary, setOpenSecondary] = useState(false)
 
   const handleOpenPrimary = () => setOpenPrimary(true)
+
   const handleClosePrimary = () => {
     onPrimaryClose?.()
     setOpenPrimary(false)
   }
+
   const handleSavePrimary = () => {
     onPrimarySave?.() // Calls the provided save function without any parameters
     setOpenPrimary(false)
   }
 
   const handleOpenSecondary = () => setOpenSecondary(true)
+
   const handleCloseSecondary = () => {
     onSecondaryClose?.()
     setOpenSecondary(false)
   }
+
   const handleSaveSecondary = () => {
     onSecondarySave?.() // Calls the provided save function without any parameters
     setOpenSecondary(false)

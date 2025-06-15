@@ -4,18 +4,21 @@
 import { useEffect, useState } from 'react'
 
 // MUI Imports
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import TopSection2Modal from '@/components/top-section/topsection2modal'
+
 import { Alert, Snackbar } from '@mui/material'
+
+import TopSection2Modal from '@/components/top-section/topsection2modal'
 
 // React-Quill for rich text editing
 import 'react-quill/dist/quill.snow.css' // Import styles
 import EditorBasic from '@/components/Editor/EditorBasic'
-import { useRouter } from 'next/navigation'
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewProblemProps {
@@ -24,6 +27,7 @@ interface ViewProblemProps {
 
 const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     title: '',
     description: ``,
@@ -44,10 +48,12 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
     try {
       console.log(id)
       const data = await fetchWithAuth(`/api/problem/${id}`, undefined, 'GET')
+
       console.log(data)
 
       if (data.status && data.data) {
         const result = data.data
+
         setFormData({
           title: result.title,
           description: result.description,
@@ -71,6 +77,7 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -79,11 +86,13 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
 
   const handleSubmit = async () => {
     const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
+
     console.log('data: ', title, description, constraints, sample_input, sample_output)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
       console.log('all field required')
-      return setSnackbar({
+      
+return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
         severity: 'error'
@@ -91,11 +100,14 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
     }
 
     const payload: any = { title, description, constraints, sample_input, sample_output }
+
     if (cpu_time_limit !== '') {
       payload.cpu_time_limit = parseFloat(cpu_time_limit)
     }
+
     if (memory_limit !== '') {
       payload.memory_limit = parseInt(memory_limit)
+
       if (payload.memory_limit <= 2048 && payload.memory_limit !== 0) {
         return setSnackbar({
           open: true,
@@ -110,7 +122,8 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
 
       if (result.status === false) {
         console.log(result)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: result?.message || 'Failed to update problem.',
           severity: 'error'
@@ -136,12 +149,14 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
 
   const handleDelete = async () => {
     console.log('Problem Deleted:', formData.title)
+
     try {
       const result = await fetchWithAuth(`/api/problem/${id}`, undefined, 'DELETE')
 
       if (result.status === false) {
         console.log(result)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: result?.message || 'Failed to delete problem.',
           severity: 'error'
@@ -158,6 +173,7 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
       setTimeout(() => {
         router.back()
       }, 1000)
+
       // Redirect or show confirmation
     } catch (error) {
       console.error('Network error:', error)

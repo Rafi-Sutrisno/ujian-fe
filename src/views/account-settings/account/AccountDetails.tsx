@@ -66,13 +66,16 @@ const AccountDetails = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
+
   const handlepassChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setPassData(prev => ({
       ...prev,
       [name]: value
@@ -87,6 +90,7 @@ const AccountDetails = () => {
 
       if (!data.status) {
         console.error('Failed to update user:', data.message)
+
         return setSnackbar({
           open: true,
           message: data.error || 'Failed to update user',
@@ -128,6 +132,7 @@ const AccountDetails = () => {
 
       if (!data.status) {
         console.error('Failed to update user:', data)
+
         return setSnackbar({
           open: true,
           message: data.error || 'Failed to update user',
@@ -146,6 +151,7 @@ const AccountDetails = () => {
       fetchData()
     } catch (error) {
       console.error('Network error:', error)
+
       return setSnackbar({
         open: true,
         message: 'Failed to update user',

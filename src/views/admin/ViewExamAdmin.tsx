@@ -4,12 +4,17 @@
 import { useEffect, useState } from 'react'
 
 // MUI Imports
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import TopSection2Modal from '@/components/top-section/topsection2modal'
+
+import type {
+  SelectChangeEvent
+} from '@mui/material';
 import {
   Alert,
   MenuItem,
@@ -20,10 +25,10 @@ import {
   Select,
   ListItemText,
   FormControl,
-  InputLabel,
-  SelectChangeEvent
+  InputLabel
 } from '@mui/material'
-import { useRouter } from 'next/navigation'
+
+import TopSection2Modal from '@/components/top-section/topsection2modal'
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewExamProps {
@@ -53,6 +58,7 @@ type FormData = {
 const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
   const router = useRouter()
   const [lang, setLang] = useState<Language[]>([])
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     short_name: '',
@@ -119,17 +125,21 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
           seb_quit_url: result.seb_quit_url,
           allowed_languages: result.allowed_languages
         })
+
         if (result.seb_browser_key !== '') {
           setSebKeyEnabled(true)
         }
+
         if (result.seb_config_key !== '') {
           setSebConfigKeyEnabled(true)
         }
+
         if (result.seb_quit_url !== '') {
           setSebQuitUrlEnabled(true)
         }
 
         const langData = await fetchWithAuth(`/api/language/all`, undefined, 'GET')
+
         if (langData.status) {
           const transformed = langData.data.map(
             (result: any): Language => ({
@@ -138,6 +148,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
               code: result.code
             })
           )
+
           console.log('lang: ', transformed)
           setLang(transformed)
         }
@@ -155,11 +166,13 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
+
   const handleLanguageChange = (event: SelectChangeEvent<string[]>) => {
     const selectedIds = event.target.value // string[]
 
@@ -177,6 +190,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
     // Append timezone manually if it's missing
     let start_time = data.start_time
+
     if (!start_time.includes('+')) {
       start_time += ':00+07:00' // or use dynamic TZ if needed
     }
@@ -193,7 +207,9 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
   const handleSubmit = async () => {
     const formattedData = formatExamData(formData)
+
     console.log('data:', formattedData)
+
     const {
       name,
       short_name,
@@ -206,6 +222,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       seb_quit_url,
       allowed_languages
     } = formattedData
+
     console.log('data: ', name, short_name, is_published, start_time, duration)
 
     if (
@@ -218,7 +235,8 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       allowed_languages.length <= 0
     ) {
       console.log('all field required')
-      return setSnackbar({
+      
+return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
         severity: 'error'
@@ -244,7 +262,8 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
       if (data.status === false) {
         console.log(data)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: data?.message || 'Failed to update exam.',
           severity: 'error'
@@ -260,9 +279,11 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
       console.log('ini payload2:', payload2)
       const data2 = await fetchWithAuth(`/api/exam_lang/create_many`, payload2, 'POST')
+
       if (data2.status === false) {
         console.log(data2)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: data2?.message || 'Failed to create exam.',
           severity: 'error'
@@ -287,12 +308,14 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
   const handleDelete = async () => {
     console.log('Exam Deleted:', formData.name)
+
     try {
       const result = await fetchWithAuth(`/api/exam/${id}`, undefined, 'DELETE')
 
       if (result.status === false) {
         console.log(result)
-        return setSnackbar({
+        
+return setSnackbar({
           open: true,
           message: result?.message || 'Failed to delete exam.',
           severity: 'error'
@@ -309,6 +332,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       setTimeout(() => {
         router.back()
       }, 1000)
+
       // Redirect or show confirmation
     } catch (error) {
       console.error('Network error:', error)

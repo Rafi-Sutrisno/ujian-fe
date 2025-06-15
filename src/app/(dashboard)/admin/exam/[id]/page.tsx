@@ -1,11 +1,13 @@
 'use client'
 import type { ReactElement } from 'react'
+
 import dynamic from 'next/dynamic'
 
 // import ExamProblemTableAdmin from '@/views/admin/ExamProblemTableAdmin'
 // import SessionTableAdmin from '@/views/admin/SessionTableAdmin'
 // import ViewExamAdmin from '@/views/admin/ViewExamAdmin'
 import { useParams } from 'next/navigation'
+
 import SplitViewExamAdmin from '@/views/admin/split_views/ViewExamAdmin'
 
 const ViewExamAdmin = dynamic(() => import('@/views/admin/ViewExamAdmin'))

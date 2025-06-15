@@ -15,6 +15,7 @@ const NavSearch = () => {
       <i className='ri-search-line' />
     </IconButton>
   ) : (
+
     // <div className='flex items-center cursor-pointer gap-2'>
     //   <IconButton className='text-textPrimary'>
     //     <i className='ri-search-line' />

@@ -1,21 +1,7 @@
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Stack,
-  Link
-} from '@mui/material'
 import { useState } from 'react'
+
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Stack, Link } from '@mui/material'
+
 import { fetchWithAuthFile } from '@/utils/api'
 
 interface AddExamUploadModalProps {
@@ -39,6 +25,7 @@ export default function AddExamUploadModal({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
+
     if (selectedFile) {
       setFile(selectedFile)
     }
@@ -47,9 +34,11 @@ export default function AddExamUploadModal({
   const handleUpload = async () => {
     if (!file) return
     const formData = new FormData()
+
     formData.append('file', file)
 
     setUploading(true)
+
     try {
       const res = await fetchWithAuthFile(`/api/exam/yaml/${class_id}`, formData, 'POST')
 
@@ -67,6 +56,7 @@ export default function AddExamUploadModal({
       try {
         const error = err as Error
         const parsed = JSON.parse(error.message.replace(/^.*?\{/, '{')) // sanitize in case there's prefix text
+
         message = parsed.error || parsed.message || message
       } catch (e) {
         console.error('Could not parse error message:', err)

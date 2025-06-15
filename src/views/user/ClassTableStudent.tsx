@@ -1,7 +1,9 @@
 'use client'
 
 import * as React from 'react'
+
 import Link from 'next/link'
+
 import {
   Paper,
   Table,
@@ -17,6 +19,7 @@ import {
   Typography,
   TableSortLabel
 } from '@mui/material'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface Column {
@@ -46,6 +49,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -78,6 +82,7 @@ export default function ClassTableStudent() {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(`/api/class/user`, undefined, 'GET')
+
       console.log(data)
 
       if (data.status) {
@@ -90,7 +95,9 @@ export default function ClassTableStudent() {
             short_name: result.short_name
           })
         )
+
         setRows(transformed)
+
         // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
@@ -106,6 +113,7 @@ export default function ClassTableStudent() {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }

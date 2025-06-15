@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -16,10 +17,8 @@ import DialogActions from '@mui/material/DialogActions'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, CardHeader, Stack, Grid, TextField, Snackbar, Alert } from '@mui/material'
-import Link from 'next/link'
-import TopSectionModal from '@/components/top-section/topsectionModal'
-import EditorBasic from '@/components/Editor/EditorBasic'
+import { Card, CardContent, CardHeader, Stack } from '@mui/material'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface SessionTableProps {
@@ -54,8 +53,7 @@ const columns: readonly Column[] = [
   { id: 'device', label: 'Device', minWidth: 100, sortable: true },
   { id: 'status', label: 'Status', minWidth: 100, sortable: true },
   { id: 'finished_at', label: 'Finished At', minWidth: 120, sortable: true },
-  { id: 'created_at', label: 'Created At', minWidth: 120, sortable: true },
-  { id: 'action', label: 'Action', minWidth: 120 }
+  { id: 'created_at', label: 'Created At', minWidth: 120, sortable: true }
 ]
 
 type Order = 'asc' | 'desc'
@@ -63,6 +61,7 @@ type Order = 'asc' | 'desc'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1
   if (b[orderBy] > a[orderBy]) return 1
+
   return 0
 }
 
@@ -80,7 +79,9 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     .map((el, index) => [el, index] as [T, number])
     .sort((a, b) => {
       const cmp = comparator(a[0], b[0])
+
       if (cmp !== 0) return cmp
+
       return a[1] - b[1]
     })
     .map(el => el[0])
@@ -117,6 +118,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
               created_at: result.created_at
             })
           )
+
           setRows(transformed)
         }
 
@@ -135,6 +137,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
 
   const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
+
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -153,43 +156,39 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
     setOpenDialog(true)
   }
 
-  const handleDelete = async () => {
-    // console.log('Problem Deleted:', formData.input_data)
-    try {
-      const data = await fetchWithAuth(`/api/exam_session/${selectedId}`, undefined, 'DELETE')
+  // const handleDelete = async () => {
+  //   // console.log('Problem Deleted:', formData.input_data)
+  //   try {
+  //     const data = await fetchWithAuth(`/api/exam_session/${selectedId}`, undefined, 'DELETE')
 
-      if (data.status === false) {
-        console.log(data)
-        return setSnackbar({
-          open: true,
-          message: data?.message || 'Failed to delete sessions.',
-          severity: 'error'
-        })
-      }
+  //     if (data.status === false) {
+  //       console.log(data)
 
-      console.log('Sessions deleted:', data)
-      fetchData()
-      setSnackbar({
-        open: true,
-        message: 'Sessions deleted successfully!',
-        severity: 'success'
-      })
-    } catch (error) {
-      console.error('Network error:', error)
-      setSnackbar({
-        open: true,
-        message: 'Network error while deleting session.',
-        severity: 'error'
-      })
-    }
-    setOpenDialog(false)
-  }
+  //       return setSnackbar({
+  //         open: true,
+  //         message: data?.message || 'Failed to delete sessions.',
+  //         severity: 'error'
+  //       })
+  //     }
 
-  const [snackbar, setSnackbar] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error'
-  })
+  //     console.log('Sessions deleted:', data)
+  //     fetchData()
+  //     setSnackbar({
+  //       open: true,
+  //       message: 'Sessions deleted successfully!',
+  //       severity: 'success'
+  //     })
+  //   } catch (error) {
+  //     console.error('Network error:', error)
+  //     setSnackbar({
+  //       open: true,
+  //       message: 'Network error while deleting session.',
+  //       severity: 'error'
+  //     })
+  //   }
+
+  //   setOpenDialog(false)
+  // }
 
   return (
     <Card sx={{ mt: 4 }}>
@@ -249,7 +248,9 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
                             </TableCell>
                           )
                         }
+
                         const value = row[column.id as keyof Data]
+
                         return (
                           <TableCell key={column.id} align={column.align ?? 'left'}>
                             {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
@@ -274,9 +275,7 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
             <DialogTitle>Are you sure you want to remove this session?</DialogTitle>
             <DialogActions>
               <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-              <Button color='error' onClick={handleDelete}>
-                Delete
-              </Button>
+              <Button color='error'>Delete</Button>
             </DialogActions>
           </Dialog>
         </Paper>
