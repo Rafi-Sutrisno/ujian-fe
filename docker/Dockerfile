@@ -8,11 +8,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --ignore-scripts
 
-RUN npm run build:icons
-RUN npm run build
-
 # Copy source code
 COPY . .
+
+RUN npm run build:icons
+RUN npm run build
 
 # Build app
 RUN npm run build
