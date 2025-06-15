@@ -12,9 +12,7 @@ import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 
-import type {
-  SelectChangeEvent
-} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material'
 import {
   Alert,
   MenuItem,
@@ -29,6 +27,9 @@ import {
 } from '@mui/material'
 
 import TopSection2Modal from '@/components/top-section/topsection2modal'
+
+import { v4 as uuidv4 } from 'uuid'
+
 import { fetchWithAuth } from '@/utils/api'
 
 interface ViewExamProps {
@@ -54,6 +55,8 @@ type FormData = {
   seb_quit_url: string
   allowed_languages: Language[]
 }
+
+const frontnedURL = process.env.NEXT_PUBLIC_APP_URL
 
 const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
   const router = useRouter()
@@ -235,8 +238,8 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       allowed_languages.length <= 0
     ) {
       console.log('all field required')
-      
-return setSnackbar({
+
+      return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
         severity: 'error'
@@ -262,8 +265,8 @@ return setSnackbar({
 
       if (data.status === false) {
         console.log(data)
-        
-return setSnackbar({
+
+        return setSnackbar({
           open: true,
           message: data?.message || 'Failed to update exam.',
           severity: 'error'
@@ -282,8 +285,8 @@ return setSnackbar({
 
       if (data2.status === false) {
         console.log(data2)
-        
-return setSnackbar({
+
+        return setSnackbar({
           open: true,
           message: data2?.message || 'Failed to create exam.',
           severity: 'error'
@@ -314,8 +317,8 @@ return setSnackbar({
 
       if (result.status === false) {
         console.log(result)
-        
-return setSnackbar({
+
+        return setSnackbar({
           open: true,
           message: result?.message || 'Failed to delete exam.',
           severity: 'error'
@@ -528,7 +531,19 @@ return setSnackbar({
                             control={
                               <Checkbox
                                 checked={sebQuitUrlEnabled}
-                                onChange={e => setSebQuitUrlEnabled(e.target.checked)}
+                                onChange={e => {
+                                  const checked = e.target.checked
+
+                                  setSebQuitUrlEnabled(checked)
+                                  if (checked) {
+                                    const randomId = uuidv4().slice(0, 8)
+                                    const quitUrl = `${frontnedURL}/${randomId}`
+
+                                    setFormData(prev => ({ ...prev, seb_quit_url: quitUrl }))
+                                  } else {
+                                    setFormData(prev => ({ ...prev, seb_quit_url: '' }))
+                                  }
+                                }}
                               />
                             }
                             label={
