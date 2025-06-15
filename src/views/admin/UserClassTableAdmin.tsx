@@ -241,6 +241,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
             }
             class_id={id}
             onSave={handleSave}
+            onError={onError}
           />
 
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -289,9 +290,9 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                         sx={{ cursor: 'pointer' }}
                       >
                         {columns.map(column => {
-                          console.log('ini column:', column)
+                          // console.log('ini column:', column)
                           const value = row[column.id as keyof Data]
-                          console.log('ini value:', value)
+                          // console.log('ini value:', value)
                           if (column.id === 'actions') {
                             if (row.role === 'admin') return null
                             return (

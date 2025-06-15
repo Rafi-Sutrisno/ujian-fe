@@ -23,6 +23,7 @@ interface AddUserUploadModalProps {
   class_id: string
   onClose?: () => void
   onUploadSuccess?: () => void
+  onError?: (message?: string) => void
 }
 
 interface CreatedUser {
@@ -43,6 +44,7 @@ export default function AssignUserUploadModal({
   class_id,
   open = false,
   onClose,
+  onError,
   onUploadSuccess
 }: AddUserUploadModalProps) {
   const [file, setFile] = useState<File | null>(null)
@@ -67,6 +69,11 @@ export default function AssignUserUploadModal({
     try {
       const res = await fetchWithAuthFile(`/api/user_class/upload-file/${class_id}`, formData, 'POST')
 
+      if (res.status === false) {
+        console.error('Upload failed:', res)
+        onError?.(res?.error)
+      }
+
       const created = res?.data?.created_users || []
       const failed = res?.data?.failed_users || []
 
@@ -75,9 +82,18 @@ export default function AssignUserUploadModal({
       setResultOpen(true)
 
       onUploadSuccess?.() // refresh data
-    } catch (error) {
-      console.error('Upload failed:', error)
-      alert('Failed to upload file')
+    } catch (err) {
+      let message = 'Failed to upload file.'
+
+      try {
+        const error = err as Error
+        const parsed = JSON.parse(error.message.replace(/^.*?\{/, '{')) // sanitize in case there's prefix text
+        message = parsed.error || parsed.message || message
+      } catch (e) {
+        console.error('Could not parse error message:', err)
+      }
+
+      onError?.(message)
     } finally {
       setUploading(false)
     }

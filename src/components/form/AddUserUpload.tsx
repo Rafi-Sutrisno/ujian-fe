@@ -22,6 +22,7 @@ interface AddUserUploadModalProps {
   open?: boolean
   onClose?: () => void
   onUploadSuccess?: () => void
+  onError?: (message?: string) => void
 }
 
 interface CreatedUser {
@@ -38,7 +39,12 @@ interface FailedUser {
   reason: string
 }
 
-export default function AddUserUploadModal({ open = false, onClose, onUploadSuccess }: AddUserUploadModalProps) {
+export default function AddUserUploadModal({
+  open = false,
+  onClose,
+  onUploadSuccess,
+  onError
+}: AddUserUploadModalProps) {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [createdUsers, setCreatedUsers] = useState<CreatedUser[]>([])
@@ -69,9 +75,19 @@ export default function AddUserUploadModal({ open = false, onClose, onUploadSucc
       setResultOpen(true)
 
       onUploadSuccess?.() // refresh data
-    } catch (error) {
-      console.error('Upload failed:', error)
-      alert('Failed to upload file')
+    } catch (err) {
+      console.log('masuk sini')
+      let message = 'Failed to upload file.'
+
+      try {
+        const error = err as Error
+        const parsed = JSON.parse(error.message.replace(/^.*?\{/, '{')) // sanitize in case there's prefix text
+        message = parsed.error || parsed.message || message
+      } catch (e) {
+        console.error('Could not parse error message:', err)
+      }
+
+      onError?.(message)
     } finally {
       setUploading(false)
     }

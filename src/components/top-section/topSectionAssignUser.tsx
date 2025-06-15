@@ -11,6 +11,7 @@ interface ClassTopSectionProps {
   class_id: string
   onClose?: () => void
   onSave?: () => void
+  onError?: (message?: string) => void
   recv?: boolean // Optional prop to control dialog width behavior
 }
 
@@ -21,6 +22,7 @@ const TopSectionAssignUser = ({
   class_id,
   onClose,
   onSave,
+  onError,
   recv = true // Default to true, making it fullWidth and maxWidth='xl'
 }: ClassTopSectionProps) => {
   const [open, setOpen] = useState(false)
@@ -56,6 +58,7 @@ const TopSectionAssignUser = ({
         open={openUploadModal}
         onClose={handleCloseUpload}
         onUploadSuccess={handleSave}
+        onError={onError}
       />
 
       <Dialog

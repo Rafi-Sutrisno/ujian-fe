@@ -14,7 +14,8 @@ import {
   TableRow,
   Button,
   Stack,
-  Checkbox,
+  Snackbar,
+  Alert,
   Toolbar,
   Typography,
   IconButton,
@@ -111,6 +112,11 @@ export default function UserTableAdmin() {
   const handleCloseAdd = () => setOpenModal(false)
 
   const [rows, setRows] = React.useState<Data[]>([])
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error'
+  })
 
   const fetchData = async () => {
     try {
@@ -206,19 +212,32 @@ export default function UserTableAdmin() {
     setOpen(false)
   }
 
+  const onError = (message?: string) => {
+    setSnackbar({
+      open: true,
+      message: message || 'Failed to remove user from class.',
+      severity: 'error'
+    })
+  }
+
   const sortedRows = rows.slice().sort(getComparator(order, orderBy))
 
   return (
     <>
       <AddUserModal open={openModal} onClose={handleCloseAdd} onUserAdded={fetchData} />
-      <AddUserUploadModal open={openUploadModal} onClose={handleCloseUpload} onUploadSuccess={fetchData} />
+      <AddUserUploadModal
+        open={openUploadModal}
+        onClose={handleCloseUpload}
+        onUploadSuccess={fetchData}
+        onError={onError}
+      />
       <Box display='flex' justifyContent='space-between' alignItems='center' mb={4}>
         <Typography variant='h5' fontWeight='bold'>
           User Management
         </Typography>
         <Box display='flex' justifyContent='start' gap={2} alignItems='center' mb={4}>
           <Button variant='outlined' color='secondary' onClick={handleOpenUpload}>
-            Upload Users File
+            Upload Users using File
           </Button>
           <Button variant='contained' color='primary' onClick={handleOpen}>
             Add New User
@@ -337,6 +356,21 @@ export default function UserTableAdmin() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity={snackbar.severity}
+          variant='filled'
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   )
 }
