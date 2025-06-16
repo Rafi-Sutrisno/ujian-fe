@@ -117,7 +117,7 @@ export default function AssignUserUploadModal({
     <>
       {/* Upload Modal */}
       <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
-        <DialogTitle>Assing Users File</DialogTitle>
+        <DialogTitle>Assing Users Using File</DialogTitle>
         <DialogContent>
           <Stack spacing={2} mt={1}>
             <input type='file' accept='.yaml,.yml,.csv' onChange={handleFileChange} />
@@ -126,11 +126,11 @@ export default function AssignUserUploadModal({
             </Typography>
             <Typography variant='body2'>
               Download example format:&nbsp;
-              <Link href='/example/example.csv' download underline='hover'>
+              <Link href='/example_files/users-success.csv' download underline='hover'>
                 CSV
               </Link>{' '}
               |{' '}
-              <Link href='/example/example.yaml' download underline='hover'>
+              <Link href='/example_files/users-success.yaml' download underline='hover'>
                 YAML
               </Link>
             </Typography>

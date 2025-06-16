@@ -67,6 +67,7 @@ const UserDropdown = () => {
 
     // Remove the token cookie
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+    document.cookie = 'session_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
 
     // Optional: if using cookies-next:
     // deleteCookie('token')
@@ -117,9 +118,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        John Doe
+                        User
                       </Typography>
-                      <Typography variant='caption'>Admin</Typography>
+                      <Typography variant='caption'>Profile</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
@@ -127,10 +128,10 @@ const UserDropdown = () => {
                     <i className='ri-user-3-line' />
                     <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
-                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
+                  {/* <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-settings-4-line' />
                     <Typography color='text.primary'>Settings</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
                   <div className='flex items-center plb-2 pli-4'>
                     <Button
                       fullWidth

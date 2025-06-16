@@ -1,0 +1,16 @@
+name: Contest test 2
+short_name: CT2
+is_published: false
+start_time: 2025-06-15T11:50:00+07:00
+duration: 2h0m0s
+is_seb_restricted: false
+seb_browser_key: ""
+seb_config_key: ""
+seb_quit_url: ""
+problems:
+  - problem_title: Print String
+  - problem_title: Multiply Number
+languages:
+  - name: C
+  - name: C++
+  - name: C#

@@ -1,0 +1,12 @@
+users:
+  - username: johndoe
+    name: John Doe
+    email: john@example.com
+    noid: 12345
+    password: pass123
+
+  - username: janedoe
+    name: Jane Doe
+    email: jane@example.com
+    noid: 12346
+    password: pass456

@@ -87,7 +87,7 @@ export default function AddExamUploadModal({
             </Typography>
             <Typography variant='body2'>
               Download example format:&nbsp;
-              <Link href='/example/example.yaml' download underline='hover'>
+              <Link href='/example_files/exam-success.yaml' download underline='hover'>
                 YAML
               </Link>
             </Typography>
