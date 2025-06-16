@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 
 import { Button, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'

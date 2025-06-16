@@ -3,10 +3,10 @@ users:
     name: John Doe
     email: john@example.com
     noid: 12345
-    password: pass123
+    password: pass1234
 
   - username: janedoe
     name: Jane Doe
     email: jane@example.com
     noid: 12346
-    password: pass456
+    password: pass4567

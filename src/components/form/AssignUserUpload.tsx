@@ -86,7 +86,7 @@ export default function AssignUserUploadModal({
       setFailedUsers(failed)
       setResultOpen(true)
 
-      onUploadSuccess?.() // refresh data
+      onUploadSuccess?.()
     } catch (err) {
       let message = 'Failed to upload file.'
 

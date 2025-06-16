@@ -219,6 +219,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
 
   const handleSave = () => {
     assignUserTableRef.current?.handleCreateMany()
+    fetchData()
   }
 
   const onSuccess = () => {
