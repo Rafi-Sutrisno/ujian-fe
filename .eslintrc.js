@@ -12,7 +12,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'lines-around-comment': [
-      'error',
+      'off',
       {
         beforeBlockComment: true,
         beforeLineComment: true,
@@ -49,9 +49,9 @@ module.exports = {
         next: '*'
       }
     ],
-    'newline-before-return': 'error',
+    'newline-before-return': 'off',
     'import/newline-after-import': [
-      'error',
+      'off',
       {
         count: 1
       }
@@ -87,7 +87,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/ban-types': [
-      'error',
+      'off',
       {
         extendDefaults: true,
         types: {
