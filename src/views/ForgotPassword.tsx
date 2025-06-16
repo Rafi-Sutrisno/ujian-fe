@@ -18,7 +18,6 @@ import type { Mode } from '@core/types'
 // Component Imports
 import Form from '@components/Form'
 import DirectionalIcon from '@components/DirectionalIcon'
-import Illustrations from '@components/Illustrations'
 import Logo from '@components/layout/shared/Logo'
 
 // Hook Imports
@@ -103,7 +102,7 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
           </div>
         </CardContent>
       </Card>
-      <Illustrations maskImg={{ src: authBackground }} />
+      {/* <Illustrations maskImg={{ src: authBackground }} /> */}
     </div>
   )
 }

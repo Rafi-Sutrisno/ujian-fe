@@ -13,7 +13,6 @@ import Button from '@mui/material/Button'
 
 import Form from '@components/Form'
 import DirectionalIcon from '@components/DirectionalIcon'
-import Illustrations from '@components/Illustrations'
 import Logo from '@components/layout/shared/Logo'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
@@ -90,7 +89,7 @@ const ResetPassword = ({ token }: { token: string }) => {
           </div>
         </CardContent>
       </Card>
-      <Illustrations maskImg={{ src: authBackground }} />
+      {/* <Illustrations maskImg={{ src: authBackground }} /> */}
     </div>
   )
 }
