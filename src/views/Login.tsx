@@ -59,7 +59,7 @@ const Login = ({ mode }: { mode: Mode }) => {
     setError('')
 
     try {
-      const response = await fetch(`${serverPath}/api/user/login`, {
+      const response = await fetch(`${serverPath}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
