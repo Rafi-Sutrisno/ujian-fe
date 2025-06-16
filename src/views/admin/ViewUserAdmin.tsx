@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
-import type { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
@@ -106,8 +106,8 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
       if (data.status === false) {
         console.log(data)
-        
-return setSnackbar({
+
+        return setSnackbar({
           open: true,
           message: data?.message || 'Failed to update user.',
           severity: 'error'
@@ -137,8 +137,8 @@ return setSnackbar({
 
       if (data.status === false) {
         console.log(data)
-        
-return setSnackbar({
+
+        return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete user.',
           severity: 'error'
@@ -208,7 +208,7 @@ return setSnackbar({
                     />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id='role-label'>Role</InputLabel>
                       <Select
@@ -223,7 +223,7 @@ return setSnackbar({
                         <MenuItem value='admin'>Admin</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item xs={12}>
                     <TextField

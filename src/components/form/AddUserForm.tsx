@@ -77,8 +77,8 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
     }
 
     const roleMapping: Record<string, number> = {
-      user: 1,
-      admin: 2
+      user: 2,
+      admin: 1
     }
 
     const roleId = roleMapping[role.toLowerCase()]
@@ -99,6 +99,8 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
       password,
       role_id: roleId
     }
+
+    console.log('ini payload create:', payload)
 
     try {
       const data = await fetchWithAuth('/api/user/', payload, 'POST')
@@ -169,7 +171,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
                   required
                 />
               </Grid>
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <FormControl fullWidth required>
                   <InputLabel id='role-label'>Role</InputLabel>
                   <Select
@@ -183,7 +185,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
                     <MenuItem value='admin'>Admin</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid> */}
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
