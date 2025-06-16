@@ -101,6 +101,26 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
       })
     }
 
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return setSnackbar({
+        open: true,
+        message: 'Invalid email format.',
+        severity: 'error'
+      })
+    }
+
+    // NOID number-only check
+    const noidRegex = /^[0-9]+$/
+    if (!noidRegex.test(noid)) {
+      return setSnackbar({
+        open: true,
+        message: 'NOID must contain only numbers.',
+        severity: 'error'
+      })
+    }
+
     try {
       const data = await fetchWithAuth(`/api/user/${id}`, { username, name, email, noid }, 'PATCH')
 

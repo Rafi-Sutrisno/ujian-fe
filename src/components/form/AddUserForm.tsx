@@ -76,6 +76,35 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
       })
     }
 
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return setSnackbar({
+        open: true,
+        message: 'Invalid email format.',
+        severity: 'error'
+      })
+    }
+
+    // Password length check
+    if (password.length < 8) {
+      return setSnackbar({
+        open: true,
+        message: 'Password must be at least 8 characters.',
+        severity: 'error'
+      })
+    }
+
+    // NOID number-only check
+    const noidRegex = /^[0-9]+$/
+    if (!noidRegex.test(noid)) {
+      return setSnackbar({
+        open: true,
+        message: 'NOID must contain only numbers.',
+        severity: 'error'
+      })
+    }
+
     const roleMapping: Record<string, number> = {
       user: 2,
       admin: 1
@@ -99,8 +128,6 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
       password,
       role_id: roleId
     }
-
-    console.log('ini payload create:', payload)
 
     try {
       const data = await fetchWithAuth('/api/user/', payload, 'POST')
