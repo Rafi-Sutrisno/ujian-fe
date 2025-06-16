@@ -3,9 +3,7 @@
 import { useState } from 'react'
 
 // MUI Imports
-import type {
-  SelectChangeEvent
-} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material'
 import {
   Button,
   Dialog,
@@ -171,7 +169,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
                   required
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControl fullWidth required>
                   <InputLabel id='role-label'>Role</InputLabel>
                   <Select
@@ -185,7 +183,7 @@ const AddUserModal = ({ open = false, onClose, onUserAdded }: AddUserModalProps)
                     <MenuItem value='admin'>Admin</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
