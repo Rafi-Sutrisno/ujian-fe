@@ -108,7 +108,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
     try {
       const data = await fetchWithAuth(`/api/user_class/class/${id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -121,10 +121,10 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
           })
         )
 
-        console.log('update: ', transformed)
+        // console.log('update: ', transformed)
         setRows(transformed)
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }
@@ -173,15 +173,15 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const handleDeleteClick = async (id: string) => {
-    console.log(id)
+    // console.log(id)
 
     try {
       const data = await fetchWithAuth(`/api/user_class/${id}`, undefined, 'DELETE')
 
-      console.log('User removed:', data)
+      // console.log('User removed:', data)
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -190,7 +190,7 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
         })
       }
 
-      console.log('User removed:', data)
+      // console.log('User removed:', data)
 
       fetchData()
 
@@ -301,10 +301,10 @@ const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
                         sx={{ cursor: 'pointer' }}
                       >
                         {columns.map(column => {
-                          // console.log('ini column:', column)
+                          // // console.log('ini column:', column)
                           const value = row[column.id as keyof Data]
 
-                          // console.log('ini value:', value)
+                          // // console.log('ini value:', value)
                           if (column.id === 'actions') {
                             if (row.role === 'admin') return null
 

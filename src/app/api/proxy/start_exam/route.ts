@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
   const configKeyHash = req.headers.get('x-safeexambrowser-configkeyhash') || ''
   const authHeader = req.headers.get('authorization') || ''
 
-  console.log('requestHash:', requestHash)
-  console.log('configKeyHash:', configKeyHash)
+  // console.log('requestHash:', requestHash)
+  // console.log('configKeyHash:', configKeyHash)
 
   try {
     const backendRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam_session/start_exam`, {

@@ -43,11 +43,11 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
 
   const fetchUser = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/user/${id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status && data.data) {
         const user = data.data
@@ -125,7 +125,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
       const data = await fetchWithAuth(`/api/user/${id}`, { username, name, email, noid }, 'PATCH')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -134,7 +134,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
         })
       }
 
-      console.log('User updated:', data)
+      // console.log('User updated:', data)
 
       setSnackbar({
         open: true,
@@ -156,7 +156,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
       const data = await fetchWithAuth(`/api/user/${id}`, undefined, 'DELETE')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -165,7 +165,7 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
         })
       }
 
-      console.log('User deleted:', data)
+      // console.log('User deleted:', data)
 
       setSnackbar({
         open: true,

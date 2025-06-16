@@ -130,7 +130,7 @@ export default function ClassTableAdmin() {
 
         setRows(transformed)
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }
@@ -178,7 +178,7 @@ export default function ClassTableAdmin() {
   const handleClose = () => setOpen(false)
 
   const handleDeleteConfirm = () => {
-    console.log(`Deleting ${selected.length} classes...`)
+    // console.log(`Deleting ${selected.length} classes...`)
     setSelected([])
     setOpen(false)
   }

@@ -31,7 +31,7 @@ const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key
     try {
       const check = await fetchWithAuth('/api/exam_session/check_session', undefined, 'GET')
 
-      console.log('ini check:', check, check.status)
+      // console.log('ini check:', check, check.status)
 
       if (!check.status) {
         setSessionInvalid(true)

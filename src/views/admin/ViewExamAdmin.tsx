@@ -97,10 +97,10 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
       const json = await fetchWithAuth(`/api/exam/${id}`, undefined, 'GET')
 
-      console.log(json)
+      // console.log(json)
 
       if (json.status && json.data) {
         const result = json.data
@@ -151,7 +151,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
             })
           )
 
-          console.log('lang: ', transformed)
+          // console.log('lang: ', transformed)
           setLang(transformed)
         }
       } else {
@@ -210,7 +210,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
   const handleSubmit = async () => {
     const formattedData = formatExamData(formData)
 
-    console.log('data:', formattedData)
+    // console.log('data:', formattedData)
 
     const {
       name,
@@ -225,7 +225,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       allowed_languages
     } = formattedData
 
-    console.log('data: ', name, short_name, is_published, start_time, duration)
+    // console.log('data: ', name, short_name, is_published, start_time, duration)
 
     if (
       !name ||
@@ -236,7 +236,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
       !duration ||
       allowed_languages.length <= 0
     ) {
-      console.log('all field required')
+      // console.log('all field required')
 
       return setSnackbar({
         open: true,
@@ -258,12 +258,12 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
         seb_quit_url: sebQuitUrlEnabled ? seb_quit_url : ''
       }
 
-      console.log('ini payload:', payload)
+      // console.log('ini payload:', payload)
 
       const data = await fetchWithAuth(`/api/exam/${id}`, payload, 'PATCH')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -272,18 +272,18 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
         })
       }
 
-      console.log('Exam updated:', data)
+      // console.log('Exam updated:', data)
 
       const payload2 = allowed_languages.map(lang => ({
         lang_id: lang.id,
         exam_id: data.data.id
       }))
 
-      console.log('ini payload2:', payload2)
+      // console.log('ini payload2:', payload2)
       const data2 = await fetchWithAuth(`/api/exam_lang/create_many`, payload2, 'POST')
 
       if (data2.status === false) {
-        console.log(data2)
+        // console.log(data2)
 
         return setSnackbar({
           open: true,
@@ -309,13 +309,13 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
   }
 
   const handleDelete = async () => {
-    console.log('Exam Deleted:', formData.name)
+    // console.log('Exam Deleted:', formData.name)
 
     try {
       const result = await fetchWithAuth(`/api/exam/${id}`, undefined, 'DELETE')
 
       if (result.status === false) {
-        console.log(result)
+        // console.log(result)
 
         return setSnackbar({
           open: true,
@@ -324,7 +324,7 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
         })
       }
 
-      console.log('Exam deleted:', result)
+      // console.log('Exam deleted:', result)
 
       setSnackbar({
         open: true,

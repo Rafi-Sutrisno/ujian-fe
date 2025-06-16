@@ -59,7 +59,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
     try {
       const data = await fetchWithAuth(`/api/testcase/problem/${problem_id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         if (data.data) {
@@ -77,7 +77,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
           setRows([])
         }
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch test cases:', data.message)
       }
@@ -113,10 +113,10 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
   const handleSubmitPost = async () => {
     const { input_data, expected_output } = formData
 
-    console.log('data: ', formData)
+    // console.log('data: ', formData)
 
     if (!input_data || !expected_output) {
-      console.log('all field required')
+      // console.log('all field required')
 
       return setSnackbar({
         open: true,
@@ -130,7 +130,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
       const result = await fetchWithAuth(`/api/testcase/`, payload, 'POST')
 
       if (result.status === false) {
-        console.log(result)
+        // console.log(result)
 
         return setSnackbar({
           open: true,
@@ -139,7 +139,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         })
       }
 
-      console.log('Test Case created:', result)
+      // console.log('Test Case created:', result)
       fetchData()
       setSnackbar({
         open: true,
@@ -185,10 +185,10 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
   const handleSaveEdit = async () => {
     const { input_data, expected_output } = formData
 
-    console.log('data: ', input_data, expected_output)
+    // console.log('data: ', input_data, expected_output)
 
     if (!input_data || !expected_output) {
-      console.log('all field required')
+      // console.log('all field required')
 
       return setSnackbar({
         open: true,
@@ -202,7 +202,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
       const data = await fetchWithAuth(`/api/testcase/${currentRow?.id}`, payload, 'PATCH')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -211,7 +211,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         })
       }
 
-      console.log('Test Case updated:', data)
+      // console.log('Test Case updated:', data)
       fetchData()
       setSnackbar({
         open: true,
@@ -240,12 +240,12 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
   }
 
   const handleDelete = async () => {
-    // console.log('Problem Deleted:', formData.input_data)
+    // // console.log('Problem Deleted:', formData.input_data)
     try {
       const data = await fetchWithAuth(`/api/testcase/${currentRow?.id}`, undefined, 'DELETE')
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -254,7 +254,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         })
       }
 
-      console.log('Test Case deleted:', data)
+      // console.log('Test Case deleted:', data)
       await fetchData()
       setSnackbar({
         open: true,

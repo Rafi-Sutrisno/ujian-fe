@@ -98,7 +98,7 @@ const AccountDetails = () => {
         })
       }
 
-      console.log('User updated successfully:', data)
+      // console.log('User updated successfully:', data)
       setSnackbar({
         open: true,
         message: data.message || 'Success to update user',
@@ -140,7 +140,7 @@ const AccountDetails = () => {
         })
       }
 
-      console.log('User updated successfully:', data)
+      // console.log('User updated successfully:', data)
       setSnackbar({
         open: true,
         message: data.message || 'Success to update user',

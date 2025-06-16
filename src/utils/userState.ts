@@ -46,8 +46,7 @@ export const loadEncrypted = async (
     try {
       const bytes = CryptoJS.AES.decrypt(encrypted, userId)
 
-      
-return bytes.toString(CryptoJS.enc.Utf8)
+      return bytes.toString(CryptoJS.enc.Utf8)
     } catch {
       // Fall through to DB
     }
@@ -55,7 +54,7 @@ return bytes.toString(CryptoJS.enc.Utf8)
 
   // Step 2: Try backend DB (only for 'code')
   if (type === 'code' && language) {
-    console.log('masuk ambil kode dari be')
+    // console.log('masuk ambil kode dari be')
 
     try {
       const response = await fetchWithAuth(
@@ -71,8 +70,7 @@ return bytes.toString(CryptoJS.enc.Utf8)
       if (response?.data?.code) {
         const bytes = CryptoJS.AES.decrypt(response.data.code, userId)
 
-        
-return bytes.toString(CryptoJS.enc.Utf8)
+        return bytes.toString(CryptoJS.enc.Utf8)
       }
     } catch (err) {
       console.warn('Error fetching from DB draft', err)
@@ -81,9 +79,9 @@ return bytes.toString(CryptoJS.enc.Utf8)
 
   // Step 3: Fallback to default
   if (type === 'code') {
-    console.log('Returning default code for language:', language)
-    
-return getDefaultCode(language)
+    // console.log('Returning default code for language:', language)
+
+    return getDefaultCode(language)
   }
 
   return ''
@@ -91,7 +89,7 @@ return getDefaultCode(language)
 
 // Default code generator
 const getDefaultCode = (language?: string): string => {
-  console.log('ini lang:', language)
+  // console.log('ini lang:', language)
 
   switch (language) {
     case 'C':

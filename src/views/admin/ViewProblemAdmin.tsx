@@ -46,10 +46,10 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
       const data = await fetchWithAuth(`/api/problem/${id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -87,12 +87,12 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
   const handleSubmit = async () => {
     const { title, description, constraints, sample_input, sample_output, cpu_time_limit, memory_limit } = formData
 
-    console.log('data: ', title, description, constraints, sample_input, sample_output)
+    // console.log('data: ', title, description, constraints, sample_input, sample_output)
 
     if (!title || !description || !constraints || !sample_input || !sample_output) {
-      console.log('all field required')
-      
-return setSnackbar({
+      // console.log('all field required')
+
+      return setSnackbar({
         open: true,
         message: 'All fields cant be null.',
         severity: 'error'
@@ -121,16 +121,16 @@ return setSnackbar({
       const result = await fetchWithAuth(`/api/problem/${id}`, payload, 'PATCH')
 
       if (result.status === false) {
-        console.log(result)
-        
-return setSnackbar({
+        // console.log(result)
+
+        return setSnackbar({
           open: true,
           message: result?.message || 'Failed to update problem.',
           severity: 'error'
         })
       }
 
-      console.log('Problem updated:', result)
+      // console.log('Problem updated:', result)
       fetchData()
       setSnackbar({
         open: true,
@@ -148,22 +148,22 @@ return setSnackbar({
   }
 
   const handleDelete = async () => {
-    console.log('Problem Deleted:', formData.title)
+    // console.log('Problem Deleted:', formData.title)
 
     try {
       const result = await fetchWithAuth(`/api/problem/${id}`, undefined, 'DELETE')
 
       if (result.status === false) {
-        console.log(result)
-        
-return setSnackbar({
+        // console.log(result)
+
+        return setSnackbar({
           open: true,
           message: result?.message || 'Failed to delete problem.',
           severity: 'error'
         })
       }
 
-      console.log('Problem deleted:', result)
+      // console.log('Problem deleted:', result)
 
       setSnackbar({
         open: true,

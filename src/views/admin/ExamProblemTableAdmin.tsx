@@ -96,7 +96,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
     try {
       const data = await fetchWithAuth(`/api/exam_problem/exam/${exam_id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         if (data.data) {
@@ -112,7 +112,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
           setRows(transformed)
         }
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch problems:', data.message)
       }
@@ -148,15 +148,15 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
 
   const handleConfirmDelete = async () => {
     // perform delete logic here
-    console.log('Delete ID:', selectedId)
+    // console.log('Delete ID:', selectedId)
 
     try {
       const data = await fetchWithAuth(`/api/exam_problem/delete/${selectedId}`, undefined, 'DELETE')
 
-      console.log('Problem removed:', data)
+      // console.log('Problem removed:', data)
 
       if (data.status === false) {
-        console.log(data)
+        // console.log(data)
 
         return setSnackbar({
           open: true,
@@ -165,7 +165,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
         })
       }
 
-      console.log('Problem removed:', data)
+      // console.log('Problem removed:', data)
 
       fetchData()
 
@@ -215,10 +215,10 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
   // const handleSubmit = async () => {
   //   const { title, description, constraints, sample_input, sample_output } = formData
 
-  //   console.log('data: ', formData)
+  //   // console.log('data: ', formData)
 
   //   if (!title || !description || !constraints || !sample_input || !sample_output) {
-  //     console.log('all field required')
+  //     // console.log('all field required')
 
   //     return setSnackbar({
   //       open: true,
@@ -233,7 +233,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
   //     const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
 
   //     if (result.status === false) {
-  //       console.log(result)
+  //       // console.log(result)
 
   //       return setSnackbar({
   //         open: true,
@@ -242,7 +242,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
   //       })
   //     }
 
-  //     console.log('Problem created:', result)
+  //     // console.log('Problem created:', result)
   //     fetchData()
   //     setSnackbar({
   //       open: true,

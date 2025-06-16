@@ -56,7 +56,7 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
 
       const data = await response.json()
 
-      console.log('Forgot Password Response:', data)
+      // console.log('Forgot Password Response:', data)
 
       // You can show a success message or redirect here
       alert('Reset link sent! Please check your email.')

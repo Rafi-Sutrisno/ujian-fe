@@ -52,11 +52,11 @@ const ExamFeedback: React.FC<ExamFeedbackProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/exam/${id}`, undefined, 'GET')
 
-      console.log('ini data: ', data)
+      // console.log('ini data: ', data)
 
       if (data.status && data.data) {
         const result = data.data

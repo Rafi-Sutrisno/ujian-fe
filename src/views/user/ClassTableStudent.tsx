@@ -83,7 +83,7 @@ export default function ClassTableStudent() {
     try {
       const data = await fetchWithAuth(`/api/class/user`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status) {
         const transformed = data.data.map(
@@ -98,7 +98,7 @@ export default function ClassTableStudent() {
 
         setRows(transformed)
 
-        // console.log('transformed:', transformed)
+        // // console.log('transformed:', transformed)
       } else {
         console.error('Failed to fetch classes:', data.message)
       }

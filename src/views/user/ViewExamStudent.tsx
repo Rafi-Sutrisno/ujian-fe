@@ -71,11 +71,11 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/exam/${id}`, undefined, 'GET')
 
-      console.log('ini data: ', data)
+      // console.log('ini data: ', data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -124,7 +124,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
       const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
 
-      console.log('ini start exam: ', startExam.data)
+      // console.log('ini start exam: ', startExam.data)
 
       if (startExam.status) {
         document.cookie = `session_id=${startExam.data.session_id}; path=/; max-age=${startExam.data.time_left}; SameSite=Lax`

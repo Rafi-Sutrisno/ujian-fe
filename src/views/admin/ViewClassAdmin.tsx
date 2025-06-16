@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 
 import Typography from '@mui/material/Typography'
-import type { SelectChangeEvent } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material'
 import { Snackbar, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
 
 import TopSection2Modal from '@/components/top-section/topsection2modal'
@@ -41,11 +41,11 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(id)
+      // console.log(id)
 
       const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'GET')
 
-      console.log('data class ke fetch', data)
+      // console.log('data class ke fetch', data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -102,16 +102,16 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
       const result = await fetchWithAuth(`/api/class/${id}`, { name, year, class: class_name, short_name }, 'PATCH')
 
       if (result.status === false) {
-        console.log(result)
-        
-return setSnackbar({
+        // console.log(result)
+
+        return setSnackbar({
           open: true,
           message: result?.message || 'Failed to update class.',
           severity: 'error'
         })
       }
 
-      console.log('Class updated:', result)
+      // console.log('Class updated:', result)
 
       setSnackbar({
         open: true,
@@ -133,16 +133,16 @@ return setSnackbar({
       const data = await fetchWithAuth(`/api/class/${id}`, undefined, 'DELETE')
 
       if (data.status === false) {
-        console.log(data)
-        
-return setSnackbar({
+        // console.log(data)
+
+        return setSnackbar({
           open: true,
           message: data?.message || 'Failed to delete class.',
           severity: 'error'
         })
       }
 
-      console.log('Class deleted:', data)
+      // console.log('Class deleted:', data)
 
       setSnackbar({
         open: true,

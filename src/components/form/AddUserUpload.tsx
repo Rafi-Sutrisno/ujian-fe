@@ -81,7 +81,7 @@ export default function AddUserUploadModal({
 
       onUploadSuccess?.() // refresh data
     } catch (err) {
-      console.log('masuk sini')
+      // console.log('masuk sini')
       let message = 'Failed to upload file.'
 
       try {

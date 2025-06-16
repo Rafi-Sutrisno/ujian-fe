@@ -115,7 +115,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       const id = getUserIdFromToken(token)
 
       setUserId(id || 'anonymous')
-      console.log('ini user id:', id)
+      // console.log('ini user id:', id)
     }
   }, [])
 
@@ -125,7 +125,6 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
 
     if (!selectedLangCode) throw new Error('Selected language code not found')
-
     ;(async () => {
       const loadedCode = await loadEncrypted('code', userId, currentProblem.id, exam_id, selectedLangCode)
       const loadedInput = await loadEncrypted('input', userId, currentProblem.id, exam_id)
@@ -145,7 +144,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
 
         if (!selectedLangCode) return
-        console.log('masuk loop save draft')
+        // console.log('masuk loop save draft')
         const problemId = problem.id
 
         // Read latest from localStorage
@@ -164,8 +163,8 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
             'POST'
           )
             .then(data => {
-              console.log(`Auto-saved for problem ${problem.id}`)
-              console.log('ini resp save draft:', data)
+              // console.log(`Auto-saved for problem ${problem.id}`)
+              // console.log('ini resp save draft:', data)
             })
             .catch(err => console.warn(`Failed to auto-save for problem ${problem.id}`, err))
         }
@@ -204,7 +203,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     try {
       const data = await fetchWithAuth(`/api/problem/exam/${exam_id}`, undefined, 'GET')
 
-      console.log('ini problem: ', data)
+      // console.log('ini problem: ', data)
 
       if (data.status && Array.isArray(data.data)) {
         setProblems(data.data)
@@ -218,11 +217,11 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const fetchData = async () => {
     try {
-      console.log(exam_id)
+      // console.log(exam_id)
 
       const data = await fetchWithAuth(`/api/exam/${exam_id}`, undefined, 'GET')
 
-      console.log(data)
+      // console.log(data)
 
       if (data.status && data.data) {
         const result = data.data
@@ -254,7 +253,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           await fetchDataProblem()
 
           // After both done
-          console.log('Both fetches done sequentially')
+          // console.log('Both fetches done sequentially')
         } catch (err) {
           console.error('Error fetching data:', err)
         }
@@ -279,7 +278,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
       const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
 
-      console.log('ini result:', result)
+      // console.log('ini result:', result)
 
       if (result.status) {
         const res = result.data
@@ -363,7 +362,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     setConfirmOpen(false)
     const result = await fetchWithAuth(`/api/exam_session/finish_exam/${exam_id}`, {}, 'POST')
 
-    console.log('ini result finish exam:', result)
+    // console.log('ini result finish exam:', result)
     router.push(`/exam_feedback/${exam_id}`)
   }
 
