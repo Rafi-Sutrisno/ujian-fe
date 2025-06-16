@@ -21,7 +21,7 @@ export async function fetchWithAuth(
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json' // Set Content-Type for POST/PATCH requests
+    'Content-Type': 'application/json'
   }
 
   const fetchOptions: RequestInit = {
@@ -144,6 +144,5 @@ export async function fetchWithCookie(
   const fullUrl = new URL(url, serverPath).toString()
   const response = await fetch(fullUrl, fetchOptions)
 
-  
-return response.json()
+  return response.json()
 }

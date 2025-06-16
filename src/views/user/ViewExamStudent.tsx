@@ -124,9 +124,11 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
 
       const startExam = await fetchWithAuth('/api/exam_session/start_exam', payload, 'POST')
 
-      console.log('ini start exam: ', startExam)
+      console.log('ini start exam: ', startExam.data)
 
       if (startExam.status) {
+        document.cookie = `session_id=${startExam.data.session_id}; path=/; max-age=${startExam.data.time_left}; SameSite=Lax`
+
         setSnackbar({
           open: true,
           message: 'Success Start Exam, redirecting to playground page.',
