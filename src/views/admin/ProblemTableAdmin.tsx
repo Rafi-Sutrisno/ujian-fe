@@ -77,7 +77,7 @@ const ProblemTableAdmin = () => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('title')
 
   // const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)

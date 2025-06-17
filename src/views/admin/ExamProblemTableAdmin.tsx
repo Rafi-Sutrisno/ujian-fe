@@ -86,7 +86,7 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('created_at')
   const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
@@ -189,82 +189,11 @@ const ExamProblemTableAdmin: React.FC<ProblemTableProps> = ({ exam_id }) => {
     }
   }
 
-  const [formData, setFormData] = React.useState({
-    title: '',
-    description: ``,
-    constraints: ``,
-    sample_input: ``,
-    sample_output: ``
-  })
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target
-
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }))
-  // }
-
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: '',
     severity: 'success' as 'success' | 'error'
   })
-
-  // const handleSubmit = async () => {
-  //   const { title, description, constraints, sample_input, sample_output } = formData
-
-  //   // console.log('data: ', formData)
-
-  //   if (!title || !description || !constraints || !sample_input || !sample_output) {
-  //     // console.log('all field required')
-
-  //     return setSnackbar({
-  //       open: true,
-  //       message: 'All fields cant be null.',
-  //       severity: 'error'
-  //     })
-  //   }
-
-  //   try {
-  //     const payload = { exam_id, title, description, constraints, sample_input, sample_output }
-
-  //     const result = await fetchWithAuth(`/api/problem/`, payload, 'POST')
-
-  //     if (result.status === false) {
-  //       // console.log(result)
-
-  //       return setSnackbar({
-  //         open: true,
-  //         message: result?.message || 'Failed to create problem.',
-  //         severity: 'error'
-  //       })
-  //     }
-
-  //     // console.log('Problem created:', result)
-  //     fetchData()
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'Problem created successfully!',
-  //       severity: 'success'
-  //     })
-  //   } catch (error) {
-  //     console.error('Network error:', error)
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'Network error while creating problem.',
-  //       severity: 'error'
-  //     })
-  //   }
-  // }
-
-  // const handleEditorChange = (name: string, value: string) => {
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }))
-  // }
 
   const assignProblemTableRef = React.useRef<AssignProblemTableRef>(null)
 

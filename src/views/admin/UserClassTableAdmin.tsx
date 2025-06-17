@@ -79,7 +79,7 @@ function getComparator<Key extends keyof any>(
 
 const UserClassTableAdmin: React.FC<EditUserClassProps> = ({ id }) => {
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('role')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)

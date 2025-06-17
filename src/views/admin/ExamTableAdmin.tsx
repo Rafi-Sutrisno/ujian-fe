@@ -135,8 +135,8 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
+  const [order, setOrder] = React.useState<Order>('desc')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('created_at')
   const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
 

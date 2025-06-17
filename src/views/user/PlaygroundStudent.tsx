@@ -374,7 +374,15 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     <Card>
       {/* <CardHeader title='C Code Playground' /> */}
       <CardContent>
-        <Grid container justifyContent='flex-end' style={{ marginBottom: '20px' }}>
+        <Grid container justifyContent='space-between' style={{ marginBottom: '20px' }}>
+          {currentProblem && (
+            <>
+              <Typography variant='h2' fontWeight='bold'>
+                {currentProblem.title}
+              </Typography>
+            </>
+          )}
+
           <Button variant='contained' color='error' onClick={handleFinishExam}>
             Finish Exam
           </Button>
