@@ -45,7 +45,7 @@ const SplitViewPlaygroundStudent = ({ tabContentList }: { tabContentList: { [key
   useEffect(() => {
     const interval = setInterval(() => {
       checkExamSession()
-    }, 30000) // Cek setiap 30 detik
+    }, 100000) // Cek setiap 1 menit
 
     return () => clearInterval(interval)
   }, [])

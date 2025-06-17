@@ -169,7 +169,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
             .catch(err => console.warn(`Failed to auto-save for problem ${problem.id}`, err))
         }
       })
-    }, 10000) // 30 seconds
+    }, 30000) // 30 seconds
 
     return () => clearInterval(interval)
   }, [userId, problems, formData.allowed_languages, language, exam_id])
