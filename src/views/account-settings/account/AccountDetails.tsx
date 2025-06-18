@@ -27,6 +27,7 @@ const AccountDetails = () => {
   const [formData, setFormData] = useState({
     id: '',
     name: '',
+    username: '',
     noid: '',
     role_id: 2,
     email: ''
@@ -48,6 +49,7 @@ const AccountDetails = () => {
         setFormData({
           id: result.id,
           name: result.name,
+          username: result.username,
           noid: result.noid,
           email: result.email,
           role_id: result.role_id
@@ -188,6 +190,16 @@ const AccountDetails = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
+              label='Username'
+              value={formData.username}
+              name='username'
+              placeholder='John'
+              InputProps={{ readOnly: true }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
               label='NRP'
               value={formData.noid}
               name='noid'
@@ -243,6 +255,7 @@ const AccountDetails = () => {
           <Grid container spacing={5} direction='column'>
             <Grid item xs={12}>
               <TextField
+                type='password'
                 fullWidth
                 label='Old Password'
                 value={passData.old_password}
@@ -252,6 +265,7 @@ const AccountDetails = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                type='password'
                 fullWidth
                 label='New Password'
                 value={passData.new_password}
@@ -261,6 +275,7 @@ const AccountDetails = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                type='password'
                 fullWidth
                 label='Confirm Password'
                 value={passData.confirm_password}
