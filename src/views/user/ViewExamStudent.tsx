@@ -134,6 +134,7 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
           message: 'Success Start Exam, redirecting to playground page.',
           severity: 'success'
         })
+        localStorage.removeItem('currentProblemIndex')
         router.push(`/user/playground/${startExam.data.exam_id}`)
       } else {
         setSnackbar({

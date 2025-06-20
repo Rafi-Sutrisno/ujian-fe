@@ -99,8 +99,17 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   })
 
   const [problems, setProblems] = useState<Data[]>([])
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(0)
+  const getStoredIndex = () => {
+    const stored = localStorage.getItem('currentProblemIndex')
+    return stored ? parseInt(stored, 10) : 0
+  }
+
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(getStoredIndex)
   const currentProblem = problems[currentProblemIndex]
+
+  useEffect(() => {
+    localStorage.setItem('currentProblemIndex', currentProblemIndex.toString())
+  }, [currentProblemIndex])
 
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
@@ -251,9 +260,6 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         try {
           await fetchData()
           await fetchDataProblem()
-
-          // After both done
-          // console.log('Both fetches done sequentially')
         } catch (err) {
           console.error('Error fetching data:', err)
         }
@@ -265,35 +271,29 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const handleRun = async () => {
     setLoading(true)
-
     try {
-      const encodedCode = btoa(code) // Encode the code to Base64
-      const encodedInput = btoa(input) // Encode the input to Base64
+      const encodedCode = btoa(code)
+      const encodedInput = btoa(input)
 
       const payload = {
         language_id: language,
         source_code: encodedCode,
         stdin: encodedInput
       }
-
       const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
-
-      // console.log('ini result:', result)
 
       if (result.status) {
         const res = result.data
 
         if (res.status?.id === 3) {
-          const decodedOutput = atob(res.stdout || '') // Decode Base64 output
+          const decodedOutput = atob(res.stdout || '')
 
-          // setOutput(decodedOutput)
           handleOutputChange(decodedOutput)
         } else {
           const errorOutput = res.compile_output || res.stderr || 'Unknown error occurred'
           const decodedError = atob(errorOutput)
-
-          // setOutput(`Error: ${decodedError}`)
           handleOutputChange(`Error: ${decodedError}`)
+          setLoading(false)
         }
       } else {
         setSnackbar({
@@ -305,8 +305,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     } catch (err) {
       console.error('Error during code execution:', err)
       handleOutputChange('Failed to run code.')
-
-      // setOutput('Failed to run code. Please try again.')
+      setLoading(false)
     } finally {
       setLoading(false)
     }
@@ -386,6 +385,22 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           <Button variant='contained' color='error' onClick={handleFinishExam}>
             Finish Exam
           </Button>
+        </Grid>
+
+        <Grid item style={{ marginBottom: '20px' }}>
+          <Select
+            size='small'
+            value={currentProblemIndex}
+            onChange={e => setCurrentProblemIndex(Number(e.target.value))}
+            displayEmpty
+            style={{ minWidth: 200 }}
+          >
+            {problems.map((problem, index) => (
+              <MenuItem key={problem.id} value={index}>
+                {`${index + 1}. ${problem.title}`}
+              </MenuItem>
+            ))}
+          </Select>
         </Grid>
 
         <Grid
