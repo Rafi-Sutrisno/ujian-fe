@@ -40,6 +40,8 @@ import { getTokenFromCookies, getUserIdFromToken } from '@/utils/token'
 
 import { getExtensionsForCodeEditor } from '@/components/Editor/CodeEditor'
 
+import EditorBasic from '@/components/Editor/EditorBasic'
+
 interface PlaygroundProps {
   exam_id: string
 }
@@ -401,6 +403,13 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     setConfirmOpen(false)
   }
 
+  const handleEditorChange = (name: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
   if (!currentProblem) {
     return <div>Loading...</div>
   }
@@ -546,22 +555,46 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           <Grid item xs={12} md={6} style={{ borderRight: '2px solid gray', overflowY: 'scroll', maxHeight: '700px' }}>
             {currentProblem && (
               <>
-                <Typography variant='h6' fontWeight='bold'>
-                  {currentProblem.title}
+                <Typography>
+                  <strong>Description:</strong>{' '}
                 </Typography>
-                <Typography dangerouslySetInnerHTML={{ __html: currentProblem.description }} sx={{ mb: 2 }} />
+                <EditorBasic
+                  key={`description-view-${currentProblem.title}`}
+                  name='description-view'
+                  content={currentProblem.description}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
+                />
                 <Typography>
                   <strong>Constraints:</strong>{' '}
-                  <span dangerouslySetInnerHTML={{ __html: currentProblem.constraints }} />
                 </Typography>
+                <EditorBasic
+                  key={`constraints-view-${currentProblem.title}`}
+                  name='description-view'
+                  content={currentProblem.constraints}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
+                />
                 <Typography>
                   <strong>Sample Input:</strong>{' '}
-                  <span dangerouslySetInnerHTML={{ __html: currentProblem.sample_input }} />
                 </Typography>
+                <EditorBasic
+                  key={`sample_input-view-${currentProblem.title}`}
+                  name='description-view'
+                  content={currentProblem.sample_input}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
+                />
                 <Typography>
                   <strong>Sample Output:</strong>{' '}
-                  <span dangerouslySetInnerHTML={{ __html: currentProblem.sample_output }} />
                 </Typography>
+                <EditorBasic
+                  key={`sample_output-view-${currentProblem.title}`}
+                  name='description-view'
+                  content={currentProblem.sample_output}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
+                />
               </>
             )}
           </Grid>
