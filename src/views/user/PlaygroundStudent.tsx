@@ -23,7 +23,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Box
 } from '@mui/material'
 import { ArrowBackIos, ArrowForwardIos, PlayArrow, Publish } from '@mui/icons-material'
 
@@ -51,6 +52,7 @@ interface Data {
   sample_input: string
   sample_output: string
   created_at: string
+  status: string
 }
 
 type Language = {
@@ -271,6 +273,13 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const handleRun = async () => {
     setLoading(true)
+
+    // Buat abort controller untuk timeout
+    const controller = new AbortController()
+    const timeout = setTimeout(() => {
+      controller.abort()
+    }, 15000) // 15 detik
+
     try {
       const encodedCode = btoa(code)
       const encodedInput = btoa(input)
@@ -280,20 +289,26 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         source_code: encodedCode,
         stdin: encodedInput
       }
-      const result = await fetchWithAuth(`/api/submission/run/${exam_id}`, payload, 'POST')
+
+      const result = await fetchWithAuth(
+        `/api/submission/run/${exam_id}`,
+        payload,
+        'POST',
+        { signal: controller.signal } // gunakan signal
+      )
+
+      clearTimeout(timeout) // bersihkan timeout jika berhasil
 
       if (result.status) {
         const res = result.data
 
         if (res.status?.id === 3) {
           const decodedOutput = atob(res.stdout || '')
-
           handleOutputChange(decodedOutput)
         } else {
           const errorOutput = res.compile_output || res.stderr || 'Unknown error occurred'
           const decodedError = atob(errorOutput)
           handleOutputChange(`Error: ${decodedError}`)
-          setLoading(false)
         }
       } else {
         setSnackbar({
@@ -302,12 +317,17 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
           severity: 'error'
         })
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error during code execution:', err)
-      handleOutputChange('Failed to run code.')
-      setLoading(false)
+
+      if (err.name === 'AbortError') {
+        handleOutputChange('⏱️ Waktu eksekusi melebihi batas (15 detik).')
+      } else {
+        handleOutputChange('❌ Gagal menjalankan kode.')
+      }
     } finally {
       setLoading(false)
+      clearTimeout(timeout)
     }
   }
 
@@ -375,11 +395,42 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
       <CardContent>
         <Grid container justifyContent='space-between' style={{ marginBottom: '20px' }}>
           {currentProblem && (
-            <>
+            <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
               <Typography variant='h2' fontWeight='bold'>
                 {currentProblem.title}
               </Typography>
-            </>
+
+              <Typography
+                variant='h6'
+                fontWeight='bold'
+                px={2}
+                py={0.5}
+                borderRadius={2}
+                sx={{
+                  border: '2px solid',
+                  color:
+                    currentProblem.status === 'accepted'
+                      ? 'green'
+                      : currentProblem.status === 'wrong answer'
+                        ? 'red'
+                        : 'gray',
+                  borderColor:
+                    currentProblem.status === 'accepted'
+                      ? 'green'
+                      : currentProblem.status === 'wrong answer'
+                        ? 'red'
+                        : 'gray',
+                  backgroundColor:
+                    currentProblem.status === 'accepted'
+                      ? 'rgba(0,128,0,0.1)'
+                      : currentProblem.status === 'wrong answer'
+                        ? 'rgba(255,0,0,0.1)'
+                        : 'rgba(128,128,128,0.05)'
+                }}
+              >
+                {currentProblem.status || 'no submissions'}
+              </Typography>
+            </Box>
           )}
 
           <Button variant='contained' color='error' onClick={handleFinishExam}>
