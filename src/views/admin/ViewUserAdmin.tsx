@@ -15,7 +15,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 
-import { Snackbar, Alert } from '@mui/material'
+import { Snackbar, Alert, Box } from '@mui/material'
 
 import TopSection2Modal from '@/components/top-section/topsection2modal'
 import { fetchWithAuth } from '@/utils/api'
@@ -185,6 +185,17 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
     }
   }
 
+  const DisplayField = ({ label, value }: { label: string; value: string | number }) => (
+    <Box mb={6} borderRadius={2}>
+      <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+        {label}
+      </Typography>
+      <Typography variant='body1' color='text.secondary'>
+        {value}
+      </Typography>
+    </Box>
+  )
+
   return (
     <>
       <Card>
@@ -268,69 +279,25 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
             }
           />
 
-          <Grid container spacing={5}>
+          <Grid container>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Username'
-                placeholder='Example: Alice 1'
-                name='username'
-                value={formData.username}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
+              <DisplayField label='Username' value={formData.username} />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Name'
-                placeholder='Example: Alice Smith'
-                name='name'
-                value={formData.name}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
+              <DisplayField label='Name' value={formData.name} />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Email'
-                placeholder='Example: alice@example.com'
-                name='email'
-                value={formData.email}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
+              <DisplayField label='Email' value={formData.email} />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Role'
-                name='Role'
-                value={formData.role}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
+              <DisplayField label='Role' value={formData.role} />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='NOID'
-                placeholder='Example: 5025211001'
-                name='noid'
-                value={formData.noid}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
+              <DisplayField label='NOID' value={formData.noid} />
             </Grid>
           </Grid>
         </CardContent>

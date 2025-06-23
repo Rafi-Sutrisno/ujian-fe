@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 
-import { Alert, Snackbar } from '@mui/material'
+import { Alert, Box, Snackbar } from '@mui/material'
 
 import TopSection2Modal from '@/components/top-section/topsection2modal'
 
@@ -192,6 +192,17 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
     }))
   }
 
+  const DisplayField = ({ label, value }: { label: string; value: string | number }) => (
+    <Box mb={6} borderRadius={2}>
+      <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+        {label} :
+      </Typography>
+      <Typography variant='body1' color='text.secondary'>
+        {value}
+      </Typography>
+    </Box>
+  )
+
   return (
     <>
       <Card>
@@ -266,136 +277,84 @@ const ViewProblemAdmin: React.FC<ViewProblemProps> = ({ id }) => {
             }
             onSecondarySave={handleDelete}
           />
+
           <form>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Title'
-                  name='title'
-                  value={formData.title}
-                  InputProps={{
-                    readOnly: true
-                  }}
+                <DisplayField label='Title' value={formData.title} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+                  Description :
+                </Typography>
+                <EditorBasic
+                  key={`description-view-${formData.title}`}
+                  name='description-view'
+                  content={formData.description}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <p>Description</p>
-                <div
-                  className='description'
-                  style={{
-                    padding: '10px 14px',
-                    fontSize: '16px',
-                    lineHeight: '1.5',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    minHeight: '150px',
-                    overflowY: 'auto'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: formData.description }}
+                <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+                  Constraints
+                </Typography>
+                <EditorBasic
+                  key={`constraints-view-${formData.title}`}
+                  name='description-view'
+                  content={formData.constraints}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                {/* <TextField
-                fullWidth
-                label='Constraints'
-                name='constraints'
-                value={formData.constraints}
-                InputProps={{
-                  readOnly: true
-                }}
-              /> */}
-                <p>Constraints</p>
-                <div
-                  className='description'
-                  style={{
-                    padding: '10px 14px',
-                    fontSize: '16px',
-                    lineHeight: '1.5',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    minHeight: '80px',
-                    overflowY: 'auto'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: formData.constraints }}
+                <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+                  Sample Input
+                </Typography>
+                <EditorBasic
+                  key={`sample_input-view-${formData.title}`}
+                  name='description-view'
+                  content={formData.sample_input}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <p>Sample Input</p>
-                <div
-                  className='description'
-                  style={{
-                    padding: '10px 14px',
-                    fontSize: '16px',
-                    lineHeight: '1.5',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    minHeight: '80px',
-                    overflowY: 'auto'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: formData.sample_input }}
+                <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+                  Sample Output
+                </Typography>
+                <EditorBasic
+                  key={`sample_output-view-${formData.title}`}
+                  name='description-view'
+                  content={formData.sample_output}
+                  onChange={handleEditorChange}
+                  viewOnly={true}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <p>Sample Output</p>
-                <div
-                  className='description'
-                  style={{
-                    padding: '10px 14px',
-                    fontSize: '16px',
-                    lineHeight: '1.5',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    minHeight: '80px',
-                    overflowY: 'auto'
-                  }}
-                  dangerouslySetInnerHTML={{ __html: formData.sample_output }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Cpu Time Limit'
-                  placeholder=''
-                  name='cpu_time_limit'
+                <DisplayField
+                  label='CPU Time Limit'
                   value={
                     formData.cpu_time_limit && formData.cpu_time_limit !== '0'
                       ? formData.cpu_time_limit
                       : 'default limit (2 sec)'
                   }
-                  InputProps={{
-                    readOnly: true
-                  }}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
+                <DisplayField
                   label='Memory Limit'
-                  placeholder=''
-                  name='memory_limit'
                   value={
                     formData.memory_limit && formData.memory_limit !== '0'
                       ? formData.memory_limit
-                      : 'default limit (128000 kylobyte)'
+                      : 'default limit (128000 kilobyte)'
                   }
-                  InputProps={{
-                    readOnly: true
-                  }}
                 />
               </Grid>
             </Grid>

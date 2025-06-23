@@ -23,7 +23,8 @@ import {
   Select,
   ListItemText,
   FormControl,
-  InputLabel
+  InputLabel,
+  Box
 } from '@mui/material'
 import TopSection2Modal from '@/components/top-section/topsection2modal'
 
@@ -346,6 +347,17 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
     }
   }
 
+  const DisplayField = ({ label, value }: { label: string; value: string | number }) => (
+    <Box mb={6} borderRadius={2}>
+      <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+        {label}
+      </Typography>
+      <Typography variant='body1' color='text.secondary'>
+        {value || '-'}
+      </Typography>
+    </Box>
+  )
+
   return (
     <>
       <Card>
@@ -601,208 +613,62 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
             }
             onSecondarySave={handleDelete}
           />
-          <form>
-            <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Name'
-                  name='name'
-                  value={formData.name}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Short Name'
-                  name='short_name'
-                  value={formData.short_name}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Published'
-                  name='is_published'
-                  value={formData.is_published ? 'Yes' : 'No'}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Start Time'
-                  name='start_time'
-                  value={formData.start_time}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Duration'
-                  name='duration'
-                  value={formData.duration}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='End Time'
-                  name='end_time'
-                  value={formData.end_time}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  disabled
-                  control={
-                    <Switch
-                      checked={!!formData.is_seb_restricted}
-                      onChange={e =>
-                        setFormData(prev => ({
-                          ...prev,
-                          is_seb_restricted: e.target.checked
-                        }))
-                      }
-                      name='is_seb_restricted'
-                      color='primary'
-                    />
-                  }
-                  label='Require Safe Exam Browser (SEB) Only'
-                />
-              </Grid>
-
-              {formData.is_seb_restricted && (
-                <>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox disabled checked={sebKeyEnabled} onChange={e => setSebKeyEnabled(e.target.checked)} />
-                      }
-                      label={
-                        <Typography color={sebKeyEnabled ? 'textPrimary' : 'textSecondary'}>
-                          Enable SEB Browser Key
-                        </Typography>
-                      }
-                    />
-                    <TextField
-                      fullWidth
-                      label='SEB Browser Key'
-                      name='seb_browser_key'
-                      value={formData.seb_browser_key}
-                      onChange={e => setFormData(prev => ({ ...prev, seb_browser_key: e.target.value }))}
-                      disabled
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled
-                          checked={sebConfigKeyEnabled}
-                          onChange={e => setSebConfigKeyEnabled(e.target.checked)}
-                        />
-                      }
-                      label={
-                        <Typography color={sebConfigKeyEnabled ? 'textPrimary' : 'textSecondary'}>
-                          Enable SEB Config Key
-                        </Typography>
-                      }
-                    />
-
-                    <TextField
-                      fullWidth
-                      label='SEB Config Key'
-                      name='seb_config_key'
-                      value={formData.seb_config_key}
-                      onChange={e => setFormData(prev => ({ ...prev, seb_config_key: e.target.value }))}
-                      disabled
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Typography variant='body2' color='textSecondary'>
-                      If both left empty, access will only be checked by User-Agent
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled
-                          checked={sebQuitUrlEnabled}
-                          onChange={e => setSebQuitUrlEnabled(e.target.checked)}
-                        />
-                      }
-                      label={
-                        <Typography color={sebQuitUrlEnabled ? 'textPrimary' : 'textSecondary'}>
-                          Enable SEB Quit Url
-                        </Typography>
-                      }
-                    />
-
-                    <TextField
-                      fullWidth
-                      label='SEB Quit Url'
-                      name='seb_quit_url'
-                      value={formData.seb_quit_url}
-                      onChange={e => setFormData(prev => ({ ...prev, seb_quit_url: e.target.value }))}
-                      disabled
-                    />
-                  </Grid>
-                </>
-              )}
-
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id='language-select-label'>Allowed Programming Languages</InputLabel>
-                  <Select
-                    labelId='language-select-label'
-                    id='language-select'
-                    multiple
-                    disabled
-                    value={formData.allowed_languages.map(lang => String(lang.id))} // ✅ safe now
-                    label='Allowed Programming Languages'
-                    renderValue={selected =>
-                      (selected as string[]).map(id => lang.find(l => String(l.id) === id)?.name || id).join(', ')
-                    }
-                  >
-                    {lang.map(l => (
-                      <MenuItem key={l.id} value={String(l.id)}>
-                        <Checkbox checked={formData.allowed_languages.some(al => String(al.id) === String(l.id))} />
-                        <ListItemText primary={l.name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              <DisplayField label='Name' value={formData.name} />
             </Grid>
-          </form>
+
+            <Grid item xs={12}>
+              <DisplayField label='Short Name' value={formData.short_name} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DisplayField label='Published' value={formData.is_published ? 'Yes' : 'No'} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DisplayField label='Start Time' value={formData.start_time} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DisplayField label='Duration' value={formData.duration} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DisplayField label='End Time' value={formData.end_time} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DisplayField
+                label='Require Safe Exam Browser (SEB) Only'
+                value={formData.is_seb_restricted ? 'Yes' : 'No'}
+              />
+            </Grid>
+
+            {formData.is_seb_restricted && (
+              <>
+                <Grid item xs={12}>
+                  <DisplayField label='SEB Browser Key' value={formData.seb_browser_key} />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <DisplayField label='SEB Config Key' value={formData.seb_config_key} />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <DisplayField label='SEB Quit Url' value={formData.seb_quit_url} />
+                </Grid>
+              </>
+            )}
+
+            <Grid item xs={12}>
+              <DisplayField
+                label='Allowed Programming Languages'
+                value={formData.allowed_languages.map(l => l.name).join(', ')}
+              />
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
       <Snackbar

@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent'
 
 import Typography from '@mui/material/Typography'
 import type { SelectChangeEvent } from '@mui/material'
-import { Snackbar, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
+import { Snackbar, Alert, Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material'
 
 import TopSection2Modal from '@/components/top-section/topsection2modal'
 
@@ -164,6 +164,17 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
     }
   }
 
+  const DisplayField = ({ label, value }: { label: string; value: string | number }) => (
+    <Box mb={6} borderRadius={2}>
+      <Typography variant='subtitle1' fontWeight='bold' color='text.primary' gutterBottom>
+        {label}
+      </Typography>
+      <Typography variant='body1' color='text.secondary'>
+        {value}
+      </Typography>
+    </Box>
+  )
+
   return (
     <>
       <Card>
@@ -247,60 +258,19 @@ const ViewClassAdmin: React.FC<ViewClassProps> = ({ id }) => {
             }
             onSecondarySave={handleDelete}
           />
-          <form>
-            <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Name'
-                  placeholder='Example: Mathematics'
-                  name='name'
-                  value={formData.name}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Year'
-                  placeholder='Example: 2025'
-                  name='year'
-                  value={formData.year}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Class'
-                  placeholder='Example: A'
-                  name='class_name'
-                  value={formData.class_name}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label='Short Name'
-                  placeholder='Example: DPA'
-                  name='short_name'
-                  value={formData.short_name}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </form>
+          <Grid item xs={12}>
+            <DisplayField label='Name' value={formData.name} />
+          </Grid>
+          <Grid item xs={12}>
+            <DisplayField label='Year' value={formData.year} />
+          </Grid>
+          <Grid item xs={12}>
+            <DisplayField label='Class' value={formData.class_name} />
+          </Grid>
+          <Grid item xs={12}>
+            <DisplayField label='Short Name' value={formData.short_name} />
+          </Grid>
         </CardContent>
       </Card>
       <Snackbar
