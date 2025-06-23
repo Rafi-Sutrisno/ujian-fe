@@ -30,7 +30,7 @@ type FormData = {
   duration: string
   end_time: string
 
-  // is_seb_restricted: boolean
+  is_seb_restricted: boolean
   // seb_browser_key: string
   // seb_config_key: string
   seb_quit_url: string
@@ -46,6 +46,7 @@ const ExamFeedback: React.FC<ExamFeedbackProps> = ({ id }) => {
     start_time: '',
     duration: '',
     end_time: '',
+    is_seb_restricted: false,
     seb_quit_url: '',
     allowed_languages: []
   })
@@ -69,6 +70,7 @@ const ExamFeedback: React.FC<ExamFeedbackProps> = ({ id }) => {
           start_time: result.start_time,
           duration: result.duration,
           end_time: result.end_time,
+          is_seb_restricted: result.is_seb_restricted,
           seb_quit_url: result.seb_quit_url,
           allowed_languages: result.allowed_languages
         })
@@ -92,7 +94,7 @@ const ExamFeedback: React.FC<ExamFeedbackProps> = ({ id }) => {
             Exam Finished
           </Typography>
         </Box>
-        {formData.seb_quit_url === '' ? (
+        {formData.seb_quit_url === '' && formData.is_seb_restricted ? (
           <>
             <Link href={`/user/exam/${id}`}>
               <Button variant='outlined' size='small' color='primary'>
