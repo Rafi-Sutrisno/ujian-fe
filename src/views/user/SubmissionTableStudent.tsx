@@ -16,9 +16,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, CardHeader, DialogContent } from '@mui/material'
+import { Card, CardContent, CardHeader, DialogContent, useTheme } from '@mui/material'
+import CodeMirror from '@uiw/react-codemirror'
 
 import { fetchWithAuth } from '@/utils/api'
+import { getExtensionsForCodeEditor } from '@/components/Editor/CodeEditor'
 
 interface ExamTableProps {
   exam_id: string
@@ -93,8 +95,21 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
   const [openDialog, setOpenDialog] = React.useState(false)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [userCode, setUserCode] = React.useState<string | null>(null)
+  const [Lang, setLang] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
+
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
+
+  const extensions = (lang: string, readOnly: boolean) => {
+    return getExtensionsForCodeEditor(lang || 'C', isDarkMode, readOnly)
+  }
+
+  // const extensions = useMemo(
+  //     (lang: string) => getExtensionsForCodeEditor(lang || 'C', isDarkMode),
+  //     [language, isDarkMode]
+  //   )
 
   const fetchData = async () => {
     try {
@@ -161,10 +176,10 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
   //   setSelectedId(null)
   // }
 
-  const handleSeeCode = (code: string) => {
+  const handleSeeCode = (code: string, lang: string) => {
     const decodedCode = atob(code)
-
     setUserCode(decodedCode)
+    setLang(lang)
     setOpenDialog(true)
   }
 
@@ -217,7 +232,7 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
                                 variant='outlined'
                                 size='small'
                                 color='primary'
-                                onClick={() => handleSeeCode(row.code)}
+                                onClick={() => handleSeeCode(row.code, row.lang_id)}
                               >
                                 See Code
                               </Button>
@@ -248,12 +263,10 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
 
-          <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth='lg'>
             <DialogTitle>Users Code</DialogTitle>
             <DialogContent>
-              <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                <code>{userCode}</code>
-              </pre>
+              <CodeMirror value={userCode || ''} height='400px' extensions={extensions(Lang || '', true)} />
             </DialogContent>
           </Dialog>
         </Paper>

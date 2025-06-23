@@ -3,6 +3,7 @@ import { StreamLanguage } from '@codemirror/language'
 import { csharp } from '@codemirror/legacy-modes/mode/clike'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { autocompletion, completeFromList } from '@codemirror/autocomplete'
+import { EditorView } from '@codemirror/view'
 
 // Common C keywords
 const cKeywords = [
@@ -53,7 +54,7 @@ const cppKeywords = [
   'delete'
 ].map(label => ({ label, type: 'keyword' }))
 
-export const getExtensionsForCodeEditor = (langName: string, isDarkMode: boolean) => {
+export const getExtensionsForCodeEditor = (langName: string, isDarkMode: boolean, readOnly: boolean = false) => {
   const extensions = []
 
   switch (langName) {
@@ -75,6 +76,7 @@ export const getExtensionsForCodeEditor = (langName: string, isDarkMode: boolean
   }
 
   if (isDarkMode) extensions.push(oneDark)
-  
-return extensions
+  if (readOnly) extensions.push(EditorView.editable.of(false))
+
+  return extensions
 }
