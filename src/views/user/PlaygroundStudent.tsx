@@ -101,16 +101,23 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   })
 
   const [problems, setProblems] = useState<Data[]>([])
-  const getStoredIndex = () => {
-    const stored = localStorage.getItem('currentProblemIndex')
-    return stored ? parseInt(stored, 10) : 0
-  }
+  const [currentProblemIndex, setCurrentProblemIndex] = useState<number | null>(null) // initially null
+  const currentProblem = currentProblemIndex !== null ? problems[currentProblemIndex] : null
 
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(getStoredIndex)
-  const currentProblem = problems[currentProblemIndex]
-
+  // Get stored index after mount
   useEffect(() => {
-    localStorage.setItem('currentProblemIndex', currentProblemIndex.toString())
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('currentProblemIndex')
+      const index = stored ? parseInt(stored, 10) : 0
+      setCurrentProblemIndex(index)
+    }
+  }, [])
+
+  // Update localStorage when index changes
+  useEffect(() => {
+    if (currentProblemIndex !== null) {
+      localStorage.setItem('currentProblemIndex', currentProblemIndex.toString())
+    }
   }, [currentProblemIndex])
 
   const theme = useTheme()
@@ -189,12 +196,16 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
     const selectedLangCode = formData.allowed_languages.find(l => l.id === language)?.name
 
     setCode(newCode)
-    saveEncrypted('code', userId, currentProblem.id, newCode, exam_id, selectedLangCode)
+    if (currentProblem) {
+      saveEncrypted('code', userId, currentProblem.id, newCode, exam_id, selectedLangCode)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
-    saveEncrypted('input', userId, currentProblem.id, e.target.value, exam_id)
+    if (currentProblem) {
+      saveEncrypted('input', userId, currentProblem.id, e.target.value, exam_id)
+    }
   }
 
   const handleOutputChange = (newOutput: string) => {
@@ -332,44 +343,45 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
   }
 
   const handleSubmit = async () => {
-    setLoadingSubmit(true)
+    if (currentProblem) {
+      setLoadingSubmit(true)
+      try {
+        const encodedCode = code
 
-    try {
-      const encodedCode = code
+        const payload = {
+          language_id: language,
+          source_code: encodedCode,
+          exam_id: exam_id,
+          problem_id: currentProblem.id
+        }
 
-      const payload = {
-        language_id: language,
-        source_code: encodedCode,
-        exam_id: exam_id,
-        problem_id: currentProblem.id
-      }
+        const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
 
-      const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
-
-      if (result.status) {
+        if (result.status) {
+          setSnackbar({
+            open: true,
+            message: result?.message || 'Success submit code.',
+            severity: 'success'
+          })
+        } else {
+          setSnackbar({
+            open: true,
+            message: result?.error || 'Failed to submit code.',
+            severity: 'error'
+          })
+        }
+      } catch (err) {
+        console.error('Error during code submission:', err)
         setSnackbar({
           open: true,
-          message: result?.message || 'Success submit code.',
-          severity: 'success'
-        })
-      } else {
-        setSnackbar({
-          open: true,
-          message: result?.error || 'Failed to submit code.',
+          message: 'Failed to submit code.',
           severity: 'error'
         })
-      }
-    } catch (err) {
-      console.error('Error during code submission:', err)
-      setSnackbar({
-        open: true,
-        message: 'Failed to submit code.',
-        severity: 'error'
-      })
 
-      // setOutput('Failed to run code. Please try again.')
-    } finally {
-      setLoadingSubmit(false)
+        // setOutput('Failed to run code. Please try again.')
+      } finally {
+        setLoadingSubmit(false)
+      }
     }
   }
 
@@ -387,6 +399,10 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const cancelFinishExam = () => {
     setConfirmOpen(false)
+  }
+
+  if (!currentProblem) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -469,7 +485,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                 <Button
                   variant='outlined'
                   color='secondary'
-                  onClick={() => setCurrentProblemIndex(i => Math.max(i - 1, 0))}
+                  onClick={() => setCurrentProblemIndex(i => (i !== null ? Math.max(i - 1, 0) : 0))}
                   disabled={currentProblemIndex === 0}
                 >
                   <ArrowBackIos />
@@ -479,7 +495,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                 <Button
                   variant='outlined'
                   color='secondary'
-                  onClick={() => setCurrentProblemIndex(i => Math.min(i + 1, problems.length - 1))}
+                  onClick={() => setCurrentProblemIndex(i => (i !== null ? Math.max(i + 1, 0) : 0))}
                   disabled={currentProblemIndex === problems.length - 1}
                 >
                   <ArrowForwardIos />
