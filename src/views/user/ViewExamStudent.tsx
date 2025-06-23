@@ -127,7 +127,10 @@ const ViewExamStudent: React.FC<ViewExamProps> = ({ id }) => {
       // console.log('ini start exam: ', startExam.data)
 
       if (startExam.status) {
-        document.cookie = `session_id=${startExam.data.session_id}; path=/; max-age=${startExam.data.time_left}; SameSite=Lax`
+        console.log('ini session id dari be:', startExam.data.session_id)
+        if (startExam.data.session_id !== '') {
+          document.cookie = `session_id=${startExam.data.session_id}; path=/; max-age=${startExam.data.time_left}; SameSite=Lax`
+        }
 
         setSnackbar({
           open: true,
