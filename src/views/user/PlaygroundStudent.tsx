@@ -360,6 +360,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
         const result = await fetchWithAuth(`/api/submission/submit/${exam_id}`, payload, 'POST')
 
         if (result.status) {
+          currentProblem.status = 'in queue'
           setSnackbar({
             open: true,
             message: result?.message || 'Success submit code.',
@@ -438,19 +439,25 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
                       ? 'green'
                       : currentProblem.status === 'wrong answer'
                         ? 'red'
-                        : 'gray',
+                        : currentProblem.status === 'in queue'
+                          ? 'orange'
+                          : 'gray',
                   borderColor:
                     currentProblem.status === 'accepted'
                       ? 'green'
                       : currentProblem.status === 'wrong answer'
                         ? 'red'
-                        : 'gray',
+                        : currentProblem.status === 'in queue'
+                          ? 'orange'
+                          : 'gray',
                   backgroundColor:
                     currentProblem.status === 'accepted'
                       ? 'rgba(0,128,0,0.1)'
                       : currentProblem.status === 'wrong answer'
                         ? 'rgba(255,0,0,0.1)'
-                        : 'rgba(128,128,128,0.05)'
+                        : currentProblem.status === 'in queue'
+                          ? 'rgba(255,165,0,0.1)' // orange-ish
+                          : 'rgba(128,128,128,0.05)'
                 }}
               >
                 {currentProblem.status || 'no submissions'}
