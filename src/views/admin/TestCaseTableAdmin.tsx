@@ -153,6 +153,8 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         message: 'Network error while creating test case.',
         severity: 'error'
       })
+    } finally {
+      setFormData({ input_data: '', expected_output: `` })
     }
   }
 

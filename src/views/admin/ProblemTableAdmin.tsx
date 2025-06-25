@@ -216,6 +216,16 @@ const ProblemTableAdmin = () => {
         message: 'Network error while creating problem.',
         severity: 'error'
       })
+    } finally {
+      setFormData({
+        title: '',
+        description: ``,
+        constraints: ``,
+        sample_input: ``,
+        sample_output: ``,
+        cpu_time_limit: '',
+        memory_limit: ''
+      })
     }
   }
 
