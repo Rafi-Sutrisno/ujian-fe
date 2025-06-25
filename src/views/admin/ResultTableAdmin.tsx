@@ -15,11 +15,10 @@ import TableRow from '@mui/material/TableRow'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
-import DialogActions from '@mui/material/DialogActions'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
-import { Card, CardContent, CardHeader, Stack } from '@mui/material'
+import { Card, CardContent, CardHeader, DialogContent, Typography } from '@mui/material'
 
 import { fetchWithAuth } from '@/utils/api'
 
@@ -43,6 +42,9 @@ interface Data {
   total_problem: number
   status: string
   finished_at: string
+  accepted_problems: string
+  wrong_problems: string
+  no_submission_problems: string
 }
 
 const columns: readonly Column[] = [
@@ -51,7 +53,8 @@ const columns: readonly Column[] = [
   { id: 'total_correct', label: 'Total Correct', minWidth: 100, sortable: true },
   { id: 'score', label: 'Score', minWidth: 170, sortable: true },
   { id: 'status', label: 'Status', minWidth: 170, sortable: true },
-  { id: 'finished_at', label: 'Finished At', minWidth: 170, sortable: true }
+  { id: 'finished_at', label: 'Finished At', minWidth: 170, sortable: true },
+  { id: 'action', label: 'Action', minWidth: 100, sortable: true }
 ]
 
 type Order = 'asc' | 'desc'
@@ -91,7 +94,12 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
   const [order, setOrder] = React.useState<Order>('desc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('total_correct')
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
+  const [selectedResult, setSelectedResult] = React.useState<{
+    userName: string
+    accepted: string[]
+    wrong: string[]
+    noSubmission: string[]
+  } | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
 
@@ -110,7 +118,10 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             total_correct: result.total_correct,
             total_problem: result.total_problem,
             status: result.status === 0 ? 'not finished' : 'finished',
-            finished_at: result.status === 1 ? result.finished_at : '-'
+            finished_at: result.status === 1 ? result.finished_at : '-',
+            accepted_problems: result.accepted_problems,
+            no_submission_problems: result.no_submission_problems,
+            wrong_problems: result.wrong_problems
           })
         )
 
@@ -146,16 +157,14 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
     setPage(0)
   }
 
-  // const handleDeleteClick = (id: string) => {
-  //   setSelectedId(id)
-  //   setOpenDialog(true)
-  // }
-
-  const handleConfirmDelete = () => {
-    // perform delete logic here
-    // console.log('Delete ID:', selectedId)
-    setOpenDialog(false)
-    setSelectedId(null)
+  const handleSeeResult = (row: any) => {
+    setSelectedResult({
+      userName: row.name,
+      accepted: row.accepted_problems?.split(',') || [],
+      wrong: row.wrong_problems?.split(',') || [],
+      noSubmission: row.no_submission_problems?.split(',') || []
+    })
+    setOpenDialog(true)
   }
 
   return (
@@ -226,13 +235,14 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
                         if (column.id === 'action') {
                           return (
                             <TableCell key={column.id} align={column.align ?? 'left'}>
-                              <Stack direction='row' spacing={2}>
-                                <Link href={`/user/exam/${row.id}`} passHref>
-                                  <Button variant='outlined' size='small' color='primary'>
-                                    View
-                                  </Button>
-                                </Link>
-                              </Stack>
+                              <Button
+                                variant='outlined'
+                                size='small'
+                                color='primary'
+                                onClick={() => handleSeeResult(row)}
+                              >
+                                View
+                              </Button>
                             </TableCell>
                           )
                         }
@@ -259,14 +269,12 @@ const ResultTableAdmin: React.FC<ExamTableProps> = ({ exam_id }) => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-            <DialogTitle>Are you sure you want to delete this exam?</DialogTitle>
-            <DialogActions>
-              <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-              <Button color='error' onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-            </DialogActions>
+          <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth='sm' fullWidth>
+            <DialogTitle>Result for {selectedResult?.userName}</DialogTitle>
+            <DialogContent dividers>
+              <Typography variant='subtitle1'>✅ Accepted Problems</Typography>
+              <ul>{selectedResult?.accepted.map((title, idx) => <li key={`acc-${idx}`}>{title}</li>)}</ul>
+            </DialogContent>
           </Dialog>
         </Paper>
       </CardContent>{' '}
