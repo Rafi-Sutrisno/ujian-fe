@@ -21,6 +21,7 @@ import { Card, CardContent, Grid, Snackbar, Alert } from '@mui/material'
 
 import TopSectionModal from '@/components/top-section/topsectionModal'
 import { fetchWithAuth } from '@/utils/api'
+import TopSectionTestCase from '@/components/top-section/topSectionTestCase'
 
 interface TestCaseTableProps {
   problem_id: string
@@ -275,11 +276,63 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
     setOpenDeleteDialog(false)
   }
 
+  const onError = (message?: string) => {
+    setSnackbar({
+      open: true,
+      message: message || 'Failed to remove user from class.',
+      severity: 'error'
+    })
+  }
+
+  const onUploadSuccess = async () => {
+    await fetchData()
+
+    setSnackbar({
+      open: true,
+      message: 'Test Case uploaded successfully!',
+      severity: 'success'
+    })
+  }
+
   return (
     <>
       <Card sx={{ mt: 4 }}>
         <CardContent>
-          <TopSectionModal
+          <TopSectionTestCase
+            title='Test Case List'
+            buttonText='Add New Test Case'
+            problem_id={problem_id}
+            modalContent={
+              <>
+                <Grid container spacing={5}>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label='Input Data'
+                      name='input_data'
+                      value={formData.input_data}
+                      onChange={handleChange}
+                      multiline
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label='Expected Output'
+                      name='expected_output'
+                      value={formData.expected_output}
+                      onChange={handleChange}
+                      multiline
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            }
+            onSave={handleSubmitPost}
+            onError={onError}
+            onUploadSuccess={onUploadSuccess}
+          />
+          {/* <TopSectionModal
             recv={false}
             title='Test Case List'
             buttonText='Add New Test Case'
@@ -310,7 +363,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
               </>
             }
             onSave={handleSubmitPost}
-          />
+          /> */}
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 440 }}>
               <Table stickyHeader aria-label='test case table'>
@@ -385,7 +438,7 @@ const TestCaseTableAdmin: React.FC<TestCaseTableProps> = ({ problem_id }) => {
         </CardContent>
 
         {/* Edit Dialog */}
-        <Dialog open={openEditDialog} onClose={handleEditClose}>
+        <Dialog fullWidth={true} maxWidth={'xl'} open={openEditDialog} onClose={handleEditClose}>
           <DialogTitle>Edit Test Case</DialogTitle>
           <DialogContent>
             <Grid container spacing={5}>
