@@ -80,7 +80,7 @@ const Login = ({ mode }: { mode: Mode }) => {
         setSuccess('Login Succesfull, redirecting to your page ')
 
         if (data.data.role_id === 1) {
-          router.push('/admin/user')
+          router.push('/admin/class')
         } else {
           router.push('/user/class')
         }
