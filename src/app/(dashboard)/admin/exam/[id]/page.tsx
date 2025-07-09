@@ -1,5 +1,6 @@
 'use client'
 import type { ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
@@ -9,6 +10,8 @@ import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 
 import SplitViewExamAdmin from '@/views/admin/split_views/ViewExamAdmin'
+
+import { fetchWithAuth } from '@/utils/api'
 
 const ViewExamAdmin = dynamic(() => import('@/views/admin/ViewExamAdmin'))
 const ExamProblemTableAdmin = dynamic(() => import('@/views/admin/ExamProblemTableAdmin'))
@@ -28,7 +31,22 @@ const FormLayouts = () => {
   const params = useParams()
   const id = params?.id as string
 
-  return <SplitViewExamAdmin tabContentList={tabContentList(id)} />
+  const [examName, setExamName] = useState<string>('Loading...')
+
+  useEffect(() => {
+    const fetchClassName = async () => {
+      const res = await fetchWithAuth(`/api/exam/${id}`, undefined, 'GET')
+      if (res.status && res.data) {
+        setExamName(res.data.name + ' (' + res.data.short_name + ') ')
+      } else {
+        setExamName('Unknown Class')
+      }
+    }
+
+    if (id) fetchClassName()
+  }, [id])
+
+  return <SplitViewExamAdmin tabContentList={tabContentList(id)} examName={examName} />
 }
 
 export default FormLayouts

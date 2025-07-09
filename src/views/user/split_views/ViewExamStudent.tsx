@@ -11,7 +11,13 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 
-const SplitViewExamStudent = ({ tabContentList }: { tabContentList: { [key: string]: ReactElement } }) => {
+const SplitViewExamStudent = ({
+  tabContentList,
+  examName
+}: {
+  tabContentList: { [key: string]: ReactElement }
+  examName: string
+}) => {
   // States
   const [activeTab, setActiveTab] = useState('exam')
 
@@ -22,6 +28,10 @@ const SplitViewExamStudent = ({ tabContentList }: { tabContentList: { [key: stri
   return (
     <TabContext value={activeTab}>
       <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <h2 style={{ marginBottom: 0 }}>{examName}</h2>
+        </Grid>
+
         <Grid item xs={12}>
           <TabList onChange={handleChange} variant='scrollable'>
             <Tab label='Exam' icon={<i className='ri-file-paper-2-line' />} iconPosition='start' value='exam' />

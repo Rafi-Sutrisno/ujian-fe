@@ -11,7 +11,13 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 
-const SplitViewProblemAdmin = ({ tabContentList }: { tabContentList: { [key: string]: ReactElement } }) => {
+const SplitViewProblemAdmin = ({
+  tabContentList,
+  problemName
+}: {
+  tabContentList: { [key: string]: ReactElement }
+  problemName: string
+}) => {
   // States
   const [activeTab, setActiveTab] = useState('problem')
 
@@ -22,6 +28,10 @@ const SplitViewProblemAdmin = ({ tabContentList }: { tabContentList: { [key: str
   return (
     <TabContext value={activeTab}>
       <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <h2 style={{ marginBottom: 0 }}>{problemName}</h2>
+        </Grid>
+
         <Grid item xs={12}>
           <TabList onChange={handleChange} variant='scrollable'>
             <Tab label='Problem' icon={<i className='ri-code-line' />} iconPosition='start' value='problem' />

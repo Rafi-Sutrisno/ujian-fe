@@ -11,7 +11,13 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 
-const SplitViewClassAdmin = ({ tabContentList }: { tabContentList: { [key: string]: ReactElement } }) => {
+const SplitViewClassAdmin = ({
+  tabContentList,
+  className
+}: {
+  tabContentList: { [key: string]: ReactElement }
+  className: string
+}) => {
   // States
   const [activeTab, setActiveTab] = useState('class')
 
@@ -22,6 +28,11 @@ const SplitViewClassAdmin = ({ tabContentList }: { tabContentList: { [key: strin
   return (
     <TabContext value={activeTab}>
       <Grid container spacing={6}>
+        {/* Class Name Header */}
+        <Grid item xs={12}>
+          <h2 style={{ marginBottom: 0 }}>{className}</h2>
+        </Grid>
+
         <Grid item xs={12}>
           <TabList onChange={handleChange} variant='scrollable'>
             <Tab label='Class' icon={<i className='ri-graduation-cap-line' />} iconPosition='start' value='class' />

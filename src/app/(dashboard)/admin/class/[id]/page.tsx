@@ -1,5 +1,6 @@
 'use client'
 import type { ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
@@ -10,6 +11,8 @@ import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 
 import SplitViewClassAdmin from '@/views/admin/split_views/ViewClassAdmin'
+
+import { fetchWithAuth } from '@/utils/api'
 
 const ViewClassAdmin = dynamic(() => import('@/views/admin/ViewClassAdmin'))
 const UserClassTableAdmin = dynamic(() => import('@/views/admin/UserClassTableAdmin'))
@@ -25,7 +28,22 @@ const FormLayouts = () => {
   const params = useParams()
   const id = params?.id as string
 
-  return <SplitViewClassAdmin tabContentList={tabContentList(id)} />
+  const [className, setClassName] = useState<string>('Loading...')
+
+  useEffect(() => {
+    const fetchClassName = async () => {
+      const res = await fetchWithAuth(`/api/class/${id}`, undefined, 'GET')
+      if (res.status && res.data) {
+        setClassName(res.data.name + ' ' + res.data.class + ' (' + res.data.short_name + ') ')
+      } else {
+        setClassName('Unknown Class')
+      }
+    }
+
+    if (id) fetchClassName()
+  }, [id])
+
+  return <SplitViewClassAdmin tabContentList={tabContentList(id)} className={className} />
 }
 
 export default FormLayouts
