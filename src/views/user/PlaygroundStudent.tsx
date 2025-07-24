@@ -394,7 +394,7 @@ const PlaygroundStudent: React.FC<PlaygroundProps> = ({ exam_id }) => {
 
   const confirmFinishExam = async () => {
     setConfirmOpen(false)
-    const result = await fetchWithAuth(`/api/exam_session/finish_exam/${exam_id}`, {}, 'POST')
+    await fetchWithAuth(`/api/exam_session/finish_exam/${exam_id}`, {}, 'POST')
 
     // console.log('ini result finish exam:', result)
     router.push(`/exam_feedback/${exam_id}`)

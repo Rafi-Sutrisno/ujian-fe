@@ -96,7 +96,7 @@ export default function AssignUserUploadModal({
 
         message = parsed.error || parsed.message || message
       } catch (e) {
-        console.error('Could not parse error message:', err)
+        console.error('Could not parse error message:', e)
       }
 
       onError?.(message)

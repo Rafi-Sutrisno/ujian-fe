@@ -72,7 +72,7 @@ export default function AddTestCaseUpload({
     setUploading(true)
 
     try {
-      const res = await fetchWithAuthFile(`/api/testcase/file/${problem_id}`, formData, 'POST')
+      await fetchWithAuthFile(`/api/testcase/file/${problem_id}`, formData, 'POST')
 
       //   const created = res?.data?.created_users || []
       //   const failed = res?.data?.failed_users || []
@@ -93,7 +93,7 @@ export default function AddTestCaseUpload({
 
         message = parsed.error || parsed.message || message
       } catch (e) {
-        console.error('Could not parse error message:', err)
+        console.error('Could not parse error message:', e)
       }
 
       onError?.(message)

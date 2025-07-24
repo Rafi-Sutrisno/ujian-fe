@@ -93,7 +93,6 @@ const SubmissionTableStudent: React.FC<ExamTableProps> = ({ exam_id }) => {
   const [order, setOrder] = React.useState<Order>('desc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('submission_time')
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [userCode, setUserCode] = React.useState<string | null>(null)
   const [Lang, setLang] = React.useState<string | null>(null)
 

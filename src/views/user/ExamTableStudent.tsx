@@ -92,7 +92,6 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('id')
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
 
@@ -158,7 +157,6 @@ const ExamTableStudent: React.FC<ExamTableProps> = ({ class_id }) => {
     // perform delete logic here
     // console.log('Delete ID:', selectedId)
     setOpenDialog(false)
-    setSelectedId(null)
   }
 
   return (

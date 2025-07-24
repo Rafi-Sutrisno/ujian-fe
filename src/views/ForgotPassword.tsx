@@ -20,20 +20,8 @@ import Form from '@components/Form'
 import DirectionalIcon from '@components/DirectionalIcon'
 import Logo from '@components/layout/shared/Logo'
 
-// Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
-
-// React Imports
-
 const ForgotPassword = ({ mode }: { mode: Mode }) => {
   const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
-
-  // Vars
-  const darkImg = '/images/pages/auth-v1-mask-dark.png'
-  const lightImg = '/images/pages/auth-v1-mask-light.png'
-
-  // Hooks
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
 
   // States
   const [email, setEmail] = useState('')
@@ -53,8 +41,6 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
         body: JSON.stringify({ email }),
         credentials: 'include'
       })
-
-      const data = await response.json()
 
       // console.log('Forgot Password Response:', data)
 

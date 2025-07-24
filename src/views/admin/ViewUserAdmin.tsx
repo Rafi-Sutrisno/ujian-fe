@@ -81,15 +81,6 @@ const ViewUserAdmin: React.FC<ViewUserProps> = ({ id }) => {
     }))
   }
 
-  const handleSelectChange = (e: SelectChangeEvent) => {
-    const { name, value } = e.target
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
   const handleSubmit = async () => {
     const { username, name, email, noid } = formData
 

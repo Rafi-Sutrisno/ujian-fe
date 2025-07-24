@@ -40,10 +40,6 @@ const Login = ({ mode }: { mode: Mode }) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  // Vars
-  const darkImg = '/images/pages/auth-v1-mask-dark.png'
-  const lightImg = '/images/pages/auth-v1-mask-light.png'
-
   // Hooks
   const router = useRouter()
 
@@ -59,7 +55,7 @@ const Login = ({ mode }: { mode: Mode }) => {
     setError('')
 
     try {
-      const response = await fetch(`${serverPath}/user/login`, {
+      const response = await fetch(`${serverPath}/api/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

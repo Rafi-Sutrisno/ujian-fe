@@ -7,7 +7,6 @@ import { getRoleFromToken, getTokenFromCookies } from '@/utils/token'
 import { MenuItem, MenuSection } from '@menu/vertical-menu'
 
 const MenuAuthRole = () => {
-  const pathname = usePathname()
   const [role, setRole] = useState<'user' | 'admin' | null>(null)
 
   useEffect(() => {

@@ -93,7 +93,6 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
   const [order, setOrder] = React.useState<Order>('desc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('created_at')
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
 
@@ -152,7 +151,6 @@ const SessionTableAdmin: React.FC<SessionTableProps> = ({ exam_id }) => {
   }
 
   const handleDeleteClick = (id: string) => {
-    setSelectedId(id)
     setOpenDialog(true)
   }
 

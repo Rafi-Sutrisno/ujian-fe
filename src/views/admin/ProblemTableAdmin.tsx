@@ -79,9 +79,6 @@ const ProblemTableAdmin = () => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('title')
 
-  // const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
-
   const [rows, setRows] = React.useState<Data[]>([])
 
   const fetchData = async () => {

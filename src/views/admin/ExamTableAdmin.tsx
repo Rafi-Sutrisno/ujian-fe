@@ -138,7 +138,6 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
   const [order, setOrder] = React.useState<Order>('desc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('created_at')
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
   const [rows, setRows] = React.useState<Data[]>([])
   const [lang, setLang] = React.useState<LangData[]>([])
@@ -215,7 +214,6 @@ const ExamTableAdmin: React.FC<ExamTableProps> = ({ class_id }) => {
     // perform delete logic here
     // console.log('Delete ID:', selectedId)
     setOpenDialog(false)
-    setSelectedId(null)
   }
 
   const [formData, setFormData] = React.useState<FormData>({

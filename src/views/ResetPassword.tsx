@@ -19,10 +19,6 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 const ResetPassword = ({ token }: { token: string }) => {
   const serverPath = process.env.NEXT_PUBLIC_SERVER_URL
 
-  const mode = 'light' // fallback until you properly detect theme
-  const darkImg = '/images/pages/auth-v1-mask-dark.png'
-  const lightImg = '/images/pages/auth-v1-mask-light.png'
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
   const router = useRouter()
 
   const [newPassword, setNewPassword] = useState('')

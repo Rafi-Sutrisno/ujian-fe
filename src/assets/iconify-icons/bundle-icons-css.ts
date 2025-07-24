@@ -111,7 +111,7 @@ const target = join(__dirname, 'generated-icons.css')
       recursive: true
     })
   } catch (err) {
-    //
+    console.log(err)
   }
 
   const allIcons: IconifyJSON[] = []
@@ -120,8 +120,8 @@ const target = join(__dirname, 'generated-icons.css')
    * Convert sources.icons to sources.json
    */
   if (sources.icons) {
-    const sourcesJSON = sources.json ? sources.json : (sources.json = [])
-
+    sources.json ||= []
+    const sourcesJSON = sources.json
     // Sort icons by prefix
     const organizedList = organizeIconsList(sources.icons)
 
@@ -247,7 +247,10 @@ function organizeIconsList(icons: string[]): Record<string, string[]> {
     if (!item) return
 
     const prefix = item.prefix
-    const prefixList = sorted[prefix] ? sorted[prefix] : (sorted[prefix] = [])
+    if (!sorted[prefix]) {
+      sorted[prefix] = []
+    }
+    const prefixList = sorted[prefix]
 
     const name = item.name
 
