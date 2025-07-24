@@ -33,7 +33,7 @@ const ForgotPassword = ({ mode }: { mode: Mode }) => {
     setLoading(true)
 
     try {
-      const response = await fetch(`${serverPath}/user/forgot_password`, {
+      await fetch(`${serverPath}/user/forgot_password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
