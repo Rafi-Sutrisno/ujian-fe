@@ -105,16 +105,23 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
 
       if (json.status && json.data) {
         const result = json.data
-        const durationRegex = /(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/
+        const durationRegex = /^(\d+h)?(\d+m)?(\d+s)?$/
         const match = result.duration.match(durationRegex)
 
-        const parsedHours = match && match[1] ? parseInt(match[1]) : 0
-        const parsedMinutes = match && match[2] ? parseInt(match[2]) : 0
-        const parsedSeconds = match && match[3] ? parseInt(match[3]) : 0
+        let parsedHours = 0
+        let parsedMinutes = 0
+        let parsedSeconds = 0
+
+        if (match) {
+          parsedHours = match[1] ? parseInt(match[1].replace('h', '')) : 0
+          parsedMinutes = match[2] ? parseInt(match[2].replace('m', '')) : 0
+          parsedSeconds = match[3] ? parseInt(match[3].replace('s', '')) : 0
+        }
 
         setHours(parsedHours)
         setMinutes(parsedMinutes)
         setSeconds(parsedSeconds)
+
         setFormData({
           name: result.name,
           short_name: result.short_name,
@@ -129,17 +136,9 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
           allowed_languages: result.allowed_languages
         })
 
-        if (result.seb_browser_key !== '') {
-          setSebKeyEnabled(true)
-        }
-
-        if (result.seb_config_key !== '') {
-          setSebConfigKeyEnabled(true)
-        }
-
-        if (result.seb_quit_url !== '') {
-          setSebQuitUrlEnabled(true)
-        }
+        if (result.seb_browser_key !== '') setSebKeyEnabled(true)
+        if (result.seb_config_key !== '') setSebConfigKeyEnabled(true)
+        if (result.seb_quit_url !== '') setSebQuitUrlEnabled(true)
 
         const langData = await fetchWithAuth(`/api/language/all`, undefined, 'GET')
 
@@ -152,7 +151,6 @@ const ViewExamAdmin: React.FC<ViewExamProps> = ({ id }) => {
             })
           )
 
-          // console.log('lang: ', transformed)
           setLang(transformed)
         }
       } else {

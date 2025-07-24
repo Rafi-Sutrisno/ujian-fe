@@ -3,31 +3,33 @@ export const rgbaToHex = (colorStr: string, forceRemoveAlpha: boolean = false) =
   const hasSlash = colorStr.includes('/')
 
   if (hasSlash) {
-    // Extract the RGBA values from the input string
-    const rgbaValues = colorStr.match(/^(\d{1,3})\s+(\d{1,3})\s+(\d{1,3})\s+\/\s+(\d*\.?\d+)$/)
+    // Safe regex to match "R G B / A" format where A is between 0 and 1
+    const rgbaValues = colorStr.match(/^(\d{1,3})\s+(\d{1,3})\s+(\d{1,3})\s+\/\s+(0(?:\.\d+)?|1(?:\.0+)?)$/)
 
     if (!rgbaValues) {
-      return colorStr // Return the original string if it doesn't match the expected format
+      return colorStr // Invalid format — return original
     }
 
-    const [red, green, blue, alpha] = rgbaValues.slice(1, 5).map(parseFloat)
+    const [red, green, blue, alpha] = rgbaValues.slice(1).map(parseFloat)
 
-    // Convert the RGB values to hexadecimal format
+    // Validate color ranges
+    if (red > 255 || green > 255 || blue > 255 || red < 0 || green < 0 || blue < 0 || alpha < 0 || alpha > 1) {
+      return colorStr
+    }
+
+    // Convert RGB values to hex
     const redHex = red.toString(16).padStart(2, '0')
     const greenHex = green.toString(16).padStart(2, '0')
     const blueHex = blue.toString(16).padStart(2, '0')
 
-    // Convert alpha to a hexadecimal format (assuming it's already a decimal value in the range [0, 1])
+    // Convert alpha [0,1] to 2-digit hex (if not suppressed)
     const alphaHex = forceRemoveAlpha
       ? ''
       : Math.round(alpha * 255)
           .toString(16)
           .padStart(2, '0')
 
-    // Combine the hexadecimal values to form the final hex color string
-    const hexColor = `#${redHex}${greenHex}${blueHex}${alphaHex}`
-
-    return hexColor
+    return `#${redHex}${greenHex}${blueHex}${alphaHex}`
   } else {
     // Use the second code block for the case when '/' is not present
     return (
