@@ -23,7 +23,7 @@ export type Config = {
 }
 
 const themeConfig: Config = {
-  templateName: 'Platform Ujian',
+  templateName: 'ITS Proxam',
   settingsCookieName: 'materio-mui-next-free-demo',
   mode: 'light', // 'light', 'dark'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
