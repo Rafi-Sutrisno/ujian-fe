@@ -55,7 +55,8 @@ const Login = ({ mode }: { mode: Mode }) => {
     setError('')
 
     try {
-      const response = await fetch(`${serverPath}/api/user/login`, {
+      const path = process.env.NODE_ENV === 'production' ? '' : '/api'
+      const response = await fetch(`${serverPath}${path}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
