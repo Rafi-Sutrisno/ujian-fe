@@ -2,9 +2,7 @@
 import type { SVGAttributes } from 'react'
 
 const Logo = (props: SVGAttributes<SVGElement>) => {
-  return (
-
-  )
+  return <></>
 }
 
 export default Logo
