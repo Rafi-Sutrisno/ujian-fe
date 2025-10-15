@@ -11,8 +11,8 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'Platform Ujian Pemrograman',
-  description: 'Platform Ujian Pemrograman'
+  title: 'ITS Proxam',
+  description: 'ITS Proxam'
 }
 
 const RootLayout = ({ children }: ChildrenType) => {

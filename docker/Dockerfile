@@ -15,11 +15,5 @@ COPY . .
 RUN npm run build:icons
 RUN npm run build
 
-# Change ownership of files to non-root user (node)
-RUN chown -R node:node /app
-
-# Use non-root user for running the app
-USER node
-
 # Start the app
 CMD ["npm", "run", "start"]

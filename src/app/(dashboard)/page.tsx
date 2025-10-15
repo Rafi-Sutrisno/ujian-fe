@@ -9,10 +9,10 @@ const DashboardAnalytics = () => {
       <Grid item xs={12}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant='h4' fontWeight='bold' gutterBottom>
-            Platform Ujian Pemrograman
+            ITS Proxam
           </Typography>
           <Typography variant='body1' color='text.secondary'>
-            Selamat datang di platform ujian pemrgoraman.
+            Selamat datang di ITS Proxam.
           </Typography>
         </Paper>
       </Grid>
